@@ -220,6 +220,12 @@ function processSignals() {
       case 'FATAL':
         result = handleFatal(signal);
         break;
+      case 'CASCADE_FAILURE':
+        result = handleCascadeFailure(signal);
+        break;
+      case 'ARTIFICIAL_STERILITY':
+        result = handleArtificialSterility(signal);
+        break;
       default:
         result = {
           status: SENTINEL_CONFIG.STATUS.ESCALATED,
@@ -232,9 +238,35 @@ function processSignals() {
     sh.getRange(signal.row, SENTINEL_CONFIG.COLUMNS.SIGNAL_ACTION).setValue(result.action);
     sh.getRange(signal.row, SENTINEL_CONFIG.COLUMNS.SIGNAL_RESULT).setValue(result.result);
 
+    // Get the original entry's UUID for reference
+    const originalUuid = sh.getRange(signal.row, SENTINEL_CONFIG.COLUMNS.UUID).getValue();
+
+    // Write immutable ledger entry for this signal disposition
+    const ledgerText = [
+      `SIGNAL: ${signal.signal}`,
+      `ORIGINAL_UUID: ${originalUuid}`,
+      `ORIGINAL_ROW: ${signal.row}`,
+      `ACTION: ${result.action}`,
+      `RESULT: ${result.result}`,
+      `DISPOSITION: ${result.status}`
+    ].join(' | ');
+
+    try {
+      safeNewEntry('System', 'SIGNAL_PROCESSED', ledgerText, '', 'FINAL');
+    } catch (ledgerErr) {
+      // Log failure but don't block signal processing
+      if (typeof logSystemEvent === 'function') {
+        logSystemEvent('ERROR', 'SENTINEL', 'Failed to write signal ledger entry', {
+          originalUuid: originalUuid,
+          error: ledgerErr.message
+        });
+      }
+    }
+
     if (typeof logSystemEvent === 'function') {
       logSystemEvent('INFO', 'SENTINEL', `Processed ${signal.signal}`, {
         row: signal.row,
+        originalUuid: originalUuid,
         action: result.action,
         status: result.status
       });
@@ -368,6 +400,49 @@ function handleFatal(signal) {
   };
 }
 
+function handleCascadeFailure(signal) {
+  // CASCADE_FAILURE: A failure in one component has propagated to others
+  // This requires immediate attention to identify the root cause and scope
+  if (typeof logSystemEvent === 'function') {
+    logSystemEvent('CRITICAL', 'SENTINEL', 'CASCADE_FAILURE detected', {
+      row: signal.row,
+      text: signal.text.substring(0, 500)
+    });
+  }
+
+  const email = PropertiesService.getScriptProperties().getProperty('ALERT_EMAIL');
+  if (email) {
+    MailApp.sendEmail(
+      email,
+      '[SENTINEL] CASCADE FAILURE DETECTED',
+      `A cascade failure was detected.\n\nRow: ${signal.row}\n\nDetails:\n${signal.text.substring(0, 1000)}`
+    );
+  }
+
+  return {
+    status: SENTINEL_CONFIG.STATUS.ESCALATED,
+    action: 'CASCADE_FAILURE - root cause analysis required',
+    result: 'Failure has propagated across components - identify origin point and scope before proceeding'
+  };
+}
+
+function handleArtificialSterility(signal) {
+  // ARTIFICIAL_STERILITY: Data appears too clean, too consistent, or lacks expected variance
+  // This is a marker for potential fabrication or synthetic data
+  if (typeof logSystemEvent === 'function') {
+    logSystemEvent('WARN', 'SENTINEL', 'ARTIFICIAL_STERILITY detected', {
+      row: signal.row,
+      text: signal.text.substring(0, 500)
+    });
+  }
+
+  return {
+    status: SENTINEL_CONFIG.STATUS.ESCALATED,
+    action: 'ARTIFICIAL_STERILITY - authenticity review required',
+    result: 'Data exhibits unnatural uniformity - verify source authenticity and check for fabrication markers'
+  };
+}
+
 
 // ==========================
 // ARTIFACT RETRIEVAL
@@ -403,8 +478,123 @@ function searchDriveForArtifact(artifactName, dateRange) {
   }
 }
 
+/**
+ * Parses natural language date ranges into ISO date strings for Drive API.
+ * Supports formats like:
+ *   - "January 2024 and March 2024"
+ *   - "between January 2024 and March 2024"
+ *   - "Q1 2024"
+ *   - "2024"
+ *   - "Jan 1, 2024 - Mar 31, 2024"
+ */
 function parseDateRange(rangeStr) {
+  if (!rangeStr || typeof rangeStr !== 'string') {
+    return { start: null, end: null };
+  }
+
+  const s = rangeStr.trim().toLowerCase();
+
+  // Quarter format: "Q1 2024", "q2 2023"
+  const quarterMatch = s.match(/q([1-4])\s*(\d{4})/i);
+  if (quarterMatch) {
+    const q = parseInt(quarterMatch[1]);
+    const year = parseInt(quarterMatch[2]);
+    const startMonth = (q - 1) * 3;
+    const endMonth = startMonth + 2;
+    return {
+      start: new Date(year, startMonth, 1).toISOString().slice(0, 10),
+      end: new Date(year, endMonth + 1, 0).toISOString().slice(0, 10) // last day of end month
+    };
+  }
+
+  // Year only: "2024"
+  const yearOnly = s.match(/^(\d{4})$/);
+  if (yearOnly) {
+    const year = parseInt(yearOnly[1]);
+    return {
+      start: `${year}-01-01`,
+      end: `${year}-12-31`
+    };
+  }
+
+  // Month name mappings
+  const months = {
+    'jan': 0, 'january': 0,
+    'feb': 1, 'february': 1,
+    'mar': 2, 'march': 2,
+    'apr': 3, 'april': 3,
+    'may': 4,
+    'jun': 5, 'june': 5,
+    'jul': 6, 'july': 6,
+    'aug': 7, 'august': 7,
+    'sep': 8, 'sept': 8, 'september': 8,
+    'oct': 9, 'october': 9,
+    'nov': 10, 'november': 10,
+    'dec': 11, 'december': 11
+  };
+
+  // Try to extract two dates: "between X and Y", "X - Y", "X to Y", "X and Y"
+  const rangePattern = /(?:between\s+)?(\w+\s*\d*,?\s*\d{4})\s*(?:and|to|-)\s*(\w+\s*\d*,?\s*\d{4})/i;
+  const rangeMatch = s.match(rangePattern);
+
+  if (rangeMatch) {
+    const startDate = parseFlexibleDate(rangeMatch[1], months);
+    const endDate = parseFlexibleDate(rangeMatch[2], months, true); // true = end of period
+    return { start: startDate, end: endDate };
+  }
+
+  // Single month/year: "January 2024"
+  const singleMonthYear = s.match(/(\w+)\s+(\d{4})/);
+  if (singleMonthYear) {
+    const monthName = singleMonthYear[1].toLowerCase();
+    const year = parseInt(singleMonthYear[2]);
+    if (months.hasOwnProperty(monthName)) {
+      const month = months[monthName];
+      return {
+        start: new Date(year, month, 1).toISOString().slice(0, 10),
+        end: new Date(year, month + 1, 0).toISOString().slice(0, 10)
+      };
+    }
+  }
+
   return { start: null, end: null };
+}
+
+/**
+ * Helper to parse flexible date strings like "January 2024", "Jan 15, 2024"
+ */
+function parseFlexibleDate(dateStr, months, endOfPeriod) {
+  const s = dateStr.trim().toLowerCase();
+
+  // Try "Month Day, Year" format
+  const mdyMatch = s.match(/(\w+)\s+(\d{1,2}),?\s*(\d{4})/);
+  if (mdyMatch) {
+    const monthName = mdyMatch[1];
+    const day = parseInt(mdyMatch[2]);
+    const year = parseInt(mdyMatch[3]);
+    if (months.hasOwnProperty(monthName)) {
+      return new Date(year, months[monthName], day).toISOString().slice(0, 10);
+    }
+  }
+
+  // Try "Month Year" format
+  const myMatch = s.match(/(\w+)\s+(\d{4})/);
+  if (myMatch) {
+    const monthName = myMatch[1];
+    const year = parseInt(myMatch[2]);
+    if (months.hasOwnProperty(monthName)) {
+      const month = months[monthName];
+      if (endOfPeriod) {
+        // Last day of month
+        return new Date(year, month + 1, 0).toISOString().slice(0, 10);
+      } else {
+        // First day of month
+        return new Date(year, month, 1).toISOString().slice(0, 10);
+      }
+    }
+  }
+
+  return null;
 }
 
 

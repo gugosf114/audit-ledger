@@ -129,7 +129,7 @@ function _ensureVerifierLog() {
 }
 
 /**
- * Records verification result.
+ * Records verification result to Verifier Log sheet AND creates immutable ledger entry.
  */
 function _logVerification(file, claimedTitle, result) {
   const sh = _ensureVerifierLog();
@@ -146,6 +146,30 @@ function _logVerification(file, claimedTitle, result) {
     JSON.stringify(result)
   ];
   sh.appendRow(row);
+
+  // Write immutable ledger entry for verification result
+  const verdict = result.is_valid ? "VALID" : "INVALID";
+  const ledgerText = [
+    `VERIFICATION: ${verdict}`,
+    `FILE: ${file.getName()}`,
+    `FILE_ID: ${file.getId()}`,
+    `CLAIMED: ${claimedTitle}`,
+    `DETECTED: ${result.detected_citation || "none"}`,
+    `CONFIDENCE: ${result.confidence || "unknown"}`,
+    result.error ? `ERROR: ${result.error}` : null
+  ].filter(Boolean).join(' | ');
+
+  try {
+    if (typeof safeNewEntry === 'function') {
+      safeNewEntry('System', 'DOCUMENT_VERIFIED', ledgerText, '', 'FINAL');
+    }
+  } catch (ledgerErr) {
+    logSystemEvent("ERROR", "VERIFIER", "Failed to write verification ledger entry", {
+      error: ledgerErr.message,
+      fileId: file.getId()
+    });
+  }
+
   logSystemEvent("INFO","VERIFIER","Verification logged",{file:file.getName(),result:result});
 }
 

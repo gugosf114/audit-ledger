@@ -231,6 +231,26 @@ function createIRACWithSafeLedger(caseName) {
 
       recordId = _writeIRACCaseEntry(ss, newFolder, folderName, folderHash, IRAC_STATUS.OPEN);
 
+      // Write immutable ledger entry for IRAC case creation
+      const ledgerText = [
+        `IRAC_CREATED: ${folderName}`,
+        `RECORD_ID: ${recordId}`,
+        `FOLDER_ID: ${newFolder.getId()}`,
+        `FOLDER_HASH: ${folderHash}`,
+        `STATUS: ${IRAC_STATUS.OPEN}`
+      ].join(' | ');
+
+      try {
+        if (typeof safeNewEntry === 'function') {
+          safeNewEntry('System', 'IRAC_CASE_CREATED', ledgerText, '', 'FINAL');
+        }
+      } catch (ledgerErr) {
+        logSystemEvent('ERROR', 'IRAC', 'Failed to write IRAC ledger entry', {
+          error: ledgerErr.message,
+          recordId: recordId
+        });
+      }
+
       return { recordId, folderUrl: newFolder.getUrl(), folderHash, metadataSaved: metaSaved };
 
     } catch (e) {

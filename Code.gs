@@ -713,6 +713,29 @@ function onOpen() {
     .addItem("Help", "showHelp")
     .addToUi();
 
+  ui.createMenu("Sentinel")
+    .addItem("Scan for Signals", "scanAndReport")
+    .addItem("Process Signals", "processAndReport")
+    .addSeparator()
+    .addItem("View Quarantine", "viewQuarantine")
+    .addItem("Show Session Ledger", "showSessionLedger")
+    .addSeparator()
+    .addItem("Setup Sentinel Columns", "setupSentinelColumns")
+    .addToUi();
+
+  ui.createMenu("IRAC")
+    .addItem("Create IRAC Folder", "generateIRACFolder")
+    .addSeparator()
+    .addItem("Setup IRAC Config", "setupIRACConfig")
+    .addItem("Setup IRAC Sheet", "setupIRACSheet")
+    .addToUi();
+
+  ui.createMenu("Verifier")
+    .addItem("Verify Source Document", "verifySourceText")
+    .addSeparator()
+    .addItem("Test Gemini Connection", "testGemini")
+    .addToUi();
+
   ui.createMenu("Admin")
     .addItem("Setup Ledger Secret", "setupLedgerSecret")
     .addItem("Setup Ledger Config (Email/Folders)", "setupLedgerConfig")

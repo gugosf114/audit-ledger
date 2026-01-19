@@ -32,7 +32,7 @@ A Google Apps Script system that creates an immutable record of events in a spre
 2. Open Extensions → Apps Script
 3. Copy each `.gs` file into the project
 4. Run `setupSheet()` to create the ledger structure
-5. Run `setupNewtonSecret()` to set your hash secret (minimum 32 characters)
+5. Run `setupLedgerSecret()` to set your hash secret (minimum 32 characters)
 6. Optional: Set `GEMINI_API_KEY` in Script Properties for document verification
 7. Optional: Deploy as web app for API access
 
