@@ -824,5 +824,6 @@ function onOpen() {
     .addItem("View Workflow Status", "showWorkflowStatusDialog")
     .addSeparator()
     .addItem("Install CA Residency Template", "installCAResidencyTemplate")
+    .addItem("Install CalCompete Tax Credit Template", "installCalCompeteTemplate")
     .addToUi();
 }

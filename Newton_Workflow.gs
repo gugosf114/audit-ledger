@@ -1434,3 +1434,510 @@ function installCAResidencyTemplate() {
 
   return result;
 }
+
+// ============================================================================
+// CALCOMPETE TAX CREDIT APPLICATION TEMPLATE
+// ============================================================================
+
+/**
+ * Install the California Competes (CalCompete) Tax Credit Application template
+ * Based on GO-Biz requirements: https://business.ca.gov/california-competes-tax-credit/
+ */
+function installCalCompeteTemplate() {
+  const existingTemplate = getWorkflowTemplate('CalCompete Tax Credit Application');
+  if (existingTemplate) {
+    Logger.log('CalCompete Tax Credit Application template already exists');
+    SpreadsheetApp.getUi().alert('Template Already Exists', 'The CalCompete Tax Credit Application template is already installed.', SpreadsheetApp.getUi().ButtonSet.OK);
+    return existingTemplate;
+  }
+
+  const steps = [
+    // ===== PRE-APPLICATION PHASE =====
+    {
+      stepNumber: 1,
+      title: "Verify Business Eligibility",
+      description: "Confirm business qualifies for CalCompete. Any business size/industry can apply. Must be creating jobs or making investments in California.",
+      requiredDocs: ["Business entity documentation", "CA Secretary of State registration"],
+      dependencies: [],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "business_type", question: "Business entity type (LLC, Corp, etc.)?", type: "text" },
+        { id: "ca_registered", question: "Is business registered in California?", type: "boolean" },
+        { id: "industry", question: "Primary industry/sector?", type: "text" }
+      ],
+      estimatedDays: 3,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 2,
+      title: "Determine Application Window",
+      description: "FY 2025-26 windows: July 21-Aug 11, 2025 ($308M); Jan 5-26, 2026 ($308M); Mar 2-16, 2026 ($306.6M). Select target window.",
+      requiredDocs: [],
+      dependencies: [1],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "target_window", question: "Which application window are you targeting?", type: "text" },
+        { id: "deadline_date", question: "Application deadline date?", type: "date" }
+      ],
+      estimatedDays: 1,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 3,
+      title: "Calculate Projected Job Creation",
+      description: "Document planned full-time employee (FTE) positions to be created. Must meet minimum 35 hrs/week threshold.",
+      requiredDocs: ["Hiring plan", "Job descriptions", "Projected org chart"],
+      dependencies: [1],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "new_fte_count", question: "Number of new FTE positions planned?", type: "number" },
+        { id: "avg_salary", question: "Average annual salary for new positions?", type: "number" },
+        { id: "job_locations", question: "Where will new employees work?", type: "text" }
+      ],
+      estimatedDays: 7,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 4,
+      title: "Calculate Projected Investment",
+      description: "Document planned capital investments in California (equipment, facilities, etc.).",
+      requiredDocs: ["Capital expenditure plan", "Equipment quotes", "Facility plans"],
+      dependencies: [1],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "investment_amount", question: "Total planned investment amount ($)?", type: "number" },
+        { id: "investment_type", question: "Type of investments (equipment, facilities, etc.)?", type: "text" },
+        { id: "investment_timeline", question: "Investment timeline (months)?", type: "number" }
+      ],
+      estimatedDays: 7,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 5,
+      title: "Calculate Cost-Benefit Ratio",
+      description: "Phase I uses formula: Credit Amount Requested ÷ (Aggregate Employee Compensation + Aggregate Investment). Lower ratio = more competitive.",
+      requiredDocs: ["Cost-benefit calculation worksheet"],
+      dependencies: [3, 4],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "credit_requested", question: "Total credit amount requesting ($)?", type: "number" },
+        { id: "cost_benefit_ratio", question: "Calculated cost-benefit ratio?", type: "text" },
+        { id: "ratio_competitive", question: "Is ratio likely competitive based on historical data?", type: "boolean" }
+      ],
+      estimatedDays: 3,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 6,
+      title: "Evaluate High Unemployment/Poverty Area Qualification",
+      description: "If 75%+ of new hires work in designated high unemployment/poverty areas, you can bypass strict Phase I cutoffs. Check GO-Biz list.",
+      requiredDocs: ["GO-Biz High Unemployment and Poverty Areas List"],
+      dependencies: [3],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "in_designated_area", question: "Are job locations in designated high unemployment/poverty areas?", type: "boolean" },
+        { id: "percentage_in_area", question: "Percentage of new hires in designated areas?", type: "number" }
+      ],
+      estimatedDays: 2,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 7,
+      title: "Evaluate Out-of-State Competition Factor",
+      description: "If project would otherwise leave/not come to CA, you can bypass Phase I cutoffs. Must certify this truthfully.",
+      requiredDocs: ["Out-of-state location analysis", "Competitor location offers (if any)"],
+      dependencies: [1],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "considering_other_states", question: "Is the project considering out-of-state locations?", type: "boolean" },
+        { id: "other_states", question: "Which other states are being considered?", type: "text" },
+        { id: "can_certify", question: "Can you certify project would otherwise leave/not come to CA?", type: "boolean" }
+      ],
+      estimatedDays: 3,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 8,
+      title: "Review California Jobs First Blueprint",
+      description: "FY25-26 gives special consideration to 'strengthen' and 'accelerate' sectors per CA Jobs First Economic Blueprint.",
+      requiredDocs: ["California Jobs First Economic Blueprint review"],
+      dependencies: [1],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "in_priority_sector", question: "Is business in a 'strengthen' or 'accelerate' sector?", type: "boolean" },
+        { id: "sector_classification", question: "Sector classification per Blueprint?", type: "text" }
+      ],
+      estimatedDays: 2,
+      category: "Pre-Application"
+    },
+    {
+      stepNumber: 9,
+      title: "Attend GO-Biz Application Webinar",
+      description: "GO-Biz hosts webinars before each application window. Highly recommended for understanding process and Q&A.",
+      requiredDocs: ["Webinar attendance notes"],
+      dependencies: [2],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "webinar_attended", question: "Webinar attended?", type: "boolean" },
+        { id: "webinar_date", question: "Date attended?", type: "date" },
+        { id: "key_takeaways", question: "Key takeaways from webinar?", type: "text" }
+      ],
+      estimatedDays: 1,
+      category: "Pre-Application"
+    },
+
+    // ===== APPLICATION SUBMISSION PHASE =====
+    {
+      stepNumber: 10,
+      title: "Create CalCompetes Online Account",
+      description: "Register at calcompetes.ca.gov. Click 'Create an Account' on login screen.",
+      requiredDocs: ["Account confirmation email"],
+      dependencies: [2],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "account_created", question: "Account created?", type: "boolean" },
+        { id: "account_email", question: "Email used for account?", type: "text" }
+      ],
+      estimatedDays: 1,
+      category: "Application"
+    },
+    {
+      stepNumber: 11,
+      title: "Complete Application - Business Information Section",
+      description: "Enter business details: legal name, address, EIN, NAICS code, ownership structure.",
+      requiredDocs: ["EIN confirmation", "Business registration docs", "NAICS code documentation"],
+      dependencies: [10],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "ein", question: "Business EIN?", type: "text" },
+        { id: "naics_code", question: "Primary NAICS code?", type: "text" },
+        { id: "section_complete", question: "Business Information section complete?", type: "boolean" }
+      ],
+      estimatedDays: 2,
+      category: "Application"
+    },
+    {
+      stepNumber: 12,
+      title: "Complete Application - Project Description Section",
+      description: "Describe the project, its strategic importance, economic impact, and why California location matters.",
+      requiredDocs: ["Project narrative", "Business plan excerpt"],
+      dependencies: [10, 3, 4],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "project_summary", question: "Brief project summary (2-3 sentences)?", type: "text" },
+        { id: "strategic_importance", question: "Why is this strategically important to CA?", type: "text" },
+        { id: "section_complete", question: "Project Description section complete?", type: "boolean" }
+      ],
+      estimatedDays: 5,
+      category: "Application"
+    },
+    {
+      stepNumber: 13,
+      title: "Complete Application - Employment Data Section",
+      description: "Enter current employment, projected new hires by year, salary/wage data, benefits information.",
+      requiredDocs: ["Current payroll report", "Hiring projections spreadsheet", "Benefits summary"],
+      dependencies: [10, 3],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "current_ca_employees", question: "Current CA FTE count?", type: "number" },
+        { id: "year1_new_hires", question: "Year 1 projected new hires?", type: "number" },
+        { id: "year5_total_new", question: "Total new hires by Year 5?", type: "number" },
+        { id: "section_complete", question: "Employment Data section complete?", type: "boolean" }
+      ],
+      estimatedDays: 3,
+      category: "Application"
+    },
+    {
+      stepNumber: 14,
+      title: "Complete Application - Investment Data Section",
+      description: "Enter capital investment amounts, categories (equipment, facilities, etc.), and timeline.",
+      requiredDocs: ["Capital expenditure schedule", "Investment breakdown"],
+      dependencies: [10, 4],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "total_investment", question: "Total 5-year investment amount ($)?", type: "number" },
+        { id: "investment_by_year", question: "Investment by year breakdown?", type: "text" },
+        { id: "section_complete", question: "Investment Data section complete?", type: "boolean" }
+      ],
+      estimatedDays: 3,
+      category: "Application"
+    },
+    {
+      stepNumber: 15,
+      title: "Complete Application - Credit Request Section",
+      description: "Enter requested credit amount. Minimum request is $20,000. Credit is allocated over 5-year agreement.",
+      requiredDocs: ["Credit request calculation"],
+      dependencies: [10, 5],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "total_credit_request", question: "Total credit amount requested ($)?", type: "number" },
+        { id: "annual_allocation", question: "Proposed annual allocation?", type: "text" },
+        { id: "section_complete", question: "Credit Request section complete?", type: "boolean" }
+      ],
+      estimatedDays: 2,
+      category: "Application"
+    },
+    {
+      stepNumber: 16,
+      title: "Complete Application - Certifications Section",
+      description: "Complete required certifications including accuracy of information, out-of-state certification (if applicable).",
+      requiredDocs: ["Signed certifications"],
+      dependencies: [11, 12, 13, 14, 15],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "accuracy_certified", question: "Accuracy of information certified?", type: "boolean" },
+        { id: "out_of_state_certified", question: "Out-of-state certification (if applicable)?", type: "boolean" },
+        { id: "section_complete", question: "All certifications complete?", type: "boolean" }
+      ],
+      estimatedDays: 1,
+      category: "Application"
+    },
+    {
+      stepNumber: 17,
+      title: "Review Application with Tax Advisor",
+      description: "Full application review before submission. Check all numbers, narratives, and certifications.",
+      requiredDocs: ["Application review checklist"],
+      dependencies: [16],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "advisor_reviewed", question: "Tax advisor completed review?", type: "boolean" },
+        { id: "changes_needed", question: "Any changes recommended?", type: "text" },
+        { id: "ready_to_submit", question: "Application ready to submit?", type: "boolean" }
+      ],
+      estimatedDays: 3,
+      category: "Application"
+    },
+    {
+      stepNumber: 18,
+      title: "Submit Application Before Deadline",
+      description: "Submit completed application through calcompetes.ca.gov before window closes. Save confirmation.",
+      requiredDocs: ["Application submission confirmation", "PDF copy of submitted application"],
+      dependencies: [17],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "submitted", question: "Application submitted?", type: "boolean" },
+        { id: "submission_date", question: "Date/time submitted?", type: "date" },
+        { id: "confirmation_number", question: "Confirmation/reference number?", type: "text" }
+      ],
+      estimatedDays: 1,
+      category: "Application"
+    },
+
+    // ===== PHASE I REVIEW =====
+    {
+      stepNumber: 19,
+      title: "Await Phase I Results",
+      description: "GO-Biz calculates cost-benefit ratios and ranks applications. Top applicants advance to Phase II.",
+      requiredDocs: [],
+      dependencies: [18],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "phase1_result", question: "Phase I result (Advanced/Not Advanced)?", type: "text" },
+        { id: "notification_date", question: "Date notified of result?", type: "date" }
+      ],
+      estimatedDays: 30,
+      category: "Review"
+    },
+
+    // ===== PHASE II REVIEW (if advanced) =====
+    {
+      stepNumber: 20,
+      title: "Prepare Letters of Support",
+      description: "If advancing to Phase II, prepare letters of support from local officials, economic development agencies, partners.",
+      requiredDocs: ["Letters of support"],
+      dependencies: [19],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "letters_obtained", question: "How many letters of support obtained?", type: "number" },
+        { id: "letter_sources", question: "Sources of letters (Mayor, EDC, etc.)?", type: "text" }
+      ],
+      estimatedDays: 14,
+      category: "Phase II"
+    },
+    {
+      stepNumber: 21,
+      title: "Upload Supporting Documents",
+      description: "Upload letters of support and any additional documentation to the application portal.",
+      requiredDocs: ["Uploaded document confirmations"],
+      dependencies: [20],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "documents_uploaded", question: "All supporting documents uploaded?", type: "boolean" },
+        { id: "upload_date", question: "Date uploaded?", type: "date" }
+      ],
+      estimatedDays: 3,
+      category: "Phase II"
+    },
+    {
+      stepNumber: 22,
+      title: "Await Phase II Evaluation",
+      description: "GO-Biz evaluates 14 factors including job creation, compensation, strategic importance, regional impact, training opportunities.",
+      requiredDocs: [],
+      dependencies: [21],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "phase2_result", question: "Phase II result?", type: "text" },
+        { id: "selected_for_agreement", question: "Selected for agreement negotiation?", type: "boolean" }
+      ],
+      estimatedDays: 45,
+      category: "Phase II"
+    },
+
+    // ===== AGREEMENT NEGOTIATION =====
+    {
+      stepNumber: 23,
+      title: "Negotiate Agreement Terms with GO-Biz",
+      description: "Work with GO-Biz to establish 5-year milestones for FTEs, salaries, and investment. Agreement is binding.",
+      requiredDocs: ["Draft agreement", "Milestone schedule"],
+      dependencies: [22],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "year1_fte_milestone", question: "Year 1 FTE milestone?", type: "number" },
+        { id: "year1_investment_milestone", question: "Year 1 investment milestone ($)?", type: "number" },
+        { id: "year5_fte_milestone", question: "Year 5 cumulative FTE milestone?", type: "number" },
+        { id: "negotiations_complete", question: "Agreement terms finalized?", type: "boolean" }
+      ],
+      estimatedDays: 30,
+      category: "Agreement"
+    },
+    {
+      stepNumber: 24,
+      title: "Legal Review of Agreement",
+      description: "Have business attorney review agreement terms, obligations, and recapture provisions before signing.",
+      requiredDocs: ["Attorney review memo"],
+      dependencies: [23],
+      assigneeRole: "Attorney",
+      questions: [
+        { id: "attorney_reviewed", question: "Attorney completed review?", type: "boolean" },
+        { id: "concerns_raised", question: "Any concerns raised?", type: "text" },
+        { id: "approved_to_sign", question: "Approved to sign?", type: "boolean" }
+      ],
+      estimatedDays: 7,
+      category: "Agreement"
+    },
+    {
+      stepNumber: 25,
+      title: "Sign Tax Credit Agreement",
+      description: "Execute the California Competes Tax Credit agreement with GO-Biz.",
+      requiredDocs: ["Signed agreement copy"],
+      dependencies: [24],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "agreement_signed", question: "Agreement signed?", type: "boolean" },
+        { id: "agreement_date", question: "Agreement date?", type: "date" },
+        { id: "agreement_number", question: "Agreement/Contract number?", type: "text" }
+      ],
+      estimatedDays: 3,
+      category: "Agreement"
+    },
+
+    // ===== COMMITTEE APPROVAL =====
+    {
+      stepNumber: 26,
+      title: "Await Committee Approval",
+      description: "The California Competes Tax Credit Committee reviews and approves negotiated agreements.",
+      requiredDocs: [],
+      dependencies: [25],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "committee_approved", question: "Committee approved the agreement?", type: "boolean" },
+        { id: "approval_date", question: "Committee approval date?", type: "date" },
+        { id: "final_credit_amount", question: "Final approved credit amount ($)?", type: "number" }
+      ],
+      estimatedDays: 30,
+      category: "Approval"
+    },
+
+    // ===== ANNUAL COMPLIANCE (Years 1-5) =====
+    {
+      stepNumber: 27,
+      title: "Year 1 - Meet Milestones",
+      description: "Achieve Year 1 FTE, salary, and investment milestones as specified in agreement.",
+      requiredDocs: ["Payroll reports", "Investment documentation", "Capitalized cost schedules"],
+      dependencies: [26],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "y1_fte_achieved", question: "Year 1 FTE milestone achieved?", type: "boolean" },
+        { id: "y1_investment_achieved", question: "Year 1 investment milestone achieved?", type: "boolean" },
+        { id: "y1_salary_achieved", question: "Year 1 salary requirements met?", type: "boolean" }
+      ],
+      estimatedDays: 365,
+      category: "Compliance"
+    },
+    {
+      stepNumber: 28,
+      title: "Year 1 - File Annual Compliance Report",
+      description: "Submit annual report to GO-Biz documenting milestone achievement. Required to claim credit.",
+      requiredDocs: ["GO-Biz annual compliance report"],
+      dependencies: [27],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "y1_report_filed", question: "Year 1 report filed with GO-Biz?", type: "boolean" },
+        { id: "y1_report_date", question: "Date filed?", type: "date" }
+      ],
+      estimatedDays: 30,
+      category: "Compliance"
+    },
+    {
+      stepNumber: 29,
+      title: "Year 1 - Claim Credit on Tax Return",
+      description: "File FTB Form 3531 with California tax return to claim earned credit for Year 1.",
+      requiredDocs: ["FTB 3531", "California tax return"],
+      dependencies: [28],
+      assigneeRole: "Tax Advisor",
+      questions: [
+        { id: "y1_3531_filed", question: "FTB 3531 filed for Year 1?", type: "boolean" },
+        { id: "y1_credit_claimed", question: "Credit amount claimed ($)?", type: "number" },
+        { id: "y1_return_date", question: "Tax return filing date?", type: "date" }
+      ],
+      estimatedDays: 90,
+      category: "Tax Filing"
+    },
+    {
+      stepNumber: 30,
+      title: "Maintain Compliance Records",
+      description: "Maintain complete records for potential FTB review: payroll reports, invoices, contracts, deeds, leases, depreciation schedules, general ledger.",
+      requiredDocs: ["Organized compliance documentation"],
+      dependencies: [29],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "records_organized", question: "All compliance records organized and accessible?", type: "boolean" },
+        { id: "storage_location", question: "Where are records stored?", type: "text" }
+      ],
+      estimatedDays: 14,
+      category: "Compliance"
+    },
+    {
+      stepNumber: 31,
+      title: "Complete 5-Year Agreement",
+      description: "Successfully complete all 5 years of milestones and annual reporting. Maintain post-achievement employment for 3 additional years to avoid recapture.",
+      requiredDocs: ["All 5 years annual reports", "All 5 years FTB 3531 forms"],
+      dependencies: [30],
+      assigneeRole: "Business Owner",
+      questions: [
+        { id: "all_years_complete", question: "All 5 years of milestones achieved?", type: "boolean" },
+        { id: "total_credit_received", question: "Total credit received over 5 years ($)?", type: "number" },
+        { id: "compliance_notes", question: "Any compliance issues during program?", type: "text" }
+      ],
+      estimatedDays: 1825,
+      category: "Final Review"
+    }
+  ];
+
+  const result = createWorkflowTemplate(
+    'CalCompete Tax Credit Application',
+    'California Competes Tax Credit application workflow. Covers pre-application analysis, online application, Phase I/II review, agreement negotiation, committee approval, and 5-year compliance. Based on GO-Biz requirements.',
+    steps
+  );
+
+  SpreadsheetApp.getUi().alert(
+    'Template Installed',
+    `CalCompete Tax Credit Application template installed successfully!\n\n` +
+    `Template ID: ${result.templateId}\n` +
+    `Steps: ${result.stepCount}\n\n` +
+    `Go to Workflow > Start Workflow to begin a new workflow for a client.`,
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+
+  return result;
+}
