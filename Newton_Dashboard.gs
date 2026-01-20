@@ -1244,6 +1244,115 @@ function getDashboardHTML_() {
       font-size: 48px;
       margin-bottom: 15px;
     }
+
+    /* ========== START WORKFLOW BUTTON ========== */
+    .start-workflow-btn {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .start-workflow-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+    }
+
+    /* ========== WORKFLOW MODAL ========== */
+    .workflow-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1001;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .workflow-modal.active {
+      display: flex;
+    }
+
+    .workflow-modal-content {
+      background: #1e2a3a;
+      border-radius: 16px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .workflow-modal-content h3 {
+      margin-bottom: 20px;
+      color: #28a745;
+      font-size: 20px;
+    }
+
+    .workflow-modal-content label {
+      display: block;
+      margin-bottom: 5px;
+      color: #888;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-top: 15px;
+    }
+
+    .workflow-modal-content input,
+    .workflow-modal-content select {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .workflow-modal-content .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .workflow-modal-content button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .workflow-modal-content .btn-cancel {
+      background: rgba(255,255,255,0.1);
+      color: #888;
+    }
+
+    .workflow-modal-content .btn-start {
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+      color: white;
+    }
+
+    .workflow-modal-content .error-msg {
+      color: #dc3545;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .workflow-modal-content .no-templates {
+      color: #888;
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -1386,6 +1495,7 @@ function getDashboardHTML_() {
     <div class="workflow-section" id="workflowSection">
       <div class="section-header">
         <h2 class="section-title">Active Workflows</h2>
+        <button class="start-workflow-btn" onclick="openStartWorkflowModal()">+ Start New Workflow</button>
       </div>
 
       <div class="workflow-summary">
@@ -1445,6 +1555,32 @@ function getDashboardHTML_() {
     </div>
     <div class="drawer-content" id="drawerContent">
       <!-- Drawer content will be inserted here -->
+    </div>
+  </div>
+
+  <!-- Start Workflow Modal -->
+  <div class="workflow-modal" id="startWorkflowModal">
+    <div class="workflow-modal-content">
+      <h3>&#128203; Start New Workflow</h3>
+      <div id="workflowFormContent">
+        <label>Select Template</label>
+        <select id="workflowTemplateSelect">
+          <option value="">Loading templates...</option>
+        </select>
+
+        <label>Client Name</label>
+        <input type="text" id="workflowClientName" placeholder="e.g., John Smith">
+
+        <label>Primary Assignee Email (optional)</label>
+        <input type="text" id="workflowAssignee" placeholder="e.g., john@example.com">
+
+        <div id="workflowError" class="error-msg"></div>
+
+        <div class="btn-row">
+          <button class="btn-cancel" onclick="closeStartWorkflowModal()">Cancel</button>
+          <button class="btn-start" onclick="submitStartWorkflow()">Start Workflow</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1980,6 +2116,92 @@ function getDashboardHTML_() {
           </div>
         \`;
       }).join('');
+    }
+
+    // ========== START WORKFLOW MODAL ==========
+    let templatesLoaded = false;
+
+    function openStartWorkflowModal() {
+      const modal = document.getElementById('startWorkflowModal');
+      modal.classList.add('active');
+
+      // Load templates if not already loaded
+      if (!templatesLoaded) {
+        loadWorkflowTemplates();
+      }
+    }
+
+    function closeStartWorkflowModal() {
+      document.getElementById('startWorkflowModal').classList.remove('active');
+      document.getElementById('workflowError').textContent = '';
+      document.getElementById('workflowClientName').value = '';
+      document.getElementById('workflowAssignee').value = '';
+    }
+
+    function loadWorkflowTemplates() {
+      const select = document.getElementById('workflowTemplateSelect');
+      select.innerHTML = '<option value="">Loading templates...</option>';
+
+      google.script.run
+        .withSuccessHandler(function(templates) {
+          templatesLoaded = true;
+          if (!templates || templates.length === 0) {
+            select.innerHTML = '<option value="">No templates available</option>';
+            document.getElementById('workflowFormContent').innerHTML =
+              '<div class="no-templates">' +
+              '<p>No workflow templates found.</p>' +
+              '<p style="margin-top: 10px; font-size: 12px;">Install a template from the spreadsheet menu:<br>Workflow > Install CA Residency Template</p>' +
+              '<div class="btn-row" style="margin-top: 20px;"><button class="btn-cancel" onclick="closeStartWorkflowModal()">Close</button></div>' +
+              '</div>';
+            return;
+          }
+
+          select.innerHTML = '<option value="">Select a template...</option>' +
+            templates.map(t => '<option value="' + t.name + '">' + t.name + ' (' + t.stepCount + ' steps)</option>').join('');
+        })
+        .withFailureHandler(function(err) {
+          select.innerHTML = '<option value="">Error loading templates</option>';
+          document.getElementById('workflowError').textContent = 'Failed to load templates: ' + err.message;
+        })
+        .listWorkflowTemplatesForDashboard();
+    }
+
+    function submitStartWorkflow() {
+      const templateName = document.getElementById('workflowTemplateSelect').value;
+      const clientName = document.getElementById('workflowClientName').value.trim();
+      const assignee = document.getElementById('workflowAssignee').value.trim();
+      const errorEl = document.getElementById('workflowError');
+
+      // Validate
+      if (!templateName) {
+        errorEl.textContent = 'Please select a template.';
+        return;
+      }
+      if (!clientName) {
+        errorEl.textContent = 'Please enter a client name.';
+        return;
+      }
+
+      errorEl.textContent = '';
+
+      // Build assignees object
+      const assignees = {};
+      if (assignee) {
+        assignees['primary'] = assignee;
+      }
+
+      // Submit
+      google.script.run
+        .withSuccessHandler(function(result) {
+          closeStartWorkflowModal();
+          alert('Workflow started successfully!\\n\\nWorkflow ID: ' + result.workflowId + '\\nClient: ' + clientName);
+          // Refresh the page to show the new workflow
+          setTimeout(() => window.location.reload(), 500);
+        })
+        .withFailureHandler(function(err) {
+          errorEl.textContent = 'Error: ' + err.message;
+        })
+        .startWorkflow(templateName, clientName, assignees);
     }
 
     // ========== INITIALIZATION ==========

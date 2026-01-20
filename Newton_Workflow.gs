@@ -692,6 +692,14 @@ function getWorkflowDashboardData() {
   };
 }
 
+/**
+ * List workflow templates for dashboard (wrapper for google.script.run)
+ * Returns simplified template list for dropdown
+ */
+function listWorkflowTemplatesForDashboard() {
+  return listWorkflowTemplates();
+}
+
 // ============================================================================
 // MENU FUNCTIONS
 // ============================================================================
