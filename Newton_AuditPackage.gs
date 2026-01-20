@@ -500,7 +500,7 @@ function generateAuditPackage(startDate, endDate, framework) {
     }
   };
 
-  // Generate executive summary
+  // Generate executive summary (uses renamed function to avoid collision with Newton_GapAnalysis.gs)
   pkg.executiveSummary = generateExecutiveSummary(pkg);
 
   // Hash the package for integrity
@@ -517,51 +517,64 @@ function generateAuditPackage(startDate, endDate, framework) {
 }
 
 function generateExecutiveSummary(pkg) {
+  // Defensive null checks for all nested properties
+  const riskRegister = pkg.riskRegister || { totalRisks: 0, bySeverity: { critical: 0, high: 0, medium: 0, low: 0 } };
+  const controlEffectiveness = pkg.controlEffectiveness || { summary: { effectivenessRate: 0 }, trend: 'UNKNOWN' };
+  const incidentLog = pkg.incidentLog || { openIncidents: 0, notifiableIncidents: 0 };
+
   return {
     period: `${pkg.metadata.period.startDate} to ${pkg.metadata.period.endDate}`,
     keyMetrics: {
-      totalRisks: pkg.riskRegister.totalRisks,
-      criticalRisks: pkg.riskRegister.bySeverity.critical,
-      controlEffectiveness: `${pkg.controlEffectiveness.summary.effectivenessRate}%`,
-      controlTrend: pkg.controlEffectiveness.trend,
-      openIncidents: pkg.incidentLog.openIncidents,
-      notifiableIncidents: pkg.incidentLog.notifiableIncidents
+      totalRisks: riskRegister.totalRisks || 0,
+      criticalRisks: (riskRegister.bySeverity && riskRegister.bySeverity.critical) || 0,
+      controlEffectiveness: `${(controlEffectiveness.summary && controlEffectiveness.summary.effectivenessRate) || 0}%`,
+      controlTrend: controlEffectiveness.trend || 'UNKNOWN',
+      openIncidents: incidentLog.openIncidents || 0,
+      notifiableIncidents: incidentLog.notifiableIncidents || 0
     },
     riskPosture: determineOverallRiskPosture(pkg),
-    recommendations: generateRecommendations(pkg)
+    recommendations: generateAuditPackageRecommendations(pkg)
   };
 }
 
 function determineOverallRiskPosture(pkg) {
-  const criticalRisks = pkg.riskRegister.bySeverity.critical;
-  const openIncidents = pkg.incidentLog.openIncidents;
-  const effectiveness = pkg.controlEffectiveness.summary.effectivenessRate;
+  // Defensive null checks
+  const riskRegister = pkg.riskRegister || { bySeverity: { critical: 0, high: 0 } };
+  const bySeverity = riskRegister.bySeverity || { critical: 0, high: 0 };
+  const incidentLog = pkg.incidentLog || { openIncidents: 0 };
+  const controlEffectiveness = pkg.controlEffectiveness || { summary: { effectivenessRate: 0 } };
+  const summary = controlEffectiveness.summary || { effectivenessRate: 0 };
+
+  const criticalRisks = bySeverity.critical || 0;
+  const openIncidents = incidentLog.openIncidents || 0;
+  const effectiveness = summary.effectivenessRate || 0;
 
   if (criticalRisks > 0 || openIncidents > 5 || effectiveness < 50) {
     return 'HIGH_RISK';
   }
-  if (pkg.riskRegister.bySeverity.high > 3 || effectiveness < 70) {
+  if ((bySeverity.high || 0) > 3 || effectiveness < 70) {
     return 'MODERATE_RISK';
   }
   return 'LOW_RISK';
 }
 
-function generateRecommendations(pkg) {
+function generateAuditPackageRecommendations(pkg) {
   const recs = [];
 
-  if (pkg.riskRegister.bySeverity.critical > 0) {
+  // Null checks for all nested properties
+  if (pkg && pkg.riskRegister && pkg.riskRegister.bySeverity && pkg.riskRegister.bySeverity.critical > 0) {
     recs.push('URGENT: Address critical risks immediately');
   }
 
-  if (pkg.controlEffectiveness.trend === 'DECLINING') {
+  if (pkg && pkg.controlEffectiveness && pkg.controlEffectiveness.trend === 'DECLINING') {
     recs.push('Review and strengthen control processes');
   }
 
-  if (pkg.incidentLog.notifiableIncidents > 0) {
+  if (pkg && pkg.incidentLog && pkg.incidentLog.notifiableIncidents > 0) {
     recs.push('Verify regulatory notification requirements for incidents');
   }
 
-  if (pkg.regulatoryCoverage && pkg.regulatoryCoverage.coveragePercent < 50) {
+  if (pkg && pkg.regulatoryCoverage && pkg.regulatoryCoverage.coveragePercent < 50) {
     recs.push(`Improve ${pkg.metadata.framework} coverage (currently ${pkg.regulatoryCoverage.coveragePercent}%)`);
   }
 
