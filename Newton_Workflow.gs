@@ -1941,3 +1941,353 @@ function installCalCompeteTemplate() {
 
   return result;
 }
+
+// ============================================================================
+// CALCOMPETE NARRATIVE REVIEW
+// ============================================================================
+
+/**
+ * Review a CalCompete project narrative against evaluation criteria
+ * @param {string} narrativeText - The draft narrative to review
+ * @param {string} industry - Industry sector for context
+ * @param {string} workflowId - Optional linked workflow ID
+ * @returns {Object} - Review results with scores, strengths, gaps, suggestions
+ */
+function reviewCalCompeteNarrative(narrativeText, industry, workflowId) {
+  if (!narrativeText || narrativeText.trim().length < 50) {
+    throw new Error('Narrative text is too short. Please provide at least 50 characters.');
+  }
+
+  // Calculate hash of the draft for version tracking
+  const draftHash = calculateTextHash_(narrativeText);
+
+  // Build the analysis prompt
+  const prompt = buildNarrativeReviewPrompt_(narrativeText, industry);
+
+  // Call AI Proxy
+  let aiResponse;
+  try {
+    aiResponse = callAIProxyForNarrativeReview_(prompt);
+  } catch (e) {
+    Logger.log('AI Proxy error: ' + e.message);
+    throw new Error('Failed to analyze narrative: ' + e.message);
+  }
+
+  // Parse and structure the response
+  const reviewResult = parseNarrativeReviewResponse_(aiResponse, draftHash);
+
+  // Store the review
+  storeNarrativeReview_(reviewResult, workflowId, narrativeText);
+
+  // Log to audit ledger
+  logNarrativeReview_(reviewResult, workflowId, industry);
+
+  return reviewResult;
+}
+
+/**
+ * Build the prompt for narrative review
+ */
+function buildNarrativeReviewPrompt_(narrativeText, industry) {
+  const industryContext = industry ? `The business is in the ${industry.replace(/_/g, ' ')} sector.` : '';
+
+  return `You are an expert reviewer for California Competes Tax Credit (CalCompete) applications. Analyze the following project narrative against the official GO-Biz evaluation criteria.
+
+${industryContext}
+
+PROJECT NARRATIVE:
+"""
+${narrativeText}
+"""
+
+EVALUATION CRITERIA (from GO-Biz):
+1. JOB_CREATION: Clarity about number of full-time jobs, timeline, and job quality
+2. CA_BENEFIT: Strategic importance to California, economic impact, regional benefit
+3. INVESTMENT_SPECIFICITY: Clear details about capital investment amounts and types
+4. COMPETITIVE_NECESSITY: Why California vs other states, retention/attraction rationale
+5. TIMELINE_CREDIBILITY: Realistic and specific timeline for jobs and investment
+
+RESPOND IN THIS EXACT JSON FORMAT:
+{
+  "scores": {
+    "job_creation": <1-10>,
+    "ca_benefit": <1-10>,
+    "investment_specificity": <1-10>,
+    "competitive_necessity": <1-10>,
+    "timeline_credibility": <1-10>,
+    "overall": <1-10>
+  },
+  "strengths": [
+    "Specific strength 1",
+    "Specific strength 2"
+  ],
+  "gaps": [
+    "Specific gap or missing element 1",
+    "Specific gap 2"
+  ],
+  "suggestions": [
+    "Actionable suggestion to improve 1",
+    "Actionable suggestion 2"
+  ],
+  "summary": "One sentence overall assessment"
+}
+
+Be specific and actionable. Reference actual text from the narrative when possible.`;
+}
+
+/**
+ * Call AI Proxy for narrative review
+ */
+function callAIProxyForNarrativeReview_(prompt) {
+  // Check if proxyAIRequest exists (from Code.gs)
+  if (typeof proxyAIRequest === 'function') {
+    const response = proxyAIRequest('narrative_review', prompt, {
+      model: 'claude-3-haiku-20240307',
+      max_tokens: 1500,
+      temperature: 0.3
+    });
+    return response.content || response.text || JSON.stringify(response);
+  }
+
+  // Fallback: Direct API call if proxy not available
+  const apiKey = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
+  if (!apiKey) {
+    throw new Error('AI API key not configured. Set ANTHROPIC_API_KEY in script properties.');
+  }
+
+  const payload = {
+    model: 'claude-3-haiku-20240307',
+    max_tokens: 1500,
+    messages: [
+      { role: 'user', content: prompt }
+    ]
+  };
+
+  const options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: {
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01'
+    },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', options);
+  const result = JSON.parse(response.getContentText());
+
+  if (result.error) {
+    throw new Error(result.error.message);
+  }
+
+  return result.content[0].text;
+}
+
+/**
+ * Parse the AI response into structured format
+ */
+function parseNarrativeReviewResponse_(responseText, draftHash) {
+  try {
+    // Extract JSON from response (handle markdown code blocks)
+    let jsonStr = responseText;
+    const jsonMatch = responseText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) {
+      jsonStr = jsonMatch[1];
+    }
+
+    // Try to find JSON object in text
+    const jsonStart = jsonStr.indexOf('{');
+    const jsonEnd = jsonStr.lastIndexOf('}');
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      jsonStr = jsonStr.substring(jsonStart, jsonEnd + 1);
+    }
+
+    const parsed = JSON.parse(jsonStr);
+
+    return {
+      draftHash: draftHash,
+      reviewedAt: new Date().toISOString(),
+      scores: parsed.scores || {
+        job_creation: 5,
+        ca_benefit: 5,
+        investment_specificity: 5,
+        competitive_necessity: 5,
+        timeline_credibility: 5,
+        overall: 5
+      },
+      strengths: parsed.strengths || [],
+      gaps: parsed.gaps || [],
+      suggestions: parsed.suggestions || [],
+      summary: parsed.summary || 'Review completed.',
+      version: 1
+    };
+  } catch (e) {
+    Logger.log('Failed to parse AI response: ' + e.message);
+    Logger.log('Response was: ' + responseText.substring(0, 500));
+
+    // Return a fallback structure
+    return {
+      draftHash: draftHash,
+      reviewedAt: new Date().toISOString(),
+      scores: {
+        job_creation: 5,
+        ca_benefit: 5,
+        investment_specificity: 5,
+        competitive_necessity: 5,
+        timeline_credibility: 5,
+        overall: 5
+      },
+      strengths: ['Unable to parse detailed feedback'],
+      gaps: ['Review parsing failed - please try again'],
+      suggestions: ['Resubmit the narrative for analysis'],
+      summary: 'Review completed but parsing failed. Raw response logged.',
+      version: 1,
+      parseError: true
+    };
+  }
+}
+
+/**
+ * Store narrative review in workflow or standalone sheet
+ */
+function storeNarrativeReview_(reviewResult, workflowId, narrativeText) {
+  // If linked to workflow, store in workflow proof
+  if (workflowId) {
+    try {
+      const workflow = getWorkflowInstance_(workflowId);
+      if (workflow) {
+        // Find step 12 (Project Description) and add review to its data
+        const step12 = workflow.stepsStatus.find(s => s.stepNumber === 12);
+        if (step12) {
+          step12.narrativeReviews = step12.narrativeReviews || [];
+          step12.narrativeReviews.push({
+            ...reviewResult,
+            textPreview: narrativeText.substring(0, 200) + '...'
+          });
+
+          // Keep only last 5 reviews
+          if (step12.narrativeReviews.length > 5) {
+            step12.narrativeReviews = step12.narrativeReviews.slice(-5);
+          }
+
+          // Save back
+          const { instancesSheet } = initWorkflowSheets_();
+          saveWorkflowInstance_(workflow, instancesSheet);
+        }
+      }
+    } catch (e) {
+      Logger.log('Failed to store review in workflow: ' + e.message);
+    }
+  }
+
+  // Also store in Narrative_Reviews sheet for audit trail
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let reviewSheet = ss.getSheetByName('Narrative_Reviews');
+
+  if (!reviewSheet) {
+    reviewSheet = ss.insertSheet('Narrative_Reviews');
+    reviewSheet.appendRow([
+      'Review_ID', 'Timestamp', 'Draft_Hash', 'Workflow_ID',
+      'Overall_Score', 'Scores_JSON', 'Strengths', 'Gaps', 'Suggestions', 'Summary'
+    ]);
+    reviewSheet.getRange(1, 1, 1, 10).setFontWeight('bold');
+    reviewSheet.setFrozenRows(1);
+  }
+
+  const reviewId = Utilities.getUuid().substring(0, 8);
+  reviewSheet.appendRow([
+    reviewId,
+    reviewResult.reviewedAt,
+    reviewResult.draftHash,
+    workflowId || '',
+    reviewResult.scores.overall,
+    JSON.stringify(reviewResult.scores),
+    reviewResult.strengths.join('; '),
+    reviewResult.gaps.join('; '),
+    reviewResult.suggestions.join('; '),
+    reviewResult.summary
+  ]);
+
+  reviewResult.reviewId = reviewId;
+  return reviewResult;
+}
+
+/**
+ * Log narrative review to audit ledger
+ */
+function logNarrativeReview_(reviewResult, workflowId, industry) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ledger = ss.getSheetByName('Audit_Ledger');
+
+  if (!ledger) return;
+
+  const headers = ledger.getRange(1, 1, 1, ledger.getLastColumn()).getValues()[0];
+  const newRow = new Array(headers.length).fill('');
+
+  const colMap = {
+    'UUID': Utilities.getUuid(),
+    'Timestamp': new Date().toISOString(),
+    'Event_Type': 'NARRATIVE_REVIEW',
+    'Event Type': 'NARRATIVE_REVIEW',
+    'Actor': Session.getActiveUser().getEmail() || 'Dashboard',
+    'Action': 'CalCompete narrative analyzed',
+    'Target': workflowId || 'Standalone',
+    'Details': JSON.stringify({
+      draftHash: reviewResult.draftHash,
+      overallScore: reviewResult.scores.overall,
+      industry: industry,
+      reviewId: reviewResult.reviewId
+    }),
+    'Signal': 'AI_REVIEW'
+  };
+
+  headers.forEach((header, idx) => {
+    if (colMap[header] !== undefined) {
+      newRow[idx] = colMap[header];
+    }
+  });
+
+  ledger.appendRow(newRow);
+}
+
+/**
+ * Calculate SHA-256 hash of text
+ */
+function calculateTextHash_(text) {
+  const hash = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, text);
+  return hash.map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('').substring(0, 16);
+}
+
+/**
+ * Get narrative review history for a workflow
+ */
+function getNarrativeReviewHistory(workflowId) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const reviewSheet = ss.getSheetByName('Narrative_Reviews');
+
+  if (!reviewSheet || reviewSheet.getLastRow() < 2) {
+    return [];
+  }
+
+  const data = reviewSheet.getDataRange().getValues();
+  const headers = data[0];
+  const workflowIdCol = headers.indexOf('Workflow_ID');
+  const timestampCol = headers.indexOf('Timestamp');
+  const overallCol = headers.indexOf('Overall_Score');
+  const hashCol = headers.indexOf('Draft_Hash');
+
+  const history = [];
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][workflowIdCol] === workflowId || (!workflowId && !data[i][workflowIdCol])) {
+      history.push({
+        timestamp: data[i][timestampCol],
+        overallScore: data[i][overallCol],
+        draftHash: data[i][hashCol]
+      });
+    }
+  }
+
+  // Return most recent 10
+  return history.slice(-10).reverse();
+}

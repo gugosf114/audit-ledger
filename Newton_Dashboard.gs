@@ -1353,6 +1353,470 @@ function getDashboardHTML_() {
       text-align: center;
       padding: 20px;
     }
+
+    /* ========== NARRATIVE REVIEW SECTION ========== */
+    .narrative-review-section {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .narrative-review-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .narrative-review-card h3 {
+      color: #fff;
+      font-size: 18px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .narrative-review-card .subtitle {
+      color: #888;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .narrative-textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 15px;
+    }
+
+    .narrative-textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .narrative-controls {
+      display: flex;
+      gap: 15px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .narrative-controls .control-group {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .narrative-controls label {
+      display: block;
+      color: #888;
+      font-size: 11px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .narrative-controls select {
+      width: 100%;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .review-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      padding: 10px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+
+    .review-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .review-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .review-results {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .review-results.active {
+      display: block;
+    }
+
+    .review-results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .review-results-header h4 {
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .review-hash {
+      font-family: monospace;
+      font-size: 10px;
+      color: #666;
+      background: rgba(255,255,255,0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .review-score {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .score-item {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .score-item .score-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .score-item .score-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    .score-item.good .score-value { color: #28a745; }
+    .score-item.medium .score-value { color: #ffc107; }
+    .score-item.poor .score-value { color: #dc3545; }
+
+    .review-category {
+      margin-bottom: 20px;
+    }
+
+    .review-category h5 {
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .review-category h5.strengths { color: #28a745; }
+    .review-category h5.gaps { color: #dc3545; }
+    .review-category h5.suggestions { color: #ffc107; }
+
+    .review-category ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .review-category li {
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #e0e0e0;
+      border-left: 3px solid transparent;
+    }
+
+    .review-category.strengths li { border-left-color: #28a745; }
+    .review-category.gaps li { border-left-color: #dc3545; }
+    .review-category.suggestions li { border-left-color: #ffc107; }
+
+    .review-loading {
+      text-align: center;
+      padding: 30px;
+      color: #888;
+    }
+
+    .review-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .review-error {
+      color: #dc3545;
+      background: rgba(220, 53, 69, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+
+    .review-history {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .review-history h5 {
+      color: #888;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .history-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 12px;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item .history-date {
+      color: #888;
+    }
+
+    .history-item .history-score {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    /* Additional review result styles */
+    .review-results.visible {
+      display: block;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .loading-spinner.large {
+      width: 40px;
+      height: 40px;
+      border-width: 3px;
+      margin: 0 auto 15px;
+    }
+
+    .review-loading {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .review-loading p {
+      margin: 10px 0 0;
+      color: #888;
+    }
+
+    .review-loading .loading-hint {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .review-results-content {
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .review-score-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+      padding: 20px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+    }
+
+    .review-score-section .review-score {
+      display: flex;
+      align-items: baseline;
+      margin: 0;
+    }
+
+    .review-score-section .review-score .score-value {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .review-score-section .review-score .score-label {
+      font-size: 18px;
+      color: #888;
+      margin-left: 4px;
+    }
+
+    .review-score.high .score-value { color: #28a745; }
+    .review-score.medium .score-value { color: #ffc107; }
+    .review-score.low .score-value { color: #dc3545; }
+
+    .score-description {
+      flex: 1;
+      font-size: 14px;
+      color: #aaa;
+      line-height: 1.5;
+    }
+
+    .review-details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .review-details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .review-detail-card {
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      padding: 15px;
+    }
+
+    .review-detail-card h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .review-detail-card .card-icon {
+      font-size: 14px;
+    }
+
+    .review-detail-card.strengths h4 { color: #28a745; }
+    .review-detail-card.gaps h4 { color: #dc3545; }
+    .review-detail-card.suggestions h4 { color: #ffc107; }
+
+    .review-detail-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .review-detail-card li {
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: #e0e0e0;
+      line-height: 1.4;
+    }
+
+    .review-detail-card li:last-child {
+      margin-bottom: 0;
+    }
+
+    .review-detail-card li.empty {
+      color: #666;
+      font-style: italic;
+    }
+
+    .review-detail-card.strengths li { border-left: 3px solid #28a745; }
+    .review-detail-card.gaps li { border-left: 3px solid #dc3545; }
+    .review-detail-card.suggestions li { border-left: 3px solid #ffc107; }
+
+    .review-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 11px;
+      color: #666;
+    }
+
+    .review-timestamp {
+      color: #888;
+    }
+
+    .review-placeholder {
+      text-align: center;
+      padding: 30px 20px;
+      color: #666;
+    }
+
+    .review-placeholder .placeholder-icon {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 10px;
+      opacity: 0.5;
+    }
+
+    .review-error {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(220, 53, 69, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .review-error .error-icon {
+      font-size: 20px;
+      color: #dc3545;
+    }
+
+    .review-error .error-message {
+      color: #ff6b6b;
+      font-size: 13px;
+    }
   </style>
 </head>
 <body>
@@ -1515,6 +1979,89 @@ function getDashboardHTML_() {
 
       <div class="workflow-list" id="workflowList">
         <!-- Workflow cards will be inserted here -->
+      </div>
+    </div>
+
+    <!-- Narrative Review Section -->
+    <div class="narrative-review-section" id="narrativeReviewSection">
+      <div class="section-header">
+        <h2 class="section-title">CalCompete Narrative Review</h2>
+      </div>
+
+      <div class="narrative-review-card">
+        <h3>&#128221; AI-Powered Narrative Analysis</h3>
+        <p class="subtitle">Paste your project description draft to get feedback against CalCompete evaluation criteria.</p>
+
+        <textarea class="narrative-textarea" id="narrativeText" placeholder="Paste your CalCompete project narrative here...
+
+Example: Our company plans to expand manufacturing operations in California, creating 150 new full-time jobs over 5 years. The project involves a $12M investment in new equipment and facilities in Sacramento County..."></textarea>
+
+        <div class="narrative-controls">
+          <div class="control-group">
+            <label>Industry Sector</label>
+            <select id="narrativeIndustry">
+              <option value="">Select industry...</option>
+              <option value="manufacturing">Manufacturing</option>
+              <option value="technology">Technology / Software</option>
+              <option value="biotech">Biotech / Life Sciences</option>
+              <option value="cleantech">Clean Tech / Renewable Energy</option>
+              <option value="aerospace">Aerospace / Defense</option>
+              <option value="food_ag">Food & Agriculture</option>
+              <option value="logistics">Logistics / Distribution</option>
+              <option value="healthcare">Healthcare Services</option>
+              <option value="financial">Financial Services</option>
+              <option value="entertainment">Entertainment / Media</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Linked Workflow (optional)</label>
+            <select id="narrativeWorkflow">
+              <option value="">None - standalone review</option>
+            </select>
+          </div>
+          <button class="review-btn" id="reviewBtn" onclick="submitNarrativeReview()">Analyze Narrative</button>
+        </div>
+
+        <div id="reviewLoading" class="review-loading" style="display: none;">
+          <div class="spinner"></div>
+          <p>Analyzing narrative against CalCompete criteria...</p>
+        </div>
+
+        <div id="reviewError" class="review-error" style="display: none;"></div>
+
+        <div class="review-results" id="reviewResults">
+          <div class="review-results-header">
+            <h4>Analysis Results</h4>
+            <span class="review-hash" id="reviewHash">Hash: ---</span>
+          </div>
+
+          <div class="review-score" id="reviewScores">
+            <!-- Score items will be inserted here -->
+          </div>
+
+          <div class="review-category strengths" id="reviewStrengths">
+            <h5 class="strengths">&#10003; Strengths</h5>
+            <ul></ul>
+          </div>
+
+          <div class="review-category gaps" id="reviewGaps">
+            <h5 class="gaps">&#10007; Gaps</h5>
+            <ul></ul>
+          </div>
+
+          <div class="review-category suggestions" id="reviewSuggestions">
+            <h5 class="suggestions">&#128161; Suggestions</h5>
+            <ul></ul>
+          </div>
+
+          <div class="review-history" id="reviewHistory">
+            <h5>Review History</h5>
+            <div id="historyList">
+              <!-- History items will be inserted here -->
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2204,12 +2751,203 @@ function getDashboardHTML_() {
         .startWorkflow(templateName, clientName, assignees);
     }
 
+    // ========== NARRATIVE REVIEW ==========
+    let narrativeReviewLoading = false;
+
+    function loadCalCompeteWorkflows() {
+      const select = document.getElementById('narrativeWorkflow');
+      if (!select) return;
+
+      select.innerHTML = '<option value="">Loading workflows...</option>';
+
+      google.script.run
+        .withSuccessHandler(function(workflows) {
+          if (!workflows || workflows.length === 0) {
+            select.innerHTML = '<option value="">(Optional) No CalCompete workflows found</option>';
+            return;
+          }
+
+          select.innerHTML = '<option value="">(Optional) Link to workflow...</option>' +
+            workflows
+              .filter(w => w.templateName && w.templateName.includes('CalCompete'))
+              .map(w => '<option value="' + w.workflowId + '">' + w.clientName + ' - ' + w.percentage + '% complete</option>')
+              .join('');
+
+          // If no CalCompete workflows, show all
+          if (select.options.length === 1) {
+            select.innerHTML = '<option value="">(Optional) Link to workflow...</option>' +
+              workflows.map(w => '<option value="' + w.workflowId + '">' + w.clientName + ' (' + w.templateName + ')</option>').join('');
+          }
+        })
+        .withFailureHandler(function(err) {
+          select.innerHTML = '<option value="">(Optional) Could not load workflows</option>';
+          console.error('Failed to load workflows:', err);
+        })
+        .getDashboardData();
+    }
+
+    function submitNarrativeReview() {
+      if (narrativeReviewLoading) return;
+
+      const narrativeText = document.getElementById('narrativeText').value.trim();
+      const industry = document.getElementById('narrativeIndustry').value;
+      const workflowId = document.getElementById('narrativeWorkflow').value;
+      const resultsEl = document.getElementById('reviewResults');
+      const btn = document.querySelector('.review-btn');
+
+      // Validation
+      if (!narrativeText) {
+        showReviewError('Please paste your project narrative text.');
+        return;
+      }
+
+      if (narrativeText.length < 50) {
+        showReviewError('Narrative text is too short. Please provide at least 50 characters for meaningful analysis.');
+        return;
+      }
+
+      // Show loading state
+      narrativeReviewLoading = true;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
+      resultsEl.classList.add('visible');
+      resultsEl.innerHTML = `
+        <div class="review-loading">
+          <div class="loading-spinner large"></div>
+          <p>Analyzing your narrative against CalCompete criteria...</p>
+          <p class="loading-hint">This may take 10-30 seconds</p>
+        </div>
+      `;
+
+      // Call backend
+      google.script.run
+        .withSuccessHandler(function(result) {
+          narrativeReviewLoading = false;
+          btn.disabled = false;
+          btn.textContent = 'Analyze Narrative';
+          displayReviewResults(result);
+        })
+        .withFailureHandler(function(err) {
+          narrativeReviewLoading = false;
+          btn.disabled = false;
+          btn.textContent = 'Analyze Narrative';
+          showReviewError('Analysis failed: ' + err.message);
+        })
+        .reviewCalCompeteNarrative(narrativeText, industry, workflowId || null);
+    }
+
+    function displayReviewResults(result) {
+      const resultsEl = document.getElementById('reviewResults');
+
+      if (!result) {
+        showReviewError('No results returned from analysis.');
+        return;
+      }
+
+      // Build score display
+      const scoreClass = result.overallScore >= 70 ? 'high' : result.overallScore >= 40 ? 'medium' : 'low';
+
+      // Build strengths list
+      const strengthsHtml = (result.strengths && result.strengths.length > 0)
+        ? result.strengths.map(s => '<li>' + escapeHtml(s) + '</li>').join('')
+        : '<li class="empty">No major strengths identified yet</li>';
+
+      // Build gaps list
+      const gapsHtml = (result.gaps && result.gaps.length > 0)
+        ? result.gaps.map(g => '<li>' + escapeHtml(g) + '</li>').join('')
+        : '<li class="empty">No critical gaps found</li>';
+
+      // Build suggestions list
+      const suggestionsHtml = (result.suggestions && result.suggestions.length > 0)
+        ? result.suggestions.map(s => '<li>' + escapeHtml(s) + '</li>').join('')
+        : '<li class="empty">No additional suggestions</li>';
+
+      resultsEl.innerHTML = `
+        <div class="review-results-content">
+          <div class="review-score-section">
+            <div class="review-score ${scoreClass}">
+              <span class="score-value">${result.overallScore}</span>
+              <span class="score-label">/ 100</span>
+            </div>
+            <div class="score-description">
+              ${getScoreDescription(result.overallScore)}
+            </div>
+          </div>
+
+          <div class="review-details-grid">
+            <div class="review-detail-card strengths">
+              <h4><span class="card-icon">✓</span> Strengths</h4>
+              <ul>${strengthsHtml}</ul>
+            </div>
+
+            <div class="review-detail-card gaps">
+              <h4><span class="card-icon">⚠</span> Gaps to Address</h4>
+              <ul>${gapsHtml}</ul>
+            </div>
+
+            <div class="review-detail-card suggestions">
+              <h4><span class="card-icon">💡</span> Suggestions</h4>
+              <ul>${suggestionsHtml}</ul>
+            </div>
+          </div>
+
+          <div class="review-meta">
+            <span class="review-hash" title="Draft version hash for audit trail">
+              Hash: ${result.draftHash ? result.draftHash.substring(0, 12) + '...' : 'N/A'}
+            </span>
+            <span class="review-timestamp">
+              Analyzed: ${new Date().toLocaleString()}
+            </span>
+          </div>
+        </div>
+      `;
+
+      resultsEl.classList.add('visible');
+    }
+
+    function getScoreDescription(score) {
+      if (score >= 80) return 'Excellent - Your narrative strongly addresses CalCompete evaluation criteria.';
+      if (score >= 70) return 'Good - Your narrative covers most key areas. Minor improvements recommended.';
+      if (score >= 50) return 'Fair - Several important areas need strengthening before submission.';
+      if (score >= 30) return 'Needs Work - Significant gaps in addressing evaluation criteria.';
+      return 'Incomplete - Major revision needed. Review the gaps and suggestions carefully.';
+    }
+
+    function showReviewError(message) {
+      const resultsEl = document.getElementById('reviewResults');
+      resultsEl.classList.add('visible');
+      resultsEl.innerHTML = `
+        <div class="review-error">
+          <span class="error-icon">⚠</span>
+          <span class="error-message">${escapeHtml(message)}</span>
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function clearNarrativeReview() {
+      document.getElementById('narrativeText').value = '';
+      document.getElementById('reviewResults').classList.remove('visible');
+      document.getElementById('reviewResults').innerHTML = `
+        <div class="review-placeholder">
+          <span class="placeholder-icon">📋</span>
+          <p>Paste your narrative and click "Analyze" to get AI-powered feedback</p>
+        </div>
+      `;
+    }
+
     // ========== INITIALIZATION ==========
     // Initial render
     renderDashboard(dashboardData);
     updatePulse();
     displayHash();
     renderWorkflows(dashboardData.workflowData);
+    loadCalCompeteWorkflows(); // Load workflows for narrative review dropdown
     pulseInterval = setInterval(updatePulse, 60000); // Update pulse every minute
   </script>
 </body>
