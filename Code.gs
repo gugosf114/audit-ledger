@@ -743,4 +743,10 @@ function onOpen() {
     .addItem("Format Ledger", "formatLedger")
     .addItem("Protect Ledger Sheet", "protectLedgerSheet")
     .addToUi();
+
+  ui.createMenu("Compliance")
+    .addItem("Run Compliance Check", "runComplianceCheckFromUI")
+    .addSeparator()
+    .addItem("Test SEC 10-K Example", "testSealedPacketFlow")
+    .addToUi();
 }
