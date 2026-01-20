@@ -2851,13 +2851,13 @@ Example: Our company plans to expand manufacturing operations in California, cre
       btn.disabled = true;
       btn.innerHTML = '<span class="loading-spinner"></span> Analyzing...';
       resultsEl.classList.add('visible');
-      resultsEl.innerHTML = `
+      resultsEl.innerHTML = \`
         <div class="review-loading">
           <div class="loading-spinner large"></div>
           <p>Analyzing your narrative against CalCompete criteria...</p>
           <p class="loading-hint">This may take 10-30 seconds</p>
         </div>
-      `;
+      \`;
 
       // Call backend
       google.script.run
@@ -2922,57 +2922,57 @@ Example: Our company plans to expand manufacturing operations in California, cre
         ? '<span class="comparison-badge">📊 Compared to ' + result.comparisonsUsed + ' approved apps</span>'
         : '';
 
-      resultsEl.innerHTML = `
+      resultsEl.innerHTML = \`
         <div class="review-results-content">
           <div class="review-score-section">
-            <div class="review-score ${scoreClass}">
-              <span class="score-value">${result.overallScore}</span>
+            <div class="review-score \${scoreClass}">
+              <span class="score-value">\${result.overallScore}</span>
               <span class="score-label">/ 100</span>
             </div>
             <div class="score-description">
-              ${getScoreDescription(result.overallScore)}
+              \${getScoreDescription(result.overallScore)}
             </div>
-            ${comparisonBadge}
-            <div class="competitive-badge ${compClass}">${compLabel}</div>
+            \${comparisonBadge}
+            <div class="competitive-badge \${compClass}">\${compLabel}</div>
           </div>
 
           <div class="review-details-grid">
             <div class="review-detail-card strengths">
               <h4><span class="card-icon">✓</span> Strengths</h4>
-              <ul>${strengthsHtml}</ul>
+              <ul>\${strengthsHtml}</ul>
             </div>
 
             <div class="review-detail-card gaps">
               <h4><span class="card-icon">⚠</span> Gaps to Address</h4>
-              <ul>${gapsHtml}</ul>
+              <ul>\${gapsHtml}</ul>
             </div>
 
             <div class="review-detail-card learned">
               <h4><span class="card-icon">🏆</span> Learn from Approved Apps</h4>
-              <ul>${learnedHtml}</ul>
+              <ul>\${learnedHtml}</ul>
             </div>
 
             <div class="review-detail-card improved">
               <h4><span class="card-icon">✏️</span> Suggested Rewrites</h4>
-              <ul>${improvedHtml}</ul>
+              <ul>\${improvedHtml}</ul>
             </div>
 
             <div class="review-detail-card suggestions">
               <h4><span class="card-icon">💡</span> Action Items</h4>
-              <ul>${suggestionsHtml}</ul>
+              <ul>\${suggestionsHtml}</ul>
             </div>
           </div>
 
           <div class="review-meta">
             <span class="review-hash" title="Draft version hash for audit trail">
-              Hash: ${result.draftHash ? result.draftHash.substring(0, 12) + '...' : 'N/A'}
+              Hash: \${result.draftHash ? result.draftHash.substring(0, 12) + '...' : 'N/A'}
             </span>
             <span class="review-timestamp">
-              Analyzed: ${new Date().toLocaleString()}
+              Analyzed: \${new Date().toLocaleString()}
             </span>
           </div>
         </div>
-      `;
+      \`;
 
       resultsEl.classList.add('visible');
     }
@@ -2988,12 +2988,12 @@ Example: Our company plans to expand manufacturing operations in California, cre
     function showReviewError(message) {
       const resultsEl = document.getElementById('reviewResults');
       resultsEl.classList.add('visible');
-      resultsEl.innerHTML = `
+      resultsEl.innerHTML = \`
         <div class="review-error">
           <span class="error-icon">⚠</span>
-          <span class="error-message">${escapeHtml(message)}</span>
+          <span class="error-message">\${escapeHtml(message)}</span>
         </div>
-      `;
+      \`;
     }
 
     function escapeHtml(text) {
@@ -3005,12 +3005,12 @@ Example: Our company plans to expand manufacturing operations in California, cre
     function clearNarrativeReview() {
       document.getElementById('narrativeText').value = '';
       document.getElementById('reviewResults').classList.remove('visible');
-      document.getElementById('reviewResults').innerHTML = `
+      document.getElementById('reviewResults').innerHTML = \`
         <div class="review-placeholder">
           <span class="placeholder-icon">📋</span>
           <p>Paste your narrative and click "Analyze" to get AI-powered feedback</p>
         </div>
-      `;
+      \`;
     }
 
     // ========== INITIALIZATION ==========
