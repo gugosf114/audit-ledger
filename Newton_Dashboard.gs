@@ -313,7 +313,42 @@ function getDashboardData_() {
     },
     tagCoverage: tagCoverageStats,
     integrityHash: calculateLedgerHash_(),
-    workflowData: workflowData
+    workflowData: workflowData,
+    detectionAlerts: getDetectionAlertsForDashboard_()
+  };
+}
+
+/**
+ * Get detection alerts formatted for dashboard display
+ */
+function getDetectionAlertsForDashboard_() {
+  try {
+    // Call the detection engine if available
+    if (typeof runDetectionScan === 'function') {
+      const results = runDetectionScan();
+      return {
+        total: results.totalAlertsGenerated,
+        critical: results.summary.criticalAlerts,
+        warnings: results.summary.warningAlerts,
+        missingDocs: results.summary.missingDocuments,
+        incompleteEvidence: results.summary.incompleteEvidence,
+        alerts: results.alerts.slice(0, 20), // Top 20 alerts
+        lastScan: results.scanTimestamp
+      };
+    }
+  } catch (e) {
+    Logger.log('Detection engine error: ' + e.message);
+  }
+
+  // Return empty state if detection engine not available
+  return {
+    total: 0,
+    critical: 0,
+    warnings: 0,
+    missingDocs: 0,
+    incompleteEvidence: 0,
+    alerts: [],
+    lastScan: null
   };
 }
 
@@ -1043,6 +1078,244 @@ function getDashboardHTML_() {
     .hash-invalid {
       color: #dc3545;
       font-size: 14px;
+    }
+
+    /* ========== DETECTION ALERTS SECTION ========== */
+    .detection-alerts-section {
+      margin-top: 30px;
+      padding: 25px;
+      background: rgba(220,53,69,0.05);
+      border-radius: 16px;
+      border: 1px solid rgba(220,53,69,0.2);
+    }
+
+    .detection-alerts-section .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .alert-badges {
+      display: flex;
+      gap: 10px;
+    }
+
+    .alert-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .alert-badge.critical {
+      background: rgba(220,53,69,0.2);
+      color: #dc3545;
+      border: 1px solid rgba(220,53,69,0.3);
+    }
+
+    .alert-badge.warning {
+      background: rgba(255,193,7,0.2);
+      color: #ffc107;
+      border: 1px solid rgba(255,193,7,0.3);
+    }
+
+    .detection-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detection-stat {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 15px 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .detection-stat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .critical-stat .detection-stat-icon {
+      background: rgba(220,53,69,0.2);
+      color: #dc3545;
+    }
+
+    .warning-stat .detection-stat-icon {
+      background: rgba(255,193,7,0.2);
+      color: #ffc107;
+    }
+
+    .info-stat .detection-stat-icon {
+      background: rgba(102,126,234,0.2);
+      color: #667eea;
+    }
+
+    .detection-stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .detection-stat-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    .alerts-list {
+      max-height: 400px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid;
+      transition: all 0.2s;
+    }
+
+    .alert-item:hover {
+      background: rgba(255,255,255,0.06);
+    }
+
+    .alert-item.critical {
+      border-left-color: #dc3545;
+    }
+
+    .alert-item.warning {
+      border-left-color: #ffc107;
+    }
+
+    .alert-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .alert-item.critical .alert-icon {
+      background: rgba(220,53,69,0.2);
+      color: #dc3545;
+    }
+
+    .alert-item.warning .alert-icon {
+      background: rgba(255,193,7,0.2);
+      color: #ffc107;
+    }
+
+    .alert-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .alert-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .alert-description {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .alert-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .alert-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .alert-action-btn {
+      padding: 6px 12px;
+      background: rgba(102,126,234,0.2);
+      border: 1px solid rgba(102,126,234,0.3);
+      color: #667eea;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .alert-action-btn:hover {
+      background: rgba(102,126,234,0.3);
+    }
+
+    .no-alerts-message {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 40px;
+      color: #28a745;
+      font-size: 14px;
+    }
+
+    .no-alerts-message .check-icon {
+      font-size: 24px;
+    }
+
+    .alerts-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .scan-btn {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .scan-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(102,126,234,0.3);
+    }
+
+    .last-scan-time {
+      font-size: 12px;
+      color: #666;
     }
 
     /* ========== WORKFLOW SECTION ========== */
@@ -2010,6 +2283,54 @@ function getDashboardHTML_() {
       </div>
     </div>
 
+    <!-- DETECTION ALERTS SECTION - The Brain of Newton -->
+    <div class="detection-alerts-section" id="detectionAlertsSection">
+      <div class="section-header">
+        <h2 class="section-title">Detection Alerts</h2>
+        <div class="alert-badges">
+          <span class="alert-badge critical" id="criticalBadge">0 Critical</span>
+          <span class="alert-badge warning" id="warningBadge">0 Warnings</span>
+        </div>
+      </div>
+
+      <div class="detection-summary">
+        <div class="detection-stat critical-stat">
+          <div class="detection-stat-icon">!</div>
+          <div class="detection-stat-content">
+            <div class="detection-stat-value" id="missingDocsCount">0</div>
+            <div class="detection-stat-label">Missing Documents</div>
+          </div>
+        </div>
+        <div class="detection-stat warning-stat">
+          <div class="detection-stat-icon">?</div>
+          <div class="detection-stat-content">
+            <div class="detection-stat-value" id="incompleteEvidenceCount">0</div>
+            <div class="detection-stat-label">Steps Without Evidence</div>
+          </div>
+        </div>
+        <div class="detection-stat info-stat">
+          <div class="detection-stat-icon">i</div>
+          <div class="detection-stat-content">
+            <div class="detection-stat-value" id="totalAlertsCount">0</div>
+            <div class="detection-stat-label">Total Alerts</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="alerts-list" id="alertsList">
+        <!-- Alerts will be rendered here -->
+        <div class="no-alerts-message">
+          <span class="check-icon">&#10003;</span>
+          <span>No alerts detected. All workflows are compliant.</span>
+        </div>
+      </div>
+
+      <div class="alerts-actions">
+        <button class="scan-btn" onclick="runManualScan()">Re-scan Now</button>
+        <span class="last-scan-time" id="lastScanTime">Last scan: --</span>
+      </div>
+    </div>
+
     <!-- Workflow Section -->
     <div class="workflow-section" id="workflowSection">
       <div class="section-header">
@@ -2599,6 +2920,108 @@ Example: Our company plans to expand manufacturing operations in California, cre
       }
     }
 
+    // ========== DETECTION ALERTS SECTION ==========
+    function renderDetectionAlerts(alertData) {
+      if (!alertData) {
+        alertData = { total: 0, critical: 0, warnings: 0, missingDocs: 0, incompleteEvidence: 0, alerts: [], lastScan: null };
+      }
+
+      // Update badges
+      document.getElementById('criticalBadge').textContent = alertData.critical + ' Critical';
+      document.getElementById('warningBadge').textContent = alertData.warnings + ' Warnings';
+
+      // Update summary stats
+      document.getElementById('missingDocsCount').textContent = alertData.missingDocs;
+      document.getElementById('incompleteEvidenceCount').textContent = alertData.incompleteEvidence;
+      document.getElementById('totalAlertsCount').textContent = alertData.total;
+
+      // Update last scan time
+      if (alertData.lastScan) {
+        const scanDate = new Date(alertData.lastScan);
+        document.getElementById('lastScanTime').textContent = 'Last scan: ' + scanDate.toLocaleTimeString();
+      }
+
+      // Update section styling based on alert count
+      const section = document.getElementById('detectionAlertsSection');
+      if (alertData.critical > 0) {
+        section.style.borderColor = 'rgba(220,53,69,0.5)';
+        section.style.background = 'rgba(220,53,69,0.08)';
+      } else if (alertData.warnings > 0) {
+        section.style.borderColor = 'rgba(255,193,7,0.3)';
+        section.style.background = 'rgba(255,193,7,0.05)';
+      } else {
+        section.style.borderColor = 'rgba(40,167,69,0.3)';
+        section.style.background = 'rgba(40,167,69,0.05)';
+      }
+
+      // Render alerts list
+      const container = document.getElementById('alertsList');
+
+      if (alertData.alerts.length === 0) {
+        container.innerHTML = \`
+          <div class="no-alerts-message">
+            <span class="check-icon">&#10003;</span>
+            <span>No alerts detected. All workflows are compliant.</span>
+          </div>
+        \`;
+        return;
+      }
+
+      container.innerHTML = alertData.alerts.map(alert => {
+        const severityClass = alert.severity.toLowerCase();
+        const icon = alert.alertType === 'MISSING_DOCUMENT' ? '&#128196;' : '&#9888;';
+        const typeLabel = alert.alertType === 'MISSING_DOCUMENT' ? 'Missing Doc' : 'No Evidence';
+
+        return \`
+          <div class="alert-item \${severityClass}">
+            <div class="alert-icon">\${icon}</div>
+            <div class="alert-content">
+              <div class="alert-title">\${alert.title}</div>
+              <div class="alert-description">\${alert.description}</div>
+              <div class="alert-meta">
+                <span>Client: \${alert.clientName}</span>
+                <span>Type: \${typeLabel}</span>
+                \${alert.stepTitle ? '<span>Step: ' + alert.stepTitle + '</span>' : ''}
+              </div>
+            </div>
+            <button class="alert-action-btn" onclick="event.stopPropagation(); openWorkflowFromAlert('\${alert.workflowId}')">
+              View Workflow
+            </button>
+          </div>
+        \`;
+      }).join('');
+    }
+
+    function runManualScan() {
+      const scanBtn = document.querySelector('.scan-btn');
+      scanBtn.textContent = 'Scanning...';
+      scanBtn.disabled = true;
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          renderDetectionAlerts(result);
+          scanBtn.textContent = 'Re-scan Now';
+          scanBtn.disabled = false;
+        })
+        .withFailureHandler(function(err) {
+          console.error('Scan failed:', err);
+          scanBtn.textContent = 'Re-scan Now';
+          scanBtn.disabled = false;
+        })
+        .getDetectionAlertsForDashboard_();
+    }
+
+    function openWorkflowFromAlert(workflowId) {
+      // Scroll to workflow section and expand that workflow
+      const workflowSection = document.getElementById('workflowSection');
+      workflowSection.scrollIntoView({ behavior: 'smooth' });
+
+      // Toggle the workflow details open
+      setTimeout(function() {
+        toggleWorkflowDetails(workflowId);
+      }, 500);
+    }
+
     // ========== WORKFLOW SECTION ==========
     function renderWorkflows(workflowData) {
       if (!workflowData) {
@@ -3033,6 +3456,7 @@ Example: Our company plans to expand manufacturing operations in California, cre
     renderDashboard(dashboardData);
     updatePulse();
     displayHash();
+    renderDetectionAlerts(dashboardData.detectionAlerts); // Render AI detection alerts
     renderWorkflows(dashboardData.workflowData);
     loadCalCompeteWorkflows(); // Load workflows for narrative review dropdown
     pulseInterval = setInterval(updatePulse, 60000); // Update pulse every minute
