@@ -816,4 +816,14 @@ function onOpen() {
     .addSeparator()
     .addItem("Set Dashboard URL", "setDashboardUrl")
     .addToUi();
+
+  ui.createMenu("Workflow")
+    .addItem("Start Workflow", "showStartWorkflowDialog")
+    .addItem("View Workflow Status", "showWorkflowStatusDialog")
+    .addSeparator()
+    .addItem("Install CA Residency Template", "installCAResidencyTemplate")
+    .addItem("Create Template", "showCreateTemplateDialog")
+    .addSeparator()
+    .addItem("Initialize Workflow Sheets", "initWorkflowSheets_")
+    .addToUi();
 }

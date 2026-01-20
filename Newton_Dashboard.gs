@@ -280,6 +280,16 @@ function getDashboardData_() {
     });
   }
 
+  // Get workflow data (wrapped in try-catch in case Newton_Workflow.gs not loaded)
+  let workflowData = { activeCount: 0, totalBlocked: 0, workflows: [] };
+  try {
+    if (typeof getWorkflowDashboardData === 'function') {
+      workflowData = getWorkflowDashboardData();
+    }
+  } catch (e) {
+    Logger.log('Workflow data not available: ' + e.message);
+  }
+
   return {
     lastUpdated: now.toISOString(),
     lastEventTime: lastEventTime,
@@ -302,7 +312,8 @@ function getDashboardData_() {
       gaps: gaps
     },
     tagCoverage: tagCoverageStats,
-    integrityHash: calculateLedgerHash_()
+    integrityHash: calculateLedgerHash_(),
+    workflowData: workflowData
   };
 }
 
@@ -1028,6 +1039,211 @@ function getDashboardHTML_() {
       color: #dc3545;
       font-size: 14px;
     }
+
+    /* ========== WORKFLOW SECTION ========== */
+    .workflow-section {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .workflow-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .workflow-stat {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-align: center;
+    }
+
+    .workflow-stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .workflow-stat-value.alert {
+      color: #dc3545;
+    }
+
+    .workflow-stat-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+
+    .workflow-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .workflow-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .workflow-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: #667eea;
+    }
+
+    .workflow-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .workflow-client {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .workflow-template {
+      font-size: 12px;
+      color: #888;
+      margin-top: 3px;
+    }
+
+    .workflow-percentage {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .workflow-progress-bar {
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .workflow-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .workflow-stats {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+    }
+
+    .workflow-stats span {
+      color: #888;
+    }
+
+    .workflow-stats .completed {
+      color: #28a745;
+    }
+
+    .workflow-stats .blocked {
+      color: #dc3545;
+    }
+
+    .workflow-stats .pending {
+      color: #ffc107;
+    }
+
+    .workflow-details {
+      display: none;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .workflow-card.expanded .workflow-details {
+      display: block;
+    }
+
+    .workflow-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 13px;
+    }
+
+    .step-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .step-icon.completed {
+      background: #28a745;
+      color: white;
+    }
+
+    .step-icon.blocked {
+      background: #dc3545;
+      color: white;
+    }
+
+    .step-icon.pending {
+      background: rgba(255,255,255,0.2);
+      color: #888;
+    }
+
+    .step-title {
+      flex: 1;
+      color: #e0e0e0;
+    }
+
+    .step-title.completed {
+      color: #888;
+      text-decoration: line-through;
+    }
+
+    .step-blocker {
+      font-size: 11px;
+      color: #dc3545;
+    }
+
+    .no-workflows {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .no-workflows-icon {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -1163,6 +1379,32 @@ function getDashboardHTML_() {
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Workflow Section -->
+    <div class="workflow-section" id="workflowSection">
+      <div class="section-header">
+        <h2 class="section-title">Active Workflows</h2>
+      </div>
+
+      <div class="workflow-summary">
+        <div class="workflow-stat">
+          <div class="workflow-stat-value" id="activeWorkflowCount">0</div>
+          <div class="workflow-stat-label">Active Workflows</div>
+        </div>
+        <div class="workflow-stat">
+          <div class="workflow-stat-value" id="blockedStepsCount">0</div>
+          <div class="workflow-stat-label">Blocked Steps</div>
+        </div>
+        <div class="workflow-stat">
+          <div class="workflow-stat-value" id="avgProgress">0%</div>
+          <div class="workflow-stat-label">Avg Progress</div>
+        </div>
+      </div>
+
+      <div class="workflow-list" id="workflowList">
+        <!-- Workflow cards will be inserted here -->
       </div>
     </div>
   </div>
@@ -1619,11 +1861,133 @@ function getDashboardHTML_() {
       }
     }
 
+    // ========== WORKFLOW SECTION ==========
+    function renderWorkflows(workflowData) {
+      if (!workflowData) {
+        workflowData = { activeCount: 0, totalBlocked: 0, workflows: [] };
+      }
+
+      // Update summary stats
+      document.getElementById('activeWorkflowCount').textContent = workflowData.activeCount;
+
+      const blockedEl = document.getElementById('blockedStepsCount');
+      blockedEl.textContent = workflowData.totalBlocked;
+      blockedEl.className = 'workflow-stat-value' + (workflowData.totalBlocked > 0 ? ' alert' : '');
+
+      // Calculate average progress
+      let avgProgress = 0;
+      if (workflowData.workflows.length > 0) {
+        avgProgress = Math.round(
+          workflowData.workflows.reduce((sum, w) => sum + w.percentage, 0) / workflowData.workflows.length
+        );
+      }
+      document.getElementById('avgProgress').textContent = avgProgress + '%';
+
+      // Render workflow list
+      const container = document.getElementById('workflowList');
+
+      if (workflowData.workflows.length === 0) {
+        container.innerHTML = \`
+          <div class="no-workflows">
+            <div class="no-workflows-icon">&#128203;</div>
+            <p>No active workflows</p>
+            <p style="font-size: 12px; margin-top: 10px;">Start a workflow from the spreadsheet menu:<br>Workflow > Start Workflow</p>
+          </div>
+        \`;
+        return;
+      }
+
+      container.innerHTML = workflowData.workflows.map(w => \`
+        <div class="workflow-card" onclick="toggleWorkflowDetails('\${w.workflowId}')">
+          <div class="workflow-card-header">
+            <div>
+              <div class="workflow-client">\${w.clientName}</div>
+              <div class="workflow-template">\${w.templateName}</div>
+            </div>
+            <div class="workflow-percentage">\${w.percentage}%</div>
+          </div>
+          <div class="workflow-progress-bar">
+            <div class="workflow-progress-fill" style="width: \${w.percentage}%"></div>
+          </div>
+          <div class="workflow-stats">
+            <span class="completed">&#10003; \${w.completed} completed</span>
+            <span class="blocked">&#9940; \${w.blocked} blocked</span>
+            <span class="pending">&#9675; \${w.total - w.completed - w.blocked} pending</span>
+          </div>
+          <div class="workflow-details" id="details-\${w.workflowId}">
+            <div style="text-align: center; color: #888; padding: 10px;">Loading steps...</div>
+          </div>
+        </div>
+      \`).join('');
+    }
+
+    function toggleWorkflowDetails(workflowId) {
+      const card = event.currentTarget;
+      const detailsEl = document.getElementById('details-' + workflowId);
+
+      if (card.classList.contains('expanded')) {
+        card.classList.remove('expanded');
+        return;
+      }
+
+      // Collapse other cards
+      document.querySelectorAll('.workflow-card.expanded').forEach(c => c.classList.remove('expanded'));
+
+      // Expand this card
+      card.classList.add('expanded');
+
+      // Load details if not already loaded
+      if (detailsEl.innerHTML.includes('Loading')) {
+        google.script.run
+          .withSuccessHandler(function(status) {
+            renderWorkflowSteps(detailsEl, status.steps);
+          })
+          .withFailureHandler(function(err) {
+            detailsEl.innerHTML = '<div style="color: #dc3545;">Error loading details: ' + err.message + '</div>';
+          })
+          .getWorkflowStatus(workflowId);
+      }
+    }
+
+    function renderWorkflowSteps(container, steps) {
+      if (!steps || steps.length === 0) {
+        container.innerHTML = '<div style="color: #888;">No steps found</div>';
+        return;
+      }
+
+      container.innerHTML = steps.map(step => {
+        let iconClass = 'pending';
+        let icon = '&#9675;'; // circle
+        if (step.status === 'COMPLETED') {
+          iconClass = 'completed';
+          icon = '&#10003;'; // checkmark
+        } else if (step.status === 'BLOCKED') {
+          iconClass = 'blocked';
+          icon = '&#9940;'; // no entry
+        }
+
+        const titleClass = step.status === 'COMPLETED' ? 'step-title completed' : 'step-title';
+        const blockerText = step.blockedBy && step.blockedBy.length > 0 ?
+          '<div class="step-blocker">Blocked by: ' + step.blockedBy.map(b => b.title).join(', ') + '</div>' : '';
+
+        return \`
+          <div class="workflow-step">
+            <div class="step-icon \${iconClass}">\${icon}</div>
+            <div>
+              <div class="\${titleClass}">\${step.stepNumber}. \${step.title}</div>
+              \${blockerText}
+            </div>
+          </div>
+        \`;
+      }).join('');
+    }
+
     // ========== INITIALIZATION ==========
     // Initial render
     renderDashboard(dashboardData);
     updatePulse();
     displayHash();
+    renderWorkflows(dashboardData.workflowData);
     pulseInterval = setInterval(updatePulse, 60000); // Update pulse every minute
   </script>
 </body>
