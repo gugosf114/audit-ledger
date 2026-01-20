@@ -742,6 +742,13 @@ function onOpen() {
     .addItem("Setup Sheet (14-Column)", "setupSheet")
     .addItem("Format Ledger", "formatLedger")
     .addItem("Protect Ledger Sheet", "protectLedgerSheet")
+    .addSeparator()
+    .addItem("Generate Demo Data", "generateDemoData")
+    .addItem("Clear Demo Data", "clearDemoData")
+    .addSeparator()
+    .addItem("Send Compliance Digest", "sendComplianceDigest")
+    .addItem("Setup Weekly Digest", "setupWeeklyDigest")
+    .addItem("Remove Weekly Digest", "removeWeeklyDigest")
     .addToUi();
 
   ui.createMenu("Compliance")
