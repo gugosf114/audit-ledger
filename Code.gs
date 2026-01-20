@@ -749,4 +749,15 @@ function onOpen() {
     .addSeparator()
     .addItem("Test SEC 10-K Example", "testSealedPacketFlow")
     .addToUi();
+
+  ui.createMenu("Newton Agent")
+    .addItem("Run Investigation", "runAgentFromUI")
+    .addItem("Agentic Compliance Check", "runAgenticComplianceFromUI")
+    .addSeparator()
+    .addItem("Ghost Client Hunt", "runGhostHuntFromUI")
+    .addSeparator()
+    .addItem("Setup Daily Monitoring", "setupAgenticMonitoring")
+    .addSeparator()
+    .addItem("Test Agent Flow", "testAgentFlow")
+    .addToUi();
 }
