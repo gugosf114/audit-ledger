@@ -792,4 +792,14 @@ function onOpen() {
     .addSeparator()
     .addItem("Setup API Keys", "setupAIProxyKeysFromUI")
     .addToUi();
+
+  ui.createMenu("Customers")
+    .addItem("Generate New API Key", "generateCustomerKeyFromUI")
+    .addItem("View Customers Sheet", "viewCustomersFromUI")
+    .addSeparator()
+    .addItem("Customer Usage Report", "generateCustomerReportFromUI")
+    .addItem("Update Customer Status", "updateCustomerStatusFromUI")
+    .addSeparator()
+    .addItem("Setup Customers Sheet", "setupCustomersSheet")
+    .addToUi();
 }
