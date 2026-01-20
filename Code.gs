@@ -784,4 +784,12 @@ function onOpen() {
     .addItem("View Agent Activity", "viewAgentActivityFromUI")
     .addItem("Test Agent Logging", "testAgentLogging")
     .addToUi();
+
+  ui.createMenu("AI Proxy")
+    .addItem("Test AI Proxy", "testAIProxy")
+    .addSeparator()
+    .addItem("Generate AI Activity Report", "generateAIReportFromUI")
+    .addSeparator()
+    .addItem("Setup API Keys", "setupAIProxyKeysFromUI")
+    .addToUi();
 }
