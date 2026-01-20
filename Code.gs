@@ -809,4 +809,11 @@ function onOpen() {
     .addSeparator()
     .addItem("Setup Customers Sheet", "setupCustomersSheet")
     .addToUi();
+
+  ui.createMenu("Dashboard")
+    .addItem("Open Dashboard", "openDashboard")
+    .addItem("Preview Dashboard Data", "previewDashboardData")
+    .addSeparator()
+    .addItem("Set Dashboard URL", "setDashboardUrl")
+    .addToUi();
 }
