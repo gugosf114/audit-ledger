@@ -92,8 +92,8 @@ const MODEL_CARD_SCHEMA = {
  * Extract all entries related to a specific AI system
  */
 function extractSystemEntries(systemName) {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
-  if (!sh) throw new Error('Audit Ledger sheet not found');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
+  if (!sh) throw new Error('Audit_Ledger sheet not found');
 
   const lastRow = sh.getLastRow();
   if (lastRow < 2) return [];

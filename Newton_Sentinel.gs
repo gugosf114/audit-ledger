@@ -62,10 +62,10 @@ const SENTINEL_CONFIG = {
 
 function setupSentinelColumns() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName('Audit Ledger');
+  const sh = ss.getSheetByName('Audit_Ledger');
 
   if (!sh) {
-    SpreadsheetApp.getUi().alert('Audit Ledger sheet not found. Run Setup Sheet first.');
+    SpreadsheetApp.getUi().alert('Audit_Ledger sheet not found. Run Setup Sheet first.');
     return;
   }
 
@@ -95,7 +95,7 @@ function setupSentinelColumns() {
 // ==========================
 
 function detectSignals() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   if (!sh) return [];
 
   const lastRow = sh.getLastRow();
@@ -186,7 +186,7 @@ function processSignals() {
     return { processed: 0, results: [] };
   }
 
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   const results = [];
 
   for (const signal of signals) {
@@ -632,7 +632,7 @@ function addToQuarantine(row, text) {
 // ==========================
 
 function generateSessionLedger() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   if (!sh) return null;
 
   const lastRow = sh.getLastRow();

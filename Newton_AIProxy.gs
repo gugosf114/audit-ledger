@@ -682,8 +682,8 @@ function createJsonResponse(data, statusCode) {
  * @returns {Object} - Activity report
  */
 function getAIActivityReport(startDate, endDate, provider, model) {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
-  if (!sh) throw new Error('Audit Ledger not found');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
+  if (!sh) throw new Error('Audit_Ledger not found');
 
   const lastRow = sh.getLastRow();
   if (lastRow < 2) return { error: 'No entries found' };

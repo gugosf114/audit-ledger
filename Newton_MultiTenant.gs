@@ -299,7 +299,7 @@ function validateNewtonKey(newtonKey) {
 function getTodayRequestCount(customerId) {
   const today = new Date().toISOString().substring(0, 10);
 
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   if (!sh) return 0;
 
   const lastRow = sh.getLastRow();
@@ -438,8 +438,8 @@ function getCustomerUsageReport(newtonKey, startDate, endDate) {
   }
 
   // Get all AI proxy entries for this customer
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
-  if (!sh) return { error: 'Audit Ledger not found' };
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
+  if (!sh) return { error: 'Audit_Ledger not found' };
 
   const lastRow = sh.getLastRow();
   if (lastRow < 2) return { requests: [], summary: {} };

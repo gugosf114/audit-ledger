@@ -129,7 +129,7 @@ function viewSystemLog() {
 // SHEET & HEADER SETUP
 // ==========================
 
-const LEDGER_SHEET_NAME = 'Audit Ledger';
+const LEDGER_SHEET_NAME = 'Audit_Ledger';
 const LEDGER_HEADERS = [
   'UUID','Timestamp','Actor','Event Type','Text','Gift', // 1-6
   'Prev Hash','Record Hash','Status',                    // 7-9
@@ -185,7 +185,7 @@ function setupSheet() {
   }
 
   logSystemEvent('SUCCESS','SYSTEM','Ledger sheet setup completed',{columns: width});
-  if (_inUi()) SpreadsheetApp.getUi().alert('Audit Ledger sheet is ready! (14 Columns)');
+  if (_inUi()) SpreadsheetApp.getUi().alert('Audit_Ledger sheet is ready! (14 Columns)');
 }
 
 
@@ -462,7 +462,7 @@ function addReasoningEntry() {
   const text = t2.getResponseText();
 
   safeNewEntry('User', eventType, text, getDailyGift(), 'DRAFT');
-  ui.alert('Entry added to Audit Ledger.');
+  ui.alert('Entry added to Audit_Ledger.');
 }
 
 function testLedgerBoot() {

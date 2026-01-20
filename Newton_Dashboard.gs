@@ -69,7 +69,7 @@ function doPost(e) {
  */
 function getDashboardData_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const ledger = ss.getSheetByName('Audit_Ledger') || ss.getSheetByName('Audit Ledger');
+  const ledger = ss.getSheetByName('Audit_Ledger');
 
   // Default empty state
   const emptyData = {

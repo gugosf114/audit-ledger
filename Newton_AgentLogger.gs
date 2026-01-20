@@ -615,7 +615,7 @@ function categorizeAction(actionString) {
  * Get all actions by an agent within a date range
  */
 function getAgentActions(agentName, startDate, endDate) {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   if (!sh) return [];
 
   const lastRow = sh.getLastRow();
@@ -656,7 +656,7 @@ function getAgentActions(agentName, startDate, endDate) {
  * Get all sessions for an agent
  */
 function getAgentSessions(agentName) {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   if (!sh) return [];
 
   const lastRow = sh.getLastRow();

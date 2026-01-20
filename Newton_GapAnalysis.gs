@@ -704,7 +704,7 @@ function getFrameworkName(framework) {
 }
 
 function getAllTaggedEntries() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
   if (!sh) return [];
 
   const lastRow = sh.getLastRow();

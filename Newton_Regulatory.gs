@@ -196,8 +196,8 @@ function parseStoredTags(tagString) {
  * @returns {Object} - Result
  */
 function tagEntry(uuid, tags) {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
-  if (!sh) throw new Error('Audit Ledger sheet not found');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
+  if (!sh) throw new Error('Audit_Ledger sheet not found');
 
   const lastRow = sh.getLastRow();
 
@@ -239,8 +239,8 @@ function tagEntry(uuid, tags) {
  * @returns {Array} - Matching entries
  */
 function getEntriesByRegulation(framework, clause) {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
-  if (!sh) throw new Error('Audit Ledger sheet not found');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
+  if (!sh) throw new Error('Audit_Ledger sheet not found');
 
   const lastRow = sh.getLastRow();
   if (lastRow < 2) return [];
@@ -313,8 +313,8 @@ function getComplianceSummary(framework) {
  */
 function addRegulatoryTagsColumn() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName('Audit Ledger');
-  if (!sh) throw new Error('Audit Ledger sheet not found');
+  const sh = ss.getSheetByName('Audit_Ledger');
+  if (!sh) throw new Error('Audit_Ledger sheet not found');
 
   // Check if column 15 already exists
   const headers = sh.getRange(1, 1, 1, 16).getValues()[0];
@@ -331,7 +331,7 @@ function addRegulatoryTagsColumn() {
   sh.setColumnWidth(15, 250);
 
   logSystemEvent('SUCCESS', 'REGULATORY', 'Regulatory_Tags column added', {});
-  if (_inUi()) SpreadsheetApp.getUi().alert('Regulatory_Tags column added to Audit Ledger.');
+  if (_inUi()) SpreadsheetApp.getUi().alert('Regulatory_Tags column added to Audit_Ledger.');
 }
 
 
@@ -343,8 +343,8 @@ function addRegulatoryTagsColumn() {
  * Auto-tag all existing entries that don't have tags
  */
 function autoTagAllEntries() {
-  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit Ledger');
-  if (!sh) throw new Error('Audit Ledger sheet not found');
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Audit_Ledger');
+  if (!sh) throw new Error('Audit_Ledger sheet not found');
 
   const lastRow = sh.getLastRow();
   if (lastRow < 2) return { tagged: 0 };
