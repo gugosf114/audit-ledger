@@ -780,6 +780,11 @@ function getDashboardHTML_() {
       font-size: 14px;
     }
 
+    .override-form select option {
+      background: #1e2a3a;
+      color: #fff;
+    }
+
     .override-form textarea {
       min-height: 100px;
       resize: vertical;
@@ -1316,6 +1321,11 @@ function getDashboardHTML_() {
       font-size: 14px;
     }
 
+    .workflow-modal-content select option {
+      background: #1e2a3a;
+      color: #fff;
+    }
+
     .workflow-modal-content .btn-row {
       display: flex;
       gap: 10px;
@@ -1431,6 +1441,11 @@ function getDashboardHTML_() {
       border-radius: 8px;
       color: #fff;
       font-size: 14px;
+    }
+
+    .narrative-controls select option {
+      background: #1e2a3a;
+      color: #fff;
     }
 
     .review-btn {
