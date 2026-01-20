@@ -818,12 +818,11 @@ function onOpen() {
     .addToUi();
 
   ui.createMenu("Workflow")
+    .addItem("Create Template", "showCreateTemplateDialog")
     .addItem("Start Workflow", "showStartWorkflowDialog")
+    .addItem("Complete Step", "showCompleteStepDialog")
     .addItem("View Workflow Status", "showWorkflowStatusDialog")
     .addSeparator()
     .addItem("Install CA Residency Template", "installCAResidencyTemplate")
-    .addItem("Create Template", "showCreateTemplateDialog")
-    .addSeparator()
-    .addItem("Initialize Workflow Sheets", "initWorkflowSheets_")
     .addToUi();
 }

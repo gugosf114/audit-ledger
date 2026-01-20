@@ -767,6 +767,180 @@ function showWorkflowStatusDialog() {
 }
 
 /**
+ * Show complete step dialog
+ */
+function showCompleteStepDialog() {
+  const dashData = getWorkflowDashboardData();
+
+  if (dashData.activeCount === 0) {
+    const ui = SpreadsheetApp.getUi();
+    ui.alert(
+      'No Active Workflows',
+      'There are no active workflows.\n\nStart a new workflow from Workflow > Start Workflow.',
+      ui.ButtonSet.OK
+    );
+    return;
+  }
+
+  const html = HtmlService.createHtmlOutput(getCompleteStepHTML_(dashData))
+    .setWidth(600)
+    .setHeight(550);
+
+  SpreadsheetApp.getUi().showModalDialog(html, 'Complete Workflow Step');
+}
+
+/**
+ * Complete step from dialog
+ */
+function completeStepFromDialog(workflowId, stepNumber, proofJson) {
+  const proof = JSON.parse(proofJson || '{}');
+  const result = completeStep(workflowId, parseInt(stepNumber), proof);
+  return result;
+}
+
+/**
+ * Get pending steps for a workflow (for dialog)
+ */
+function getPendingStepsForDialog(workflowId) {
+  const status = getWorkflowStatus(workflowId);
+  return status.steps
+    .filter(s => s.status === 'PENDING' || s.status === 'IN_PROGRESS')
+    .map(s => ({
+      stepNumber: s.stepNumber,
+      title: s.title,
+      description: s.description,
+      requiredDocs: s.requiredDocs,
+      questions: s.questions
+    }));
+}
+
+/**
+ * HTML for complete step dialog
+ */
+function getCompleteStepHTML_(dashData) {
+  const workflowOptions = dashData.workflows.map(w =>
+    `<option value="${w.workflowId}">${w.clientName} - ${w.templateName} (${w.percentage}%)</option>`
+  ).join('');
+
+  return `
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      label { display: block; margin-top: 15px; font-weight: bold; }
+      input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+      textarea { min-height: 80px; }
+      button { margin-top: 20px; padding: 10px 20px; background: #4285f4; color: white; border: none; cursor: pointer; }
+      button:hover { background: #3367d6; }
+      .error { color: red; margin-top: 10px; }
+      .success { color: green; margin-top: 10px; }
+      .step-info { background: #f5f5f5; padding: 10px; border-radius: 4px; margin-top: 10px; font-size: 13px; }
+      .step-info strong { display: block; margin-bottom: 5px; }
+      #stepSelect { display: none; }
+    </style>
+
+    <label>Select Workflow:</label>
+    <select id="workflowId" onchange="loadSteps()">${workflowOptions}</select>
+
+    <div id="stepSelect">
+      <label>Select Step to Complete:</label>
+      <select id="stepNumber" onchange="showStepInfo()"></select>
+
+      <div id="stepInfo" class="step-info" style="display:none;"></div>
+
+      <label>Notes / Proof:</label>
+      <textarea id="notes" placeholder="Describe what was done, attach document names, etc."></textarea>
+
+      <label>Document Names (comma-separated, optional):</label>
+      <input type="text" id="documents" placeholder="e.g., drivers_license.pdf, utility_bill.pdf">
+    </div>
+
+    <div id="error" class="error"></div>
+    <div id="success" class="success"></div>
+
+    <button onclick="submitStep()">Complete Step</button>
+
+    <script>
+      let pendingSteps = [];
+
+      function loadSteps() {
+        const workflowId = document.getElementById('workflowId').value;
+        document.getElementById('stepSelect').style.display = 'none';
+        document.getElementById('stepInfo').style.display = 'none';
+        document.getElementById('error').textContent = '';
+
+        google.script.run
+          .withSuccessHandler(function(steps) {
+            pendingSteps = steps;
+            if (steps.length === 0) {
+              document.getElementById('error').textContent = 'No pending steps available for this workflow.';
+              return;
+            }
+
+            const stepOptions = steps.map(s =>
+              '<option value="' + s.stepNumber + '">' + s.stepNumber + '. ' + s.title + '</option>'
+            ).join('');
+
+            document.getElementById('stepNumber').innerHTML = stepOptions;
+            document.getElementById('stepSelect').style.display = 'block';
+            showStepInfo();
+          })
+          .withFailureHandler(function(err) {
+            document.getElementById('error').textContent = 'Error loading steps: ' + err.message;
+          })
+          .getPendingStepsForDialog(workflowId);
+      }
+
+      function showStepInfo() {
+        const stepNumber = parseInt(document.getElementById('stepNumber').value);
+        const step = pendingSteps.find(s => s.stepNumber === stepNumber);
+
+        if (step) {
+          let info = '<strong>' + step.title + '</strong>';
+          if (step.description) info += '<p>' + step.description + '</p>';
+          if (step.requiredDocs && step.requiredDocs.length > 0) {
+            info += '<p><em>Required docs:</em> ' + step.requiredDocs.join(', ') + '</p>';
+          }
+          document.getElementById('stepInfo').innerHTML = info;
+          document.getElementById('stepInfo').style.display = 'block';
+        }
+      }
+
+      function submitStep() {
+        const workflowId = document.getElementById('workflowId').value;
+        const stepNumber = document.getElementById('stepNumber').value;
+        const notes = document.getElementById('notes').value.trim();
+        const docsInput = document.getElementById('documents').value.trim();
+
+        const documents = docsInput ? docsInput.split(',').map(d => ({ name: d.trim() })) : [];
+
+        const proof = {
+          notes: notes,
+          documents: documents
+        };
+
+        document.getElementById('error').textContent = '';
+        document.getElementById('success').textContent = '';
+
+        google.script.run
+          .withSuccessHandler(function(result) {
+            document.getElementById('success').textContent =
+              'Step completed! Progress: ' + result.progress.completed + '/' + result.progress.total;
+            document.getElementById('notes').value = '';
+            document.getElementById('documents').value = '';
+            loadSteps(); // Refresh steps
+          })
+          .withFailureHandler(function(err) {
+            document.getElementById('error').textContent = 'Error: ' + err.message;
+          })
+          .completeStepFromDialog(workflowId, stepNumber, JSON.stringify(proof));
+      }
+
+      // Load steps for first workflow on init
+      loadSteps();
+    </script>
+  `;
+}
+
+/**
  * HTML for start workflow dialog
  */
 function getStartWorkflowHTML_(templates) {
