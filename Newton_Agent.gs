@@ -590,6 +590,16 @@ function executeConclude(session, params) {
 function runAgentInvestigation(goal, checklist) {
   const session = new AgentSession(goal, checklist);
 
+  // Create audit logging session
+  let auditSession = null;
+  try {
+    auditSession = agentSession('Newton_Agent');
+    auditSession.log('Investigation Started', { goal: goal, checklist: checklist });
+  } catch (e) {
+    // AgentLogger may not be loaded, continue without it
+    logSystemEvent('WARN', 'AGENT', 'AgentLogger not available', { error: e.message });
+  }
+
   logSystemEvent('INFO', 'AGENT', 'Starting investigation', {
     sessionId: session.sessionId,
     goal: goal
@@ -621,8 +631,29 @@ function runAgentInvestigation(goal, checklist) {
     // ACT: Execute each action
     const results = [];
     for (const action of decision.actions || []) {
+      // Log action to audit trail
+      if (auditSession) {
+        auditSession.log(`Execute: ${action.type}`, action.params || {});
+
+        // Log resource access for data operations
+        if (action.type === 'SEARCH_GMAIL' || action.type === 'READ_EMAIL') {
+          auditSession.access('Gmail', 'READ', action.params);
+        } else if (action.type === 'SEARCH_DRIVE' || action.type === 'READ_FILE') {
+          auditSession.access('Google Drive', 'READ', action.params);
+        } else if (action.type === 'SEARCH_CALENDAR') {
+          auditSession.access('Google Calendar', 'READ', action.params);
+        }
+      }
+
       const result = executeAction(session, action);
       results.push(result);
+
+      // Log decisions
+      if (auditSession && action.type === 'MARK_FOUND') {
+        auditSession.decide(`Mark as found: ${action.params?.item}`, 'Evidence matches checklist item');
+      } else if (auditSession && action.type === 'CREATE_VOID') {
+        auditSession.decide(`Create VOID: ${action.params?.item}`, action.params?.reason || 'Item not found');
+      }
 
       if (result.complete) {
         complete = true;
@@ -630,6 +661,7 @@ function runAgentInvestigation(goal, checklist) {
       }
 
       if (result.needsHuman) {
+        if (auditSession) auditSession.escalate(action.params?.reason || 'Human input required', action.params);
         complete = true; // Pause for human input
         break;
       }
@@ -655,6 +687,18 @@ function runAgentInvestigation(goal, checklist) {
     executeConclude(session, {
       summary: `Max iterations (${AGENT_CONFIG.MAX_ITERATIONS}) reached. Remaining targets: ${session.targets.join(', ')}`,
       status: 'PARTIAL'
+    });
+  }
+
+  // End audit session
+  if (auditSession) {
+    const outcome = session.state === AGENT_CONFIG.STATES.COMPLETE ? 'SUCCESS' :
+                    session.state === AGENT_CONFIG.STATES.FAILED ? 'FAILED' : 'PARTIAL';
+    auditSession.end(outcome, {
+      evidenceFound: session.evidence.length,
+      voidsCreated: session.voids.length,
+      iterations: session.iteration,
+      targetsRemaining: session.targets.length
     });
   }
 

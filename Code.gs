@@ -780,5 +780,8 @@ function onOpen() {
     .addSeparator()
     .addItem("Run Gap Analysis", "runGapAnalysisFromUI")
     .addItem("Multi-Framework Analysis", "runMultiFrameworkFromUI")
+    .addSeparator()
+    .addItem("View Agent Activity", "viewAgentActivityFromUI")
+    .addItem("Test Agent Logging", "testAgentLogging")
     .addToUi();
 }
