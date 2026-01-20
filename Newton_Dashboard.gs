@@ -769,7 +769,7 @@ function getDashboardHTML_() {
 
   <script>
     // Initial data from server
-    let dashboardData = <?= data ?>;
+    let dashboardData = JSON.parse('<?= data ?>');
 
     function renderDashboard(data) {
       // Last updated
