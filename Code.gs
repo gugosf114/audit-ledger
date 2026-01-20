@@ -760,4 +760,18 @@ function onOpen() {
     .addSeparator()
     .addItem("Test Agent Flow", "testAgentFlow")
     .addToUi();
+
+  ui.createMenu("Regulatory")
+    .addItem("View Compliance Summary", "viewRegulatoryCompliance")
+    .addItem("Query by Regulation", "queryByRegulationUI")
+    .addSeparator()
+    .addItem("Tag Entry Manually", "manualTagEntryUI")
+    .addItem("Auto-Tag All Entries", "runAutoTaggingUI")
+    .addSeparator()
+    .addItem("Add Regulatory_Tags Column", "addRegulatoryTagsColumn")
+    .addToUi();
+
+  ui.createMenu("Audit Package")
+    .addItem("Generate Audit Package", "generateAuditPackageFromUI")
+    .addToUi();
 }
