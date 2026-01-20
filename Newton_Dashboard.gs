@@ -74,14 +74,18 @@ function getDashboardData_() {
   // Default empty state
   const emptyData = {
     lastUpdated: new Date().toISOString(),
+    lastEventTime: null,
     complianceScore: 0,
     aiRequests: { total: 0, thisWeek: 0, byProvider: {}, byDay: [] },
     totalSpend: 0,
     openVoids: 0,
     openEscalations: 0,
+    voidDetails: [],
+    escalationDetails: [],
     recentActivity: [],
     gapAnalysis: { covered: 0, total: 0, gaps: [] },
-    tagCoverage: {}
+    tagCoverage: {},
+    integrityHash: null
   };
 
   if (!ledger || ledger.getLastRow() < 2) {
@@ -116,6 +120,9 @@ function getDashboardData_() {
   let totalSpend = 0;
   let openVoids = 0;
   let openEscalations = 0;
+  const voidDetails = [];
+  const escalationDetails = [];
+  let lastEventTime = null;
   const byProvider = {};
   const byDay = {};
   const recentActivity = [];
@@ -160,18 +167,35 @@ function getDashboardData_() {
       }
     }
 
-    // Count VOIDs
+    // Count VOIDs and collect details
     if (eventType === 'VOID_DETECTED' || signal === 'VOID_DETECTED') {
       if (details.status === 'OPEN' || !details.status) {
         openVoids++;
+        voidDetails.push({
+          target: target,
+          details: typeof row[cols.details] === 'string' ? row[cols.details] : JSON.stringify(details),
+          timestamp: timestamp.toISOString(),
+          actor: actor
+        });
       }
     }
 
-    // Count escalations
+    // Count escalations and collect details
     if (eventType === 'ESCALATED' || signal === 'ESCALATED') {
       if (details.status !== 'RESOLVED') {
         openEscalations++;
+        escalationDetails.push({
+          action: action,
+          target: target,
+          timestamp: timestamp.toISOString(),
+          actor: actor
+        });
       }
+    }
+
+    // Track last event time for pulse indicator
+    if (!lastEventTime || timestamp > new Date(lastEventTime)) {
+      lastEventTime = timestamp.toISOString();
     }
 
     // Track tag coverage
@@ -258,6 +282,7 @@ function getDashboardData_() {
 
   return {
     lastUpdated: now.toISOString(),
+    lastEventTime: lastEventTime,
     complianceScore: complianceScore,
     aiRequests: {
       total: aiRequestsTotal,
@@ -268,13 +293,16 @@ function getDashboardData_() {
     totalSpend: Math.round(totalSpend * 100) / 100,
     openVoids: openVoids,
     openEscalations: openEscalations,
+    voidDetails: voidDetails.slice(0, 10),
+    escalationDetails: escalationDetails.slice(0, 10),
     recentActivity: recentActivity.slice(0, 10),
     gapAnalysis: {
       covered: totalCovered,
       total: totalRequired,
       gaps: gaps
     },
-    tagCoverage: tagCoverageStats
+    tagCoverage: tagCoverageStats,
+    integrityHash: calculateLedgerHash_()
   };
 }
 
@@ -664,6 +692,342 @@ function getDashboardHTML_() {
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(255,255,255,0.3);
     }
+
+    /* ========== RED BUTTON - MANUAL OVERRIDE FAB ========== */
+    .override-fab {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(220, 53, 69, 0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      z-index: 1000;
+    }
+
+    .override-fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 30px rgba(220, 53, 69, 0.7);
+    }
+
+    .override-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1001;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .override-modal.active {
+      display: flex;
+    }
+
+    .override-form {
+      background: #1e2a3a;
+      border-radius: 16px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .override-form h3 {
+      margin-bottom: 20px;
+      color: #dc3545;
+      font-size: 20px;
+    }
+
+    .override-form label {
+      display: block;
+      margin-bottom: 5px;
+      color: #888;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .override-form input,
+    .override-form select,
+    .override-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+    }
+
+    .override-form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .override-form .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .override-form button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .override-form .btn-cancel {
+      background: rgba(255,255,255,0.1);
+      color: #888;
+    }
+
+    .override-form .btn-submit {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+
+    /* ========== LIVE PULSE INDICATOR ========== */
+    .pulse-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 15px;
+    }
+
+    .pulse-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #28a745;
+      position: relative;
+    }
+
+    .pulse-dot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #28a745;
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    .pulse-dot.inactive {
+      background: #666;
+    }
+
+    .pulse-dot.inactive::before {
+      display: none;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    .pulse-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    /* ========== WHY DRAWER ========== */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+
+    .drawer-overlay.active {
+      display: block;
+    }
+
+    .why-drawer {
+      position: fixed;
+      top: 0;
+      right: -450px;
+      width: 450px;
+      height: 100%;
+      background: #1e2a3a;
+      border-left: 1px solid rgba(255,255,255,0.1);
+      z-index: 1000;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+      padding: 30px;
+    }
+
+    .why-drawer.active {
+      right: 0;
+    }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .drawer-header h3 {
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .drawer-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .drawer-content {
+      color: #e0e0e0;
+    }
+
+    .drawer-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 13px;
+    }
+
+    .drawer-row-label {
+      color: #888;
+    }
+
+    .drawer-row-value {
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .metric-card.clickable {
+      cursor: pointer;
+    }
+
+    .metric-card.clickable:hover {
+      border-color: #667eea;
+    }
+
+    /* ========== THRESHOLD ALERTS ========== */
+    .alerts-panel {
+      margin-top: 20px;
+    }
+
+    .alert-config {
+      background: rgba(255,193,7,0.1);
+      border: 1px solid rgba(255,193,7,0.3);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+
+    .alert-config-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .alert-config-name {
+      font-weight: 600;
+      color: #ffc107;
+    }
+
+    .alert-toggle {
+      width: 40px;
+      height: 22px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 11px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .alert-toggle.active {
+      background: #28a745;
+    }
+
+    .alert-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 50%;
+      transition: left 0.2s;
+    }
+
+    .alert-toggle.active::after {
+      left: 21px;
+    }
+
+    /* ========== INTEGRITY HASH ========== */
+    .integrity-hash {
+      background: rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .hash-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #667eea;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hash-value {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 11px;
+      color: #888;
+      word-break: break-all;
+      line-height: 1.6;
+    }
+
+    .hash-valid {
+      color: #28a745;
+      font-size: 14px;
+    }
+
+    .hash-invalid {
+      color: #dc3545;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -673,9 +1037,13 @@ function getDashboardHTML_() {
         <h1>Newton AI Governance</h1>
         <p class="subtitle">Real-time Compliance Dashboard</p>
       </div>
-      <div style="text-align: right;">
+      <div style="text-align: right; display: flex; align-items: center; gap: 15px;">
+        <div class="pulse-container">
+          <div class="pulse-dot" id="pulseDot"></div>
+          <span class="pulse-label" id="pulseLabel">Live</span>
+        </div>
         <button class="refresh-btn" onclick="refreshData()" id="refreshBtn">Refresh</button>
-        <p class="last-updated" id="lastUpdated">Loading...</p>
+        <p class="last-updated" id="lastUpdated" style="margin-top: 5px;">Loading...</p>
       </div>
     </div>
 
@@ -691,7 +1059,7 @@ function getDashboardHTML_() {
 
     <!-- Top Metrics -->
     <div class="metrics-grid">
-      <div class="metric-card" id="complianceCard">
+      <div class="metric-card clickable" id="complianceCard" onclick="openDrawer('compliance')">
         <div class="metric-label">Compliance Score</div>
         <div class="compliance-ring">
           <svg viewBox="0 0 100 100">
@@ -705,25 +1073,25 @@ function getDashboardHTML_() {
         </div>
       </div>
 
-      <div class="metric-card">
+      <div class="metric-card clickable" onclick="openDrawer('requests')">
         <div class="metric-label">AI Requests (This Week)</div>
         <div class="metric-value" id="aiRequestsWeek">0</div>
         <div class="metric-detail" id="aiRequestsTotal">0 total all-time</div>
       </div>
 
-      <div class="metric-card">
+      <div class="metric-card clickable" onclick="openDrawer('spend')">
         <div class="metric-label">Total Spend</div>
         <div class="metric-value">$<span id="totalSpend">0.00</span></div>
         <div class="metric-detail">All-time AI costs</div>
       </div>
 
-      <div class="metric-card" id="voidsCard">
+      <div class="metric-card clickable" id="voidsCard" onclick="openDrawer('voids')">
         <div class="metric-label">Open VOIDs</div>
         <div class="metric-value" id="openVoids">0</div>
         <div class="metric-detail">Compliance gaps requiring attention</div>
       </div>
 
-      <div class="metric-card" id="escalationsCard">
+      <div class="metric-card clickable" id="escalationsCard" onclick="openDrawer('escalations')">
         <div class="metric-label">Open Escalations</div>
         <div class="metric-value" id="openEscalations">0</div>
         <div class="metric-detail">Incidents under review</div>
@@ -763,7 +1131,78 @@ function getDashboardHTML_() {
         <div id="quickStats">
           <!-- Quick stats will be inserted here -->
         </div>
+
+        <!-- Integrity Hash -->
+        <div class="integrity-hash">
+          <div class="hash-label">
+            <span class="hash-valid" id="hashStatus">&#10003;</span>
+            Ledger Integrity (SHA-256)
+          </div>
+          <div class="hash-value" id="hashValue">Calculating...</div>
+        </div>
+
+        <!-- Threshold Alerts Config -->
+        <div class="alerts-panel">
+          <div class="panel-title" style="margin-top: 20px; font-size: 14px;">Alert Thresholds</div>
+          <div class="alert-config">
+            <div class="alert-config-header">
+              <span class="alert-config-name">Spend > $100/week</span>
+              <div class="alert-toggle" id="alertSpend" onclick="toggleAlert('spend')"></div>
+            </div>
+          </div>
+          <div class="alert-config">
+            <div class="alert-config-header">
+              <span class="alert-config-name">Compliance < 70%</span>
+              <div class="alert-toggle active" id="alertCompliance" onclick="toggleAlert('compliance')"></div>
+            </div>
+          </div>
+          <div class="alert-config">
+            <div class="alert-config-header">
+              <span class="alert-config-name">Any Open VOIDs</span>
+              <div class="alert-toggle active" id="alertVoids" onclick="toggleAlert('voids')"></div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Red Button: Manual Override FAB -->
+  <button class="override-fab" onclick="openOverrideModal()" title="Log Manual Override">&#9888;</button>
+
+  <!-- Manual Override Modal -->
+  <div class="override-modal" id="overrideModal">
+    <div class="override-form">
+      <h3>&#9888; Log Manual Override</h3>
+      <label>Override Type</label>
+      <select id="overrideType">
+        <option value="AI_BYPASS">AI Recommendation Bypassed</option>
+        <option value="POLICY_EXCEPTION">Policy Exception Granted</option>
+        <option value="MANUAL_APPROVAL">Manual Approval (No AI)</option>
+        <option value="EMERGENCY_ACTION">Emergency Action Taken</option>
+      </select>
+      <label>Decision Made</label>
+      <input type="text" id="overrideDecision" placeholder="What was decided?">
+      <label>Justification</label>
+      <textarea id="overrideJustification" placeholder="Why was this override necessary?"></textarea>
+      <label>Your Name/Role</label>
+      <input type="text" id="overrideActor" placeholder="e.g., John Smith - Compliance Officer">
+      <div class="btn-row">
+        <button class="btn-cancel" onclick="closeOverrideModal()">Cancel</button>
+        <button class="btn-submit" onclick="submitOverride()">Log Override</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Why Drawer -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+  <div class="why-drawer" id="whyDrawer">
+    <div class="drawer-header">
+      <h3 id="drawerTitle">Details</h3>
+      <button class="drawer-close" onclick="closeDrawer()">&times;</button>
+    </div>
+    <div class="drawer-content" id="drawerContent">
+      <!-- Drawer content will be inserted here -->
     </div>
   </div>
 
@@ -786,7 +1225,7 @@ function getDashboardHTML_() {
 
       // Update compliance card color
       const compCard = document.getElementById('complianceCard');
-      compCard.className = 'metric-card ' + (score >= 70 ? 'success' : score >= 40 ? '' : 'alert');
+      compCard.className = 'metric-card clickable ' + (score >= 70 ? 'success' : score >= 40 ? '' : 'alert');
 
       // AI Requests
       document.getElementById('aiRequestsWeek').textContent =
@@ -804,7 +1243,7 @@ function getDashboardHTML_() {
       document.getElementById('openVoids').className =
         'metric-value ' + (voids > 0 ? 'alert' : 'success');
       document.getElementById('voidsCard').className =
-        'metric-card ' + (voids > 0 ? 'alert' : 'success');
+        'metric-card clickable ' + (voids > 0 ? 'alert' : 'success');
 
       // Escalations
       const esc = data.openEscalations;
@@ -812,7 +1251,7 @@ function getDashboardHTML_() {
       document.getElementById('openEscalations').className =
         'metric-value ' + (esc > 0 ? 'alert' : 'success');
       document.getElementById('escalationsCard').className =
-        'metric-card ' + (esc > 0 ? 'alert' : 'success');
+        'metric-card clickable ' + (esc > 0 ? 'alert' : 'success');
 
       // Requests chart
       renderChart(data.aiRequests.byDay);
@@ -965,8 +1404,227 @@ function getDashboardHTML_() {
       window.location.reload();
     }
 
+    // ========== LIVE PULSE ==========
+    let lastEventTime = dashboardData.lastEventTime || null;
+    let pulseInterval;
+
+    function updatePulse() {
+      const dot = document.getElementById('pulseDot');
+      const label = document.getElementById('pulseLabel');
+
+      if (!lastEventTime) {
+        dot.classList.add('inactive');
+        label.textContent = 'No Events';
+        return;
+      }
+
+      const now = new Date();
+      const lastEvent = new Date(lastEventTime);
+      const minutesAgo = Math.floor((now - lastEvent) / 60000);
+
+      if (minutesAgo < 60) {
+        dot.classList.remove('inactive');
+        label.textContent = minutesAgo < 1 ? 'Live' : minutesAgo + 'm ago';
+      } else if (minutesAgo < 1440) {
+        dot.classList.add('inactive');
+        label.textContent = Math.floor(minutesAgo / 60) + 'h ago';
+      } else {
+        dot.classList.add('inactive');
+        label.textContent = Math.floor(minutesAgo / 1440) + 'd ago';
+      }
+    }
+
+    // ========== WHY DRAWER ==========
+    function openDrawer(metric) {
+      const drawer = document.getElementById('whyDrawer');
+      const overlay = document.getElementById('drawerOverlay');
+      const title = document.getElementById('drawerTitle');
+      const content = document.getElementById('drawerContent');
+
+      let html = '';
+      switch(metric) {
+        case 'compliance':
+          title.textContent = 'Compliance Score Breakdown';
+          const tagCoverage = dashboardData.tagCoverage || {};
+          html = '<div style="margin-bottom: 20px; color: #888;">Your compliance score is calculated from coverage across regulatory frameworks.</div>';
+          Object.entries(tagCoverage).forEach(([framework, stats]) => {
+            html += \`
+              <div class="drawer-row">
+                <span class="drawer-row-label">\${framework.replace(/_/g, ' ')}</span>
+                <span class="drawer-row-value">\${stats.covered}/\${stats.total} (\${stats.percentage}%)</span>
+              </div>
+            \`;
+          });
+          if (Object.keys(tagCoverage).length === 0) {
+            html += '<div style="color: #666; padding: 20px 0;">No framework coverage data yet. Tag your AI events with regulatory frameworks to track compliance.</div>';
+          }
+          break;
+
+        case 'requests':
+          title.textContent = 'AI Requests Detail';
+          html = \`
+            <div class="drawer-row">
+              <span class="drawer-row-label">This Week</span>
+              <span class="drawer-row-value">\${dashboardData.aiRequests.thisWeek}</span>
+            </div>
+            <div class="drawer-row">
+              <span class="drawer-row-label">All Time</span>
+              <span class="drawer-row-value">\${dashboardData.aiRequests.total}</span>
+            </div>
+            <div style="margin-top: 20px; margin-bottom: 10px; color: #888;">By Provider:</div>
+          \`;
+          Object.entries(dashboardData.aiRequests.byProvider || {}).forEach(([provider, count]) => {
+            html += \`
+              <div class="drawer-row">
+                <span class="drawer-row-label">\${provider}</span>
+                <span class="drawer-row-value">\${count} requests</span>
+              </div>
+            \`;
+          });
+          break;
+
+        case 'spend':
+          title.textContent = 'AI Spend Breakdown';
+          html = \`
+            <div class="drawer-row">
+              <span class="drawer-row-label">Total Spend</span>
+              <span class="drawer-row-value">$\${dashboardData.totalSpend.toFixed(2)}</span>
+            </div>
+            <div style="margin-top: 20px; color: #666; font-size: 12px;">
+              Spend is calculated from logged AI requests with cost metadata.
+              Ensure your AI proxy logs include cost fields for accurate tracking.
+            </div>
+          \`;
+          break;
+
+        case 'voids':
+          title.textContent = 'Open VOIDs';
+          const voids = dashboardData.voidDetails || [];
+          if (voids.length === 0 && dashboardData.openVoids === 0) {
+            html = '<div style="color: #28a745; padding: 20px 0;">&#10003; No open VOIDs. All compliance gaps have been addressed.</div>';
+          } else {
+            html = '<div style="margin-bottom: 15px; color: #888;">VOIDs are compliance gaps requiring attention:</div>';
+            voids.forEach(v => {
+              html += \`
+                <div style="background: rgba(220,53,69,0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                  <div style="color: #dc3545; font-weight: 600;">\${v.target || 'Unknown'}</div>
+                  <div style="color: #888; font-size: 12px; margin-top: 5px;">\${v.details || 'No details'}</div>
+                </div>
+              \`;
+            });
+            if (voids.length === 0 && dashboardData.openVoids > 0) {
+              html += '<div style="color: #888;">VOID details not available in current data.</div>';
+            }
+          }
+          break;
+
+        case 'escalations':
+          title.textContent = 'Open Escalations';
+          const escalations = dashboardData.escalationDetails || [];
+          if (escalations.length === 0 && dashboardData.openEscalations === 0) {
+            html = '<div style="color: #28a745; padding: 20px 0;">&#10003; No open escalations. All incidents have been resolved.</div>';
+          } else {
+            html = '<div style="margin-bottom: 15px; color: #888;">Escalations are incidents requiring human review:</div>';
+            escalations.forEach(e => {
+              html += \`
+                <div style="background: rgba(220,53,69,0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px;">
+                  <div style="color: #dc3545; font-weight: 600;">\${e.action || 'Unknown'}</div>
+                  <div style="color: #888; font-size: 12px; margin-top: 5px;">\${e.actor} - \${new Date(e.timestamp).toLocaleString()}</div>
+                </div>
+              \`;
+            });
+            if (escalations.length === 0 && dashboardData.openEscalations > 0) {
+              html += '<div style="color: #888;">Escalation details not available in current data.</div>';
+            }
+          }
+          break;
+      }
+
+      content.innerHTML = html;
+      drawer.classList.add('active');
+      overlay.classList.add('active');
+    }
+
+    function closeDrawer() {
+      document.getElementById('whyDrawer').classList.remove('active');
+      document.getElementById('drawerOverlay').classList.remove('active');
+    }
+
+    // ========== MANUAL OVERRIDE MODAL ==========
+    function openOverrideModal() {
+      document.getElementById('overrideModal').classList.add('active');
+    }
+
+    function closeOverrideModal() {
+      document.getElementById('overrideModal').classList.remove('active');
+      // Clear form
+      document.getElementById('overrideDecision').value = '';
+      document.getElementById('overrideJustification').value = '';
+      document.getElementById('overrideActor').value = '';
+    }
+
+    function submitOverride() {
+      const type = document.getElementById('overrideType').value;
+      const decision = document.getElementById('overrideDecision').value;
+      const justification = document.getElementById('overrideJustification').value;
+      const actor = document.getElementById('overrideActor').value;
+
+      if (!decision || !justification || !actor) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      // Submit to backend
+      google.script.run
+        .withSuccessHandler(function() {
+          alert('Override logged successfully. This has been recorded in the audit ledger.');
+          closeOverrideModal();
+          setTimeout(() => window.location.reload(), 1000);
+        })
+        .withFailureHandler(function(err) {
+          alert('Error logging override: ' + err.message);
+        })
+        .logManualOverride(type, decision, justification, actor);
+    }
+
+    // ========== THRESHOLD ALERTS ==========
+    let alertSettings = {
+      spend: false,
+      compliance: true,
+      voids: true
+    };
+
+    function toggleAlert(alertType) {
+      alertSettings[alertType] = !alertSettings[alertType];
+      const toggle = document.getElementById('alert' + alertType.charAt(0).toUpperCase() + alertType.slice(1));
+      toggle.classList.toggle('active');
+
+      // Save to backend
+      google.script.run.saveAlertSettings(alertSettings);
+    }
+
+    // ========== INTEGRITY HASH ==========
+    function displayHash() {
+      const hashEl = document.getElementById('hashValue');
+      const statusEl = document.getElementById('hashStatus');
+
+      if (dashboardData.integrityHash) {
+        hashEl.textContent = dashboardData.integrityHash;
+        statusEl.innerHTML = '&#10003;';
+        statusEl.className = 'hash-valid';
+      } else {
+        hashEl.textContent = 'No ledger entries to hash';
+        statusEl.innerHTML = '-';
+        statusEl.className = '';
+      }
+    }
+
+    // ========== INITIALIZATION ==========
     // Initial render
     renderDashboard(dashboardData);
+    updatePulse();
+    displayHash();
+    pulseInterval = setInterval(updatePulse, 60000); // Update pulse every minute
   </script>
 </body>
 </html>`;
@@ -1046,4 +1704,149 @@ function previewDashboardData() {
     'Full data logged to Apps Script console.',
     ui.ButtonSet.OK
   );
+}
+
+// ============================================================================
+// MANUAL OVERRIDE LOGGING
+// ============================================================================
+
+/**
+ * Log a manual override to the audit ledger
+ * Called from the dashboard's Red Button
+ */
+function logManualOverride(type, decision, justification, actor) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ledger = ss.getSheetByName('Audit_Ledger');
+
+  if (!ledger) {
+    throw new Error('Audit_Ledger sheet not found');
+  }
+
+  const uuid = Utilities.getUuid();
+  const timestamp = new Date().toISOString();
+
+  // Get headers to find column positions
+  const headers = ledger.getRange(1, 1, 1, ledger.getLastColumn()).getValues()[0];
+  const newRow = new Array(headers.length).fill('');
+
+  // Map values to columns
+  const colMap = {
+    'UUID': uuid,
+    'Timestamp': timestamp,
+    'Event_Type': 'MANUAL_OVERRIDE',
+    'Event Type': 'MANUAL_OVERRIDE',
+    'Actor': actor,
+    'Action': decision,
+    'Target': type,
+    'Details': justification,
+    'Signal': 'HUMAN_DECISION',
+    'Regulatory_Tags': ''
+  };
+
+  headers.forEach((header, idx) => {
+    if (colMap[header] !== undefined) {
+      newRow[idx] = colMap[header];
+    }
+  });
+
+  ledger.appendRow(newRow);
+
+  // Log to Apps Script console
+  Logger.log(`Manual Override Logged: ${type} - ${decision} by ${actor}`);
+
+  return { success: true, uuid: uuid };
+}
+
+// ============================================================================
+// ALERT SETTINGS
+// ============================================================================
+
+/**
+ * Save alert threshold settings
+ */
+function saveAlertSettings(settings) {
+  const props = PropertiesService.getDocumentProperties();
+  props.setProperty('ALERT_SETTINGS', JSON.stringify(settings));
+  return { success: true };
+}
+
+/**
+ * Get alert threshold settings
+ */
+function getAlertSettings() {
+  const props = PropertiesService.getDocumentProperties();
+  const settingsJson = props.getProperty('ALERT_SETTINGS');
+  return settingsJson ? JSON.parse(settingsJson) : {
+    spend: false,
+    compliance: true,
+    voids: true
+  };
+}
+
+/**
+ * Check thresholds and send email alerts if triggered
+ * Can be set up as a time-based trigger
+ */
+function checkAlertThresholds() {
+  const settings = getAlertSettings();
+  const data = getDashboardData_();
+  const alerts = [];
+
+  if (settings.spend && data.totalSpend > 100) {
+    alerts.push(`Spend Alert: Weekly spend ($${data.totalSpend.toFixed(2)}) exceeds $100 threshold.`);
+  }
+
+  if (settings.compliance && data.complianceScore < 70) {
+    alerts.push(`Compliance Alert: Score (${data.complianceScore}%) is below 70% threshold.`);
+  }
+
+  if (settings.voids && data.openVoids > 0) {
+    alerts.push(`VOID Alert: ${data.openVoids} open compliance gap(s) require attention.`);
+  }
+
+  if (alerts.length > 0) {
+    const email = Session.getActiveUser().getEmail();
+    const subject = 'Newton AI Governance - Alert Triggered';
+    const body = 'The following alert thresholds have been triggered:\n\n' +
+                 alerts.join('\n\n') +
+                 '\n\nView dashboard for details.';
+
+    MailApp.sendEmail(email, subject, body);
+    Logger.log('Alert email sent: ' + alerts.join(', '));
+  }
+
+  return { alertsTriggered: alerts.length, alerts: alerts };
+}
+
+// ============================================================================
+// INTEGRITY HASH
+// ============================================================================
+
+/**
+ * Calculate SHA-256 hash of recent ledger entries
+ * Provides tamper-evident proof of ledger integrity
+ */
+function calculateLedgerHash_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ledger = ss.getSheetByName('Audit_Ledger');
+
+  if (!ledger || ledger.getLastRow() < 2) {
+    return null;
+  }
+
+  // Get last 100 rows (or all if less than 100)
+  const lastRow = ledger.getLastRow();
+  const startRow = Math.max(2, lastRow - 99);
+  const numRows = lastRow - startRow + 1;
+
+  const data = ledger.getRange(startRow, 1, numRows, ledger.getLastColumn()).getValues();
+
+  // Create a canonical string representation
+  const canonical = data.map(row => row.join('|')).join('\\n');
+
+  // Calculate SHA-256
+  const hash = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, canonical);
+
+  // Convert to hex string
+  return hash.map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
 }
