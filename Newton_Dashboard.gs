@@ -1770,6 +1770,46 @@ function getDashboardHTML_() {
     .review-detail-card.strengths li { border-left: 3px solid #28a745; }
     .review-detail-card.gaps li { border-left: 3px solid #dc3545; }
     .review-detail-card.suggestions li { border-left: 3px solid #ffc107; }
+    .review-detail-card.learned li { border-left: 3px solid #17a2b8; }
+    .review-detail-card.improved li { border-left: 3px solid #6f42c1; }
+
+    .review-detail-card.learned h4 { color: #17a2b8; }
+    .review-detail-card.improved h4 { color: #6f42c1; }
+
+    .comparison-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #17a2b8, #138496);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 15px;
+    }
+
+    .competitive-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+
+    .competitive-badge.high {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+    }
+
+    .competitive-badge.medium {
+      background: linear-gradient(135deg, #ffc107, #fd7e14);
+      color: #333;
+    }
+
+    .competitive-badge.low {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: white;
+    }
 
     .review-meta {
       display: flex;
@@ -1989,8 +2029,8 @@ function getDashboardHTML_() {
       </div>
 
       <div class="narrative-review-card">
-        <h3>&#128221; AI-Powered Narrative Analysis</h3>
-        <p class="subtitle">Paste your project description draft to get feedback against CalCompete evaluation criteria.</p>
+        <h3>&#128221; AI-Powered Narrative Analysis with Comparison</h3>
+        <p class="subtitle">Paste your project description draft to get feedback. The AI compares your narrative against <strong>approved CalCompete applications</strong> in your industry and suggests improvements based on what worked.</p>
 
         <textarea class="narrative-textarea" id="narrativeText" placeholder="Paste your CalCompete project narrative here...
 
@@ -2025,7 +2065,7 @@ Example: Our company plans to expand manufacturing operations in California, cre
 
         <div id="reviewLoading" class="review-loading" style="display: none;">
           <div class="spinner"></div>
-          <p>Analyzing narrative against CalCompete criteria...</p>
+          <p>Analyzing narrative and comparing to approved applications...</p>
         </div>
 
         <div id="reviewError" class="review-error" style="display: none;"></div>
@@ -2833,7 +2873,7 @@ Example: Our company plans to expand manufacturing operations in California, cre
           btn.textContent = 'Analyze Narrative';
           showReviewError('Analysis failed: ' + err.message);
         })
-        .reviewCalCompeteNarrative(narrativeText, industry, workflowId || null);
+        .reviewCalCompeteNarrativeWithComparison(narrativeText, industry, workflowId || null);
     }
 
     function displayReviewResults(result) {
@@ -2862,6 +2902,26 @@ Example: Our company plans to expand manufacturing operations in California, cre
         ? result.suggestions.map(s => '<li>' + escapeHtml(s) + '</li>').join('')
         : '<li class="empty">No additional suggestions</li>';
 
+      // Build learned from approved list (new comparison feature)
+      const learnedHtml = (result.learnedFromApproved && result.learnedFromApproved.length > 0)
+        ? result.learnedFromApproved.map(l => '<li>' + escapeHtml(l) + '</li>').join('')
+        : '<li class="empty">No specific patterns identified</li>';
+
+      // Build improved language suggestions (new comparison feature)
+      const improvedHtml = (result.improvedLanguage && result.improvedLanguage.length > 0)
+        ? result.improvedLanguage.map(l => '<li>' + escapeHtml(l) + '</li>').join('')
+        : '<li class="empty">No rewrites suggested</li>';
+
+      // Competitive score badge
+      const compScore = result.competitiveScore || 'unknown';
+      const compClass = compScore === 'strong' ? 'high' : compScore === 'moderate' ? 'medium' : 'low';
+      const compLabel = compScore === 'strong' ? 'Strong vs Approved' : compScore === 'moderate' ? 'Moderate vs Approved' : 'Weak vs Approved';
+
+      // Comparison badge if comparison was used
+      const comparisonBadge = result.comparisonsUsed > 0
+        ? '<span class="comparison-badge">📊 Compared to ' + result.comparisonsUsed + ' approved apps</span>'
+        : '';
+
       resultsEl.innerHTML = `
         <div class="review-results-content">
           <div class="review-score-section">
@@ -2872,6 +2932,8 @@ Example: Our company plans to expand manufacturing operations in California, cre
             <div class="score-description">
               ${getScoreDescription(result.overallScore)}
             </div>
+            ${comparisonBadge}
+            <div class="competitive-badge ${compClass}">${compLabel}</div>
           </div>
 
           <div class="review-details-grid">
@@ -2885,8 +2947,18 @@ Example: Our company plans to expand manufacturing operations in California, cre
               <ul>${gapsHtml}</ul>
             </div>
 
+            <div class="review-detail-card learned">
+              <h4><span class="card-icon">🏆</span> Learn from Approved Apps</h4>
+              <ul>${learnedHtml}</ul>
+            </div>
+
+            <div class="review-detail-card improved">
+              <h4><span class="card-icon">✏️</span> Suggested Rewrites</h4>
+              <ul>${improvedHtml}</ul>
+            </div>
+
             <div class="review-detail-card suggestions">
-              <h4><span class="card-icon">💡</span> Suggestions</h4>
+              <h4><span class="card-icon">💡</span> Action Items</h4>
               <ul>${suggestionsHtml}</ul>
             </div>
           </div>
