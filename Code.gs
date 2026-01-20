@@ -774,4 +774,11 @@ function onOpen() {
   ui.createMenu("Audit Package")
     .addItem("Generate Audit Package", "generateAuditPackageFromUI")
     .addToUi();
+
+  ui.createMenu("Newton Audit")
+    .addItem("Generate Model Card", "generateModelCardFromUI")
+    .addSeparator()
+    .addItem("Run Gap Analysis", "runGapAnalysisFromUI")
+    .addItem("Multi-Framework Analysis", "runMultiFrameworkFromUI")
+    .addToUi();
 }
