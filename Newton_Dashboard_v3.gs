@@ -1324,62 +1324,318 @@ function runDashboardActionV3(functionName, params) {
   return { success: false, error: 'Action not found: ' + functionName };
 }
 
-// Action implementations - connect to real functions
-function openComplianceReport() {
-  SpreadsheetApp.getUi().alert('Opening Compliance Report...');
-  return true;
-}
+// Action implementations - wired to real functions
 
 /**
- * Fix top risk action - now receives alertId for context
+ * Open full compliance report using Newton_Regulatory
  */
-function fixTopRiskAction(params) {
-  const alertId = params.alertId;
+function openComplianceReport() {
+  // Show compliance summary for all frameworks
+  const ui = SpreadsheetApp.getUi();
 
-  if (alertId) {
-    // Load the specific alert and take action
-    const alerts = DataCache_.getSheetData('Detection_Alerts');
-    if (alerts.exists) {
-      const idCol = findColumnIndex(alerts.headers, ['ID', 'id', 'AlertID', 'alert_id']);
-      if (idCol >= 0) {
-        for (var i = 0; i < alerts.rows.length; i++) {
-          if (alerts.rows[i][idCol] === alertId) {
-            // Found the alert - could open a specific dialog or workflow
-            SpreadsheetApp.getUi().alert('Fixing Alert: ' + alertId + '\n\n' +
-              'This would open the resolution workflow for the specific alert.');
-            return true;
+  try {
+    const frameworks = ['ISO_42001', 'EU_AI_ACT', 'NIST_AI_RMF'];
+    let report = '═══ COMPLIANCE REPORT ═══\n\n';
+
+    for (const fw of frameworks) {
+      try {
+        const summary = getComplianceSummary(fw);
+        report += `${summary.frameworkName}\n`;
+        report += `Coverage: ${summary.coveragePercent}%\n`;
+        report += `Documented: ${summary.coveredClauses.length}/${summary.totalClauses} clauses\n`;
+        if (summary.uncoveredClauses.length > 0) {
+          report += `Gaps: ${summary.uncoveredClauses.slice(0, 3).join(', ')}`;
+          if (summary.uncoveredClauses.length > 3) {
+            report += ` +${summary.uncoveredClauses.length - 3} more`;
           }
+          report += '\n';
         }
+        report += '\n';
+      } catch (e) {
+        report += `${fw}: Unable to load\n\n`;
       }
     }
-    SpreadsheetApp.getUi().alert('Alert ' + alertId + ' - Starting resolution workflow...');
-  } else {
-    // Fallback to gap analysis if no specific alert
-    if (typeof runGapAnalysisFromUI === 'function') {
-      runGapAnalysisFromUI();
-    } else {
-      SpreadsheetApp.getUi().alert('Gap Analysis workflow started');
-    }
+
+    report += '─────────────────────────\n';
+    report += 'Run "Regulatory > View Compliance Summary"\nfor detailed breakdown.';
+
+    ui.alert('Compliance Report', report, ui.ButtonSet.OK);
+  } catch (e) {
+    ui.alert('Error', 'Could not load compliance data: ' + e.message, ui.ButtonSet.OK);
   }
   return true;
 }
 
+/**
+ * Fix top risk action - resolves specific alert or runs gap analysis
+ */
+function fixTopRiskAction(params) {
+  const alertId = params.alertId;
+  const ui = SpreadsheetApp.getUi();
+
+  if (alertId) {
+    // Load the specific alert
+    const alerts = DataCache_.getSheetData('Detection_Alerts');
+    let alertData = null;
+
+    if (alerts.exists) {
+      const idCol = findColumnIndex(alerts.headers, ['ID', 'id', 'AlertID', 'alert_id']);
+      const titleCol = findColumnIndex(alerts.headers, ['Title', 'title', 'Message', 'Description']);
+      const severityCol = findColumnIndex(alerts.headers, ['Severity', 'severity']);
+      const categoryCol = findColumnIndex(alerts.headers, ['Category', 'category', 'Type']);
+
+      if (idCol >= 0) {
+        for (var i = 0; i < alerts.rows.length; i++) {
+          if (alerts.rows[i][idCol] === alertId) {
+            alertData = {
+              id: alertId,
+              title: titleCol >= 0 ? alerts.rows[i][titleCol] : 'Unknown',
+              severity: severityCol >= 0 ? alerts.rows[i][severityCol] : 'MEDIUM',
+              category: categoryCol >= 0 ? alerts.rows[i][categoryCol] : 'SYSTEM',
+              rowIndex: i + 2 // +2 for header and 0-index
+            };
+            break;
+          }
+        }
+      }
+    }
+
+    if (alertData) {
+      // Show alert details and resolution options
+      const response = ui.alert(
+        'Resolve: ' + alertData.title,
+        `ID: ${alertData.id}\nSeverity: ${alertData.severity}\nCategory: ${alertData.category}\n\n` +
+        'What would you like to do?\n\n' +
+        '• YES = Mark as Resolved\n' +
+        '• NO = Open related analysis\n' +
+        '• CANCEL = Close',
+        ui.ButtonSet.YES_NO_CANCEL
+      );
+
+      if (response === ui.Button.YES) {
+        // Mark alert as resolved
+        try {
+          const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Detection_Alerts');
+          const statusCol = findColumnIndex(alerts.headers, ['Status', 'status', 'State']);
+          if (sheet && statusCol >= 0) {
+            sheet.getRange(alertData.rowIndex, statusCol + 1).setValue('RESOLVED');
+
+            // Log to audit ledger
+            if (typeof safeNewEntry === 'function') {
+              safeNewEntry(
+                Session.getActiveUser().getEmail() || 'User',
+                'ALERT_RESOLVED',
+                'Resolved alert: ' + alertData.title,
+                alertData.id,
+                'FINAL'
+              );
+            }
+            ui.alert('Alert Resolved', 'Alert marked as resolved and logged to audit ledger.', ui.ButtonSet.OK);
+          }
+        } catch (e) {
+          ui.alert('Error', 'Could not update alert: ' + e.message, ui.ButtonSet.OK);
+        }
+      } else if (response === ui.Button.NO) {
+        // Open related analysis based on category
+        if (alertData.category === 'REGULATORY' || alertData.category === 'COMPLIANCE') {
+          runGapAnalysisFromUI();
+        } else if (alertData.category === 'GATEKEEPER' || alertData.category === 'AI') {
+          viewGatekeeperStats();
+        } else {
+          viewSystemLog();
+        }
+      }
+    } else {
+      ui.alert('Alert Not Found', 'Could not find alert: ' + alertId, ui.ButtonSet.OK);
+    }
+  } else {
+    // No specific alert - run gap analysis
+    runGapAnalysisFromUI();
+  }
+  return true;
+}
+
+/**
+ * Open budget manager - shows AI spend tracking
+ */
 function openBudgetManager() {
-  SpreadsheetApp.getUi().alert('Budget Manager - Coming Soon');
+  const ui = SpreadsheetApp.getUi();
+
+  // Try to get budget data from ledger
+  const ledger = DataCache_.getSheetData('Audit_Ledger');
+  let totalRequests = 0;
+  let estimatedCost = 0;
+
+  if (ledger.exists && ledger.rows) {
+    totalRequests = ledger.rows.length;
+    // Rough estimate: $0.01 per request for Gemini 1.5 Pro
+    estimatedCost = (totalRequests * 0.01).toFixed(2);
+  }
+
+  const report = `═══ AI BUDGET TRACKER ═══\n\n` +
+    `Total AI Requests: ${totalRequests}\n` +
+    `Estimated Cost: $${estimatedCost}\n` +
+    `Provider: Gemini 1.5 Pro\n\n` +
+    `─────────────────────────\n` +
+    `Note: Actual costs depend on\n` +
+    `token usage per request.\n\n` +
+    `To set budget alerts, add a\n` +
+    `Budget_Config sheet with:\n` +
+    `• Monthly_Limit\n` +
+    `• Alert_Threshold`;
+
+  ui.alert('Budget Manager', report, ui.ButtonSet.OK);
   return true;
 }
 
+/**
+ * Open regulatory updates - shows recent regulation changes
+ */
 function openRegulatoryUpdates() {
-  SpreadsheetApp.getUi().alert('Regulatory Updates - View Newton_Regulatory.gs');
+  // Delegate to Newton_Regulatory's UI function
+  if (typeof viewRegulatoryCompliance === 'function') {
+    viewRegulatoryCompliance();
+  } else {
+    const ui = SpreadsheetApp.getUi();
+    ui.alert(
+      'Regulatory Updates',
+      'Tracked Frameworks:\n\n' +
+      '• ISO/IEC 42001:2023 - AI Management System\n' +
+      '• EU AI Act (2024) - European AI Regulation\n' +
+      '• NIST AI RMF 1.0 - Risk Management Framework\n\n' +
+      'Run "Regulatory > View Compliance Summary"\nto check your coverage.',
+      ui.ButtonSet.OK
+    );
+  }
   return true;
 }
 
+/**
+ * Open latency trace - shows API response times
+ */
 function openLatencyTrace() {
-  SpreadsheetApp.getUi().alert('Latency Trace - Coming Soon');
+  const ui = SpreadsheetApp.getUi();
+  const ledger = DataCache_.getSheetData('Audit_Ledger');
+
+  let latencyData = [];
+
+  if (ledger.exists && ledger.rows) {
+    const latencyCol = findColumnIndex(ledger.headers, ['Latency', 'latency', 'Duration', 'duration_ms']);
+    const timestampCol = findColumnIndex(ledger.headers, ['Timestamp', 'timestamp', 'Date']);
+    const actionCol = findColumnIndex(ledger.headers, ['Action', 'action', 'Event', 'event_type']);
+
+    if (latencyCol >= 0) {
+      // Get last 20 entries with latency data
+      for (var i = ledger.rows.length - 1; i >= 0 && latencyData.length < 20; i--) {
+        const lat = parseFloat(ledger.rows[i][latencyCol]);
+        if (!isNaN(lat) && lat > 0) {
+          latencyData.push({
+            latency: lat,
+            timestamp: timestampCol >= 0 ? ledger.rows[i][timestampCol] : '',
+            action: actionCol >= 0 ? ledger.rows[i][actionCol] : ''
+          });
+        }
+      }
+    }
+  }
+
+  if (latencyData.length === 0) {
+    ui.alert('Latency Trace', 'No latency data found.\n\nAdd a "Latency" column to Audit_Ledger\nto track API response times.', ui.ButtonSet.OK);
+    return true;
+  }
+
+  // Calculate stats
+  const latencies = latencyData.map(d => d.latency);
+  const avg = Math.round(latencies.reduce((a, b) => a + b, 0) / latencies.length);
+  const max = Math.max(...latencies);
+  const min = Math.min(...latencies);
+
+  let report = `═══ LATENCY TRACE ═══\n\n`;
+  report += `Avg: ${avg}ms | Min: ${min}ms | Max: ${max}ms\n\n`;
+  report += `Recent Requests:\n`;
+
+  latencyData.slice(0, 10).forEach(d => {
+    const status = d.latency > 2000 ? '🔴' : d.latency > 800 ? '🟡' : '🟢';
+    report += `${status} ${d.latency}ms - ${String(d.action).substring(0, 25)}\n`;
+  });
+
+  ui.alert('Latency Trace', report, ui.ButtonSet.OK);
   return true;
 }
 
+/**
+ * Open workflow status dialog
+ */
 function openWorkflowStatus() {
-  SpreadsheetApp.getUi().alert('Workflow Status - View pending workflows in the Workflows sheet');
+  // Delegate to Newton_Workflow's UI function
+  if (typeof showWorkflowStatusDialog === 'function') {
+    showWorkflowStatusDialog();
+  } else {
+    const ui = SpreadsheetApp.getUi();
+    const workflows = DataCache_.getSheetData('Workflows');
+
+    if (!workflows.exists || workflows.rows.length === 0) {
+      ui.alert('Workflow Status', 'No active workflows.\n\nStart a new workflow from:\nWorkflow > Start Workflow', ui.ButtonSet.OK);
+      return true;
+    }
+
+    const statusCol = findColumnIndex(workflows.headers, ['Status', 'status']);
+    const nameCol = findColumnIndex(workflows.headers, ['Name', 'name', 'ClientName', 'client_name']);
+
+    let report = '═══ ACTIVE WORKFLOWS ═══\n\n';
+    let activeCount = 0;
+
+    workflows.rows.forEach(row => {
+      const status = statusCol >= 0 ? String(row[statusCol]).toUpperCase() : '';
+      if (status === 'ACTIVE' || status === 'IN_PROGRESS' || status === 'PENDING') {
+        const name = nameCol >= 0 ? row[nameCol] : 'Unnamed';
+        report += `• ${name} (${status})\n`;
+        activeCount++;
+      }
+    });
+
+    if (activeCount === 0) {
+      report = 'No active workflows.\n\nStart a new workflow from:\nWorkflow > Start Workflow';
+    }
+
+    ui.alert('Workflow Status', report, ui.ButtonSet.OK);
+  }
+  return true;
+}
+
+/**
+ * View system log - shows recent audit entries
+ */
+function viewSystemLog() {
+  const ui = SpreadsheetApp.getUi();
+  const ledger = DataCache_.getSheetData('Audit_Ledger');
+
+  if (!ledger.exists || ledger.rows.length === 0) {
+    ui.alert('System Log', 'No entries in Audit_Ledger.', ui.ButtonSet.OK);
+    return true;
+  }
+
+  const timestampCol = findColumnIndex(ledger.headers, ['Timestamp', 'timestamp', 'Date']);
+  const actionCol = findColumnIndex(ledger.headers, ['Action', 'action', 'Event', 'event_type']);
+  const textCol = findColumnIndex(ledger.headers, ['Text', 'text', 'Message', 'Description']);
+  const statusCol = findColumnIndex(ledger.headers, ['Status', 'status', 'Outcome']);
+
+  let report = '═══ RECENT SYSTEM LOG ═══\n\n';
+
+  // Get last 15 entries
+  const recentRows = ledger.rows.slice(-15).reverse();
+
+  recentRows.forEach(row => {
+    const action = actionCol >= 0 ? String(row[actionCol]).substring(0, 20) : '';
+    const text = textCol >= 0 ? String(row[textCol]).substring(0, 30) : '';
+    const status = statusCol >= 0 ? row[statusCol] : '';
+
+    const icon = String(status).toUpperCase().includes('ERROR') ? '🔴' :
+                 String(status).toUpperCase().includes('BLOCK') ? '🟡' : '🟢';
+
+    report += `${icon} ${action}: ${text}\n`;
+  });
+
+  ui.alert('System Log', report, ui.ButtonSet.OK);
   return true;
 }
