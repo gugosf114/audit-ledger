@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newton - AI Governance Platform</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-hover: #1a1a25;
+      --bg-active: #252535;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.15);
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #606070;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --safe: #10b981;
+      --watch: #f59e0b;
+      --action: #ef4444;
+      --info: #3b82f6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-link {
+      padding: 10px 20px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .nav-link.active {
+      color: var(--text-primary);
+      background: var(--bg-active);
+    }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--safe);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+
+    .page {
+      display: none;
+      padding: 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== HOME PAGE ===== */
+    .hero {
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff, #a0a0b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 20px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .hero-stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== CAPABILITY CARDS ===== */
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title-icon {
+      font-size: 28px;
+    }
+
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .capability-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .capability-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .capability-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .capability-card:hover::before {
+      opacity: 1;
+    }
+
+    .capability-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .capability-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: var(--bg-hover);
+    }
+
+    .capability-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .capability-status.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .capability-status.ready {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+    }
+
+    .capability-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .capability-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .capability-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .capability-feature {
+      padding: 6px 12px;
+      background: var(--bg-hover);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .capability-action {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .capability-action-btn {
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .capability-action-btn:hover {
+      background: var(--accent-hover);
+      transform: translateX(4px);
+    }
+
+    .capability-action-link {
+      color: var(--text-muted);
+      font-size: 13px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .capability-action-link:hover {
+      color: var(--text-secondary);
+    }
+
+    /* ===== WORKFLOW PAGE ===== */
+    .workflow-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .workflow-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .workflow-tab {
+      padding: 12px 24px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .workflow-tab:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .workflow-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .workflow-content {
+      display: none;
+    }
+
+    .workflow-content.active {
+      display: block;
+    }
+
+    /* Workflow Templates List */
+    .template-list {
+      display: grid;
+      gap: 20px;
+    }
+
+    .template-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: start;
+      transition: all 0.2s;
+    }
+
+    .template-card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .template-info h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .template-info p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .template-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .template-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .template-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-active);
+    }
+
+    /* Workflow Steps Detail */
+    .workflow-detail {
+      display: none;
+    }
+
+    .workflow-detail.active {
+      display: block;
+    }
+
+    .workflow-detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .workflow-detail-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .workflow-detail-desc {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    .workflow-progress {
+      text-align: right;
+    }
+
+    .workflow-progress-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .workflow-progress-bar {
+      width: 200px;
+      height: 8px;
+      background: var(--bg-hover);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .workflow-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--safe));
+      border-radius: 4px;
+      transition: width 0.5s;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+
+    .step-card.expanded {
+      border-color: var(--accent);
+    }
+
+    .step-card.completed {
+      border-color: var(--safe);
+    }
+
+    .step-header {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .step-card.completed .step-number {
+      background: var(--safe);
+      color: white;
+    }
+
+    .step-info {
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-summary {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .step-status {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .step-status.pending {
+      background: var(--bg-hover);
+      color: var(--text-muted);
+    }
+
+    .step-status.in-progress {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .step-status.completed {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .step-expand {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .step-expand:hover {
+      background: var(--bg-active);
+    }
+
+    .step-body {
+      display: none;
+      padding: 0 24px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .step-card.expanded .step-body {
+      display: block;
+    }
+
+    .step-section {
+      padding-top: 20px;
+    }
+
+    .step-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .step-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* Document Checklist */
+    .doc-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .doc-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .doc-item:hover {
+      border-color: var(--border);
+    }
+
+    .doc-item.uploaded {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .doc-checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .doc-item.uploaded .doc-checkbox {
+      background: var(--safe);
+      border-color: var(--safe);
+      color: white;
+    }
+
+    .doc-info {
+      flex: 1;
+    }
+
+    .doc-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .doc-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .doc-upload-btn {
+      padding: 8px 16px;
+      background: var(--bg-active);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .doc-upload-btn:hover {
+      background: var(--accent);
+      border-style: solid;
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* Step Actions */
+    .step-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== DOCUMENTS PAGE ===== */
+    .documents-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 60px 40px;
+      text-align: center;
+      margin-bottom: 40px;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .upload-zone:hover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .upload-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .upload-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .upload-subtitle {
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+
+    .documents-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .document-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto auto auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .document-row:hover {
+      border-color: var(--border-hover);
+    }
+
+    .document-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .document-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .document-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .document-status {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .document-status.verified {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .document-status.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .document-date {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .document-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .document-action-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .document-action-btn:hover {
+      background: var(--bg-active);
+      color: var(--text-primary);
+    }
+
+    /* ===== LEDGER PAGE ===== */
+    .ledger-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ledger-filters {
+      display: flex;
+      gap: 12px;
+    }
+
+    .filter-select {
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .ledger-search {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ledger-search input {
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 14px;
+      width: 280px;
+    }
+
+    .ledger-search input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .ledger-table {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ledger-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .ledger-table th {
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--bg-hover);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ledger-table td {
+      padding: 16px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ledger-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .ledger-table tr:hover td {
+      background: var(--bg-hover);
+    }
+
+    .ledger-uuid {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .ledger-event-type {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-hover);
+    }
+
+    .ledger-confidence {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .confidence-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .confidence-dot.known-known { background: var(--safe); }
+    .confidence-dot.known-unknown { background: var(--watch); }
+    .confidence-dot.unknown-unknown { background: var(--action); }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      animation: fadeIn 0.2s;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--bg-active);
+      color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* ===== LOADING ===== */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== TOAST ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.3s;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.success { border-color: var(--safe); }
+    .toast.error { border-color: var(--action); }
+    .toast.warning { border-color: var(--watch); }
+
+    .toast-icon {
+      font-size: 20px;
+    }
+
+    .toast-message {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#" class="nav-brand" onclick="showPage('home')">
+      <div class="nav-brand-icon">N</div>
+      Newton
+    </a>
+
+    <div class="nav-links">
+      <a class="nav-link active" onclick="showPage('home')" data-page="home">Home</a>
+      <a class="nav-link" onclick="showPage('workflows')" data-page="workflows">Workflows</a>
+      <a class="nav-link" onclick="showPage('documents')" data-page="documents">Documents</a>
+      <a class="nav-link" onclick="showPage('ledger')" data-page="ledger">Audit Ledger</a>
+    </div>
+
+    <div class="nav-status">
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span id="systemStatus">System Active</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <h1 class="hero-title">AI Governance Platform</h1>
+        <p class="hero-subtitle">Tamper-evident audit trails, adversarial verification, and regulatory compliance mapping for AI systems.</p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-value" id="statEntries">0</div>
+            <div class="hero-stat-label">Audit Entries</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value" id="statWorkflows">0</div>
+            <div class="hero-stat-label">Active Workflows</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value" id="statCompliance">0%</div>
+            <div class="hero-stat-label">Compliance Score</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title"><span class="section-title-icon">&#x1F6E0;</span> Capabilities</h2>
+
+      <div class="capabilities-grid">
+
+        <!-- Tamper-Evident Ledger -->
+        <div class="capability-card" onclick="openCapability('ledger')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x1F512;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Tamper-Evident Ledger</h3>
+          <p class="capability-description">SHA-256 hash-chained audit trail. Every entry links cryptographically to the previous. Tampering breaks the chain.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Hash Chain</span>
+            <span class="capability-feature">Tamper Detection</span>
+            <span class="capability-feature">Integrity Audit</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Ledger &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- Confidence Declaration -->
+        <div class="capability-card" onclick="openCapability('confidence')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x1F3AF;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Confidence Declaration</h3>
+          <p class="capability-description">Rumsfeld Protocol - declare confidence BEFORE logging content. Prevents retroactive softening of claims.</p>
+          <div class="capability-features">
+            <span class="capability-feature">KNOWN_KNOWN</span>
+            <span class="capability-feature">KNOWN_UNKNOWN</span>
+            <span class="capability-feature">Pre-commit</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">Declare &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- Sealed Packet -->
+        <div class="capability-card" onclick="openCapability('sealedpacket')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x1F4E6;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Sealed Packet Verification</h3>
+          <p class="capability-description">Three-role adversarial system: Generator, Auditor, Regenerator. Prevents AI drift and hallucination.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Generator</span>
+            <span class="capability-feature">Auditor</span>
+            <span class="capability-feature">Regenerator</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">Run Verification &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- Gatekeeper -->
+        <div class="capability-card" onclick="openCapability('gatekeeper')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x1F6E1;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">AI Gatekeeper</h3>
+          <p class="capability-description">Filters AI outputs before they reach users. Blocks low-confidence, hallucinated, or policy-violating content.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Confidence Filter</span>
+            <span class="capability-feature">Hallucination Block</span>
+            <span class="capability-feature">Policy Enforcement</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Stats &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- Sentinel -->
+        <div class="capability-card" onclick="openCapability('sentinel')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x1F440;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Sentinel Detection</h3>
+          <p class="capability-description">Scans entries for suspicious signals: VOID_DETECTED, ADVERSARIAL_SUSPICION, UNFALSIFIABLE claims.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Signal Detection</span>
+            <span class="capability-feature">Pattern Analysis</span>
+            <span class="capability-feature">Alert System</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">Run Scan &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- Regulatory Mapping -->
+        <div class="capability-card" onclick="openCapability('regulatory')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x1F4DC;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Regulatory Mapping</h3>
+          <p class="capability-description">Auto-tags entries to ISO 42001, EU AI Act, and NIST AI RMF. Shows compliance coverage and gaps.</p>
+          <div class="capability-features">
+            <span class="capability-feature">ISO 42001</span>
+            <span class="capability-feature">EU AI Act</span>
+            <span class="capability-feature">NIST AI RMF</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Compliance &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- Document Verification -->
+        <div class="capability-card" onclick="openCapability('verification')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x2705;</div>
+            <span class="capability-status ready">Ready</span>
+          </div>
+          <h3 class="capability-title">Document Verification</h3>
+          <p class="capability-description">Upload documents for AI-powered verification. Checks authenticity, extracts content, computes hashes.</p>
+          <div class="capability-features">
+            <span class="capability-feature">AI Analysis</span>
+            <span class="capability-feature">Hash Verification</span>
+            <span class="capability-feature">Content Extraction</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">Upload Document &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+        <!-- IRAC -->
+        <div class="capability-card" onclick="openCapability('irac')">
+          <div class="capability-header">
+            <div class="capability-icon">&#x2696;</div>
+            <span class="capability-status ready">Ready</span>
+          </div>
+          <h3 class="capability-title">IRAC Legal Research</h3>
+          <p class="capability-description">Create structured legal research folders: Issue, Rule, Analysis, Conclusion. Deterministic folder IDs for tracking.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Folder Structure</span>
+            <span class="capability-feature">Case Tracking</span>
+            <span class="capability-feature">Research Organization</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">Create Folder &#x2192;</button>
+            <a href="#" class="capability-action-link">Learn more</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WORKFLOWS PAGE -->
+    <div class="page" id="page-workflows">
+      <div class="workflow-header">
+        <div>
+          <h1 class="section-title"><span class="section-title-icon">&#x1F4CB;</span> Compliance Workflows</h1>
+          <p style="color: var(--text-secondary); margin-top: -16px;">Step-by-step guides with document checklists and progress tracking</p>
+        </div>
+        <button class="btn btn-primary" onclick="showModal('newWorkflow')">+ New Workflow</button>
+      </div>
+
+      <div class="workflow-tabs">
+        <button class="workflow-tab active" onclick="showWorkflowTab('templates')">Templates</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('active')">Active Workflows</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('completed')">Completed</button>
+      </div>
+
+      <!-- Templates Tab -->
+      <div class="workflow-content active" id="workflow-templates">
+        <div class="template-list" id="templateList">
+          <!-- Templates will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Active Workflows Tab -->
+      <div class="workflow-content" id="workflow-active">
+        <div id="activeWorkflowsList">
+          <!-- Active workflows will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Completed Tab -->
+      <div class="workflow-content" id="workflow-completed">
+        <div id="completedWorkflowsList">
+          <!-- Completed workflows will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Workflow Detail View (hidden by default) -->
+      <div class="workflow-detail" id="workflowDetail">
+        <div class="workflow-detail-header">
+          <div>
+            <h1 class="workflow-detail-title" id="workflowDetailTitle">ISO 42001 AI Management System</h1>
+            <p class="workflow-detail-desc" id="workflowDetailDesc">Complete compliance checklist for ISO/IEC 42001</p>
+          </div>
+          <div class="workflow-progress">
+            <div class="workflow-progress-label"><span id="workflowProgress">0</span>% Complete</div>
+            <div class="workflow-progress-bar">
+              <div class="workflow-progress-fill" id="workflowProgressFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="steps-list" id="stepsList">
+          <!-- Steps will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS PAGE -->
+    <div class="page" id="page-documents">
+      <div class="documents-header">
+        <h1 class="section-title"><span class="section-title-icon">&#x1F4C4;</span> Document Management</h1>
+        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">+ Upload Document</button>
+        <input type="file" id="fileInput" style="display: none" multiple onchange="handleFileUpload(event)">
+      </div>
+
+      <div class="upload-zone" id="uploadZone" ondrop="handleDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+        <div class="upload-icon">&#x1F4E4;</div>
+        <div class="upload-title">Drag and drop files here</div>
+        <div class="upload-subtitle">or click to browse. Supports PDF, DOC, DOCX, images</div>
+      </div>
+
+      <h2 class="section-title" style="font-size: 18px;">Recent Documents</h2>
+
+      <div class="documents-list" id="documentsList">
+        <!-- Documents will be loaded here -->
+      </div>
+    </div>
+
+    <!-- LEDGER PAGE -->
+    <div class="page" id="page-ledger">
+      <h1 class="section-title"><span class="section-title-icon">&#x1F4D6;</span> Audit Ledger</h1>
+
+      <div class="ledger-controls">
+        <div class="ledger-filters">
+          <select class="filter-select" id="filterEventType">
+            <option value="">All Event Types</option>
+            <option value="FINDING">Finding</option>
+            <option value="ALERT">Alert</option>
+            <option value="VOID_DETECTED">Void Detected</option>
+            <option value="CONFIDENCE_DECLARATION">Confidence Declaration</option>
+          </select>
+          <select class="filter-select" id="filterConfidence">
+            <option value="">All Confidence</option>
+            <option value="KNOWN_KNOWN">Known Known</option>
+            <option value="KNOWN_UNKNOWN">Known Unknown</option>
+            <option value="UNKNOWN_UNKNOWN">Unknown Unknown</option>
+          </select>
+          <select class="filter-select" id="filterPeriod">
+            <option value="7">Last 7 days</option>
+            <option value="30" selected>Last 30 days</option>
+            <option value="90">Last 90 days</option>
+            <option value="all">All time</option>
+          </select>
+        </div>
+
+        <div class="ledger-search">
+          <input type="text" placeholder="Search entries..." id="ledgerSearch">
+          <button class="btn btn-secondary" onclick="loadLedgerData()">Search</button>
+          <button class="btn btn-primary" onclick="showModal('newEntry')">+ New Entry</button>
+        </div>
+      </div>
+
+      <div class="ledger-table">
+        <table>
+          <thead>
+            <tr>
+              <th>UUID</th>
+              <th>Timestamp</th>
+              <th>Actor</th>
+              <th>Event Type</th>
+              <th>Text</th>
+              <th>Confidence</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerTableBody">
+            <!-- Ledger entries will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: New Entry -->
+  <div class="modal-overlay" id="modal-newEntry">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">New Audit Entry</h2>
+        <button class="modal-close" onclick="closeModal('newEntry')">&#x2715;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Confidence Level *</label>
+          <select class="form-input form-select" id="entryConfidence">
+            <option value="">Select confidence level...</option>
+            <option value="KNOWN_KNOWN">KNOWN_KNOWN - High confidence, direct evidence</option>
+            <option value="KNOWN_UNKNOWN">KNOWN_UNKNOWN - Identified gap</option>
+            <option value="UNKNOWN_UNKNOWN">UNKNOWN_UNKNOWN - Speculation</option>
+          </select>
+          <p class="form-hint">You must declare confidence before the entry is logged (Rumsfeld Protocol)</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Numeric Confidence (Optional)</label>
+          <input type="number" class="form-input" id="entryConfidenceNumeric" min="0" max="100" placeholder="0-100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Event Type *</label>
+          <select class="form-input form-select" id="entryEventType">
+            <option value="">Select event type...</option>
+            <option value="FINDING">Finding</option>
+            <option value="OBSERVATION">Observation</option>
+            <option value="DECISION">Decision</option>
+            <option value="ALERT">Alert</option>
+            <option value="VOID_DETECTED">Void Detected</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Text *</label>
+          <textarea class="form-input form-textarea" id="entryText" placeholder="Describe the finding, observation, or decision..."></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-input form-select" id="entryStatus">
+            <option value="DRAFT">Draft</option>
+            <option value="FINAL">Final</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('newEntry')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitNewEntry()">Create Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: New Workflow -->
+  <div class="modal-overlay" id="modal-newWorkflow">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Start New Workflow</h2>
+        <button class="modal-close" onclick="closeModal('newWorkflow')">&#x2715;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Workflow Template *</label>
+          <select class="form-input form-select" id="workflowTemplate">
+            <option value="">Select a template...</option>
+            <option value="ISO_42001">ISO 42001 AI Management System</option>
+            <option value="CALCOMPETE">CalCompete Grant Application</option>
+            <option value="CA_RESIDENCY">CA Residency Change</option>
+            <option value="EU_AI_ACT">EU AI Act Compliance</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Client/Project Name *</label>
+          <input type="text" class="form-input" id="workflowClientName" placeholder="e.g., Acme Corp AI Audit">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assignee Email (Optional)</label>
+          <input type="email" class="form-input" id="workflowAssignee" placeholder="e.g., analyst@company.com">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('newWorkflow')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitNewWorkflow()">Start Workflow</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // ===== PAGE NAVIGATION =====
+    function showPage(pageId) {
+      // Update nav links
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.page === pageId) {
+          link.classList.add('active');
+        }
+      });
+
+      // Show/hide pages
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById('page-' + pageId).classList.add('active');
+
+      // Load data for the page
+      if (pageId === 'ledger') loadLedgerData();
+      if (pageId === 'workflows') loadWorkflowTemplates();
+      if (pageId === 'documents') loadDocuments();
+      if (pageId === 'home') loadHomeStats();
+    }
+
+    // ===== WORKFLOW TABS =====
+    function showWorkflowTab(tabId) {
+      document.querySelectorAll('.workflow-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      document.querySelectorAll('.workflow-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.getElementById('workflow-' + tabId).classList.add('active');
+
+      // Hide detail view when switching tabs
+      document.getElementById('workflowDetail').classList.remove('active');
+    }
+
+    // ===== MODALS =====
+    function showModal(modalId) {
+      document.getElementById('modal-' + modalId).classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById('modal-' + modalId).classList.remove('active');
+    }
+
+    // Close modal on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+        }
+      });
+    });
+
+    // ===== TOAST NOTIFICATIONS =====
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+
+      const icons = {
+        success: '&#x2705;',
+        error: '&#x274C;',
+        warning: '&#x26A0;'
+      };
+
+      toast.innerHTML = `
+        <span class="toast-icon">${icons[type]}</span>
+        <span class="toast-message">${message}</span>
+      `;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.remove();
+      }, 4000);
+    }
+
+    // ===== CAPABILITY ACTIONS =====
+    function openCapability(capId) {
+      switch(capId) {
+        case 'ledger':
+          showPage('ledger');
+          break;
+        case 'confidence':
+          showPage('ledger');
+          showModal('newEntry');
+          break;
+        case 'sealedpacket':
+          runServerFunction('runSealedPacketUI');
+          break;
+        case 'gatekeeper':
+          runServerFunction('viewGatekeeperStats');
+          break;
+        case 'sentinel':
+          runServerFunction('runSentinelScan');
+          break;
+        case 'regulatory':
+          runServerFunction('viewRegulatoryCompliance');
+          break;
+        case 'verification':
+          showPage('documents');
+          break;
+        case 'irac':
+          runServerFunction('createIRACFolderUI');
+          break;
+        default:
+          showToast('Coming soon: ' + capId, 'warning');
+      }
+    }
+
+    // ===== SERVER COMMUNICATION =====
+    function runServerFunction(functionName, params) {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((result) => {
+            showToast('Action completed', 'success');
+          })
+          .withFailureHandler((err) => {
+            showToast('Error: ' + err.message, 'error');
+          })
+          [functionName](params);
+      } else {
+        showToast('Running: ' + functionName, 'warning');
+      }
+    }
+
+    // ===== HOME PAGE =====
+    function loadHomeStats() {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((stats) => {
+            document.getElementById('statEntries').textContent = stats.entries || 0;
+            document.getElementById('statWorkflows').textContent = stats.workflows || 0;
+            document.getElementById('statCompliance').textContent = (stats.compliance || 0) + '%';
+          })
+          .getHomeStats();
+      } else {
+        // Demo data
+        document.getElementById('statEntries').textContent = '247';
+        document.getElementById('statWorkflows').textContent = '3';
+        document.getElementById('statCompliance').textContent = '78%';
+      }
+    }
+
+    // ===== LEDGER PAGE =====
+    function loadLedgerData() {
+      const tbody = document.getElementById('ledgerTableBody');
+      tbody.innerHTML = '<tr><td colspan="7"><div class="loading"><div class="loading-spinner"></div>Loading entries...</div></td></tr>';
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(renderLedgerData)
+          .withFailureHandler((err) => {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--action);">Error loading data: ' + err.message + '</td></tr>';
+          })
+          .getLedgerEntries({
+            eventType: document.getElementById('filterEventType').value,
+            confidence: document.getElementById('filterConfidence').value,
+            period: document.getElementById('filterPeriod').value,
+            search: document.getElementById('ledgerSearch').value
+          });
+      } else {
+        // Demo data
+        renderLedgerData([
+          { uuid: 'a1b2c3d4', timestamp: '2026-01-23 10:30', actor: 'George', eventType: 'FINDING', text: 'Policy document missing risk assessment section', confidence: 'KNOWN_KNOWN', status: 'FINAL' },
+          { uuid: 'e5f6g7h8', timestamp: '2026-01-23 09:15', actor: 'System', eventType: 'VOID_DETECTED', text: 'Article 9 compliance documentation not found', confidence: 'KNOWN_UNKNOWN', status: 'FINAL' },
+          { uuid: 'i9j0k1l2', timestamp: '2026-01-22 16:45', actor: 'Analyst', eventType: 'OBSERVATION', text: 'Model drift detected in sentiment classifier', confidence: 'UNKNOWN_UNKNOWN', status: 'DRAFT' }
+        ]);
+      }
+    }
+
+    function renderLedgerData(entries) {
+      const tbody = document.getElementById('ledgerTableBody');
+
+      if (!entries || entries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No entries found</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = entries.map(entry => `
+        <tr>
+          <td><span class="ledger-uuid">${entry.uuid.substring(0, 8)}...</span></td>
+          <td>${entry.timestamp}</td>
+          <td>${entry.actor}</td>
+          <td><span class="ledger-event-type">${entry.eventType}</span></td>
+          <td>${entry.text.substring(0, 50)}${entry.text.length > 50 ? '...' : ''}</td>
+          <td>
+            <span class="ledger-confidence">
+              <span class="confidence-dot ${entry.confidence.toLowerCase().replace('_', '-')}"></span>
+              ${entry.confidence}
+            </span>
+          </td>
+          <td>${entry.status}</td>
+        </tr>
+      `).join('');
+    }
+
+    function submitNewEntry() {
+      const confidence = document.getElementById('entryConfidence').value;
+      const confidenceNumeric = document.getElementById('entryConfidenceNumeric').value;
+      const eventType = document.getElementById('entryEventType').value;
+      const text = document.getElementById('entryText').value;
+      const status = document.getElementById('entryStatus').value;
+
+      if (!confidence || !eventType || !text) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+      }
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(() => {
+            closeModal('newEntry');
+            showToast('Entry created with hash-chain verification', 'success');
+            loadLedgerData();
+            // Reset form
+            document.getElementById('entryConfidence').value = '';
+            document.getElementById('entryConfidenceNumeric').value = '';
+            document.getElementById('entryEventType').value = '';
+            document.getElementById('entryText').value = '';
+          })
+          .withFailureHandler((err) => {
+            showToast('Error: ' + err.message, 'error');
+          })
+          .createEntryFromUI({
+            confidence: confidence,
+            confidenceNumeric: confidenceNumeric,
+            eventType: eventType,
+            text: text,
+            status: status
+          });
+      } else {
+        closeModal('newEntry');
+        showToast('Entry created (demo mode)', 'success');
+      }
+    }
+
+    // ===== WORKFLOWS PAGE =====
+    const WORKFLOW_TEMPLATES = {
+      'ISO_42001': {
+        name: 'ISO 42001 AI Management System',
+        description: 'Complete compliance checklist for ISO/IEC 42001 AI governance standard',
+        stepCount: 12,
+        estimatedTime: '2-4 weeks',
+        steps: [
+          { title: 'Define AI Policy', description: 'Establish organizational AI policy aligned with business objectives. This policy should define the scope, objectives, and principles for AI governance.', docs: [
+            { name: 'AI Policy Document', description: 'Formal policy statement approved by leadership' },
+            { name: 'Policy Scope Definition', description: 'Document defining AI systems covered by the policy' }
+          ]},
+          { title: 'Risk Assessment', description: 'Identify and assess AI-related risks including technical, ethical, and operational risks.', docs: [
+            { name: 'Risk Register', description: 'Spreadsheet or document listing all identified risks' },
+            { name: 'Risk Assessment Report', description: 'Detailed analysis of risk likelihood and impact' }
+          ]},
+          { title: 'Define Roles', description: 'Assign AI governance roles and responsibilities. Define accountability for AI decisions.', docs: [
+            { name: 'RACI Matrix', description: 'Responsibility assignment for AI governance tasks' },
+            { name: 'Role Descriptions', description: 'Job descriptions for AI governance roles' }
+          ]},
+          { title: 'Training Plan', description: 'Develop AI competency and training program for all stakeholders.', docs: [
+            { name: 'Training Curriculum', description: 'Outline of AI governance training topics' },
+            { name: 'Competency Framework', description: 'Skills and knowledge requirements by role' }
+          ]},
+          { title: 'AI Inventory', description: 'Document all AI systems in use including purpose, data sources, and deployment status.', docs: [
+            { name: 'AI System Registry', description: 'Complete inventory of AI systems' },
+            { name: 'Data Flow Diagrams', description: 'Visual representation of data flows per system' }
+          ]},
+          { title: 'Impact Assessment', description: 'Conduct AI impact assessments for each system covering fairness, privacy, and safety.', docs: [
+            { name: 'Impact Assessment Reports', description: 'Per-system impact analysis documents' },
+            { name: 'Mitigation Plans', description: 'Plans to address identified impacts' }
+          ]},
+          { title: 'Data Governance', description: 'Establish data quality and governance procedures for AI training and operation.', docs: [
+            { name: 'Data Quality Standards', description: 'Metrics and thresholds for data quality' },
+            { name: 'Data Governance Policy', description: 'Policy for data collection, storage, and use' }
+          ]},
+          { title: 'Model Documentation', description: 'Document AI model specifications, limitations, and known biases.', docs: [
+            { name: 'Model Cards', description: 'Standardized documentation per model' },
+            { name: 'Limitation Reports', description: 'Known limitations and edge cases' }
+          ]},
+          { title: 'Testing Procedures', description: 'Define AI testing and validation procedures including fairness testing.', docs: [
+            { name: 'Test Plans', description: 'Testing methodology and criteria' },
+            { name: 'Validation Reports', description: 'Results of validation testing' }
+          ]},
+          { title: 'Monitoring Plan', description: 'Establish ongoing AI monitoring procedures for drift, performance, and compliance.', docs: [
+            { name: 'Monitoring Dashboard', description: 'Real-time monitoring configuration' },
+            { name: 'Alert Thresholds', description: 'Defined thresholds for automated alerts' }
+          ]},
+          { title: 'Incident Response', description: 'Create AI incident response procedures for failures, biases, and security events.', docs: [
+            { name: 'Incident Response Plan', description: 'Step-by-step response procedures' },
+            { name: 'Escalation Matrix', description: 'Contact list and escalation paths' }
+          ]},
+          { title: 'Audit Trail', description: 'Implement audit logging for AI decisions to enable accountability and review.', docs: [
+            { name: 'Audit Log Configuration', description: 'Technical specification for logging' },
+            { name: 'Retention Policy', description: 'Data retention requirements' }
+          ]}
+        ]
+      },
+      'EU_AI_ACT': {
+        name: 'EU AI Act Compliance',
+        description: 'Compliance checklist for the European Union AI Act requirements',
+        stepCount: 8,
+        estimatedTime: '3-6 weeks',
+        steps: [
+          { title: 'System Classification', description: 'Classify AI systems according to EU AI Act risk categories (Unacceptable, High-Risk, Limited, Minimal).', docs: [
+            { name: 'Classification Report', description: 'Risk category determination per system' }
+          ]},
+          { title: 'Prohibited Practice Check', description: 'Verify no AI systems engage in prohibited practices under Article 5.', docs: [
+            { name: 'Prohibition Compliance Declaration', description: 'Signed attestation of compliance' }
+          ]},
+          { title: 'High-Risk Assessment', description: 'For high-risk systems, conduct conformity assessment per Annex III.', docs: [
+            { name: 'Conformity Assessment Report', description: 'Technical documentation for high-risk systems' }
+          ]},
+          { title: 'Technical Documentation', description: 'Prepare technical documentation per Article 11 requirements.', docs: [
+            { name: 'Technical Documentation Package', description: 'Complete technical file per Annex IV' }
+          ]},
+          { title: 'Human Oversight', description: 'Implement human oversight measures per Article 14.', docs: [
+            { name: 'Human Oversight Protocol', description: 'Procedures for human intervention' }
+          ]},
+          { title: 'Transparency Requirements', description: 'Meet transparency obligations per Article 13 and 50.', docs: [
+            { name: 'Transparency Notices', description: 'User-facing disclosures about AI use' }
+          ]},
+          { title: 'Record Keeping', description: 'Establish automatic logging per Article 12 requirements.', docs: [
+            { name: 'Logging Configuration', description: 'Technical setup for automated logs' }
+          ]},
+          { title: 'Registration', description: 'Register high-risk systems in EU database per Article 51.', docs: [
+            { name: 'Registration Confirmation', description: 'EU database registration receipt' }
+          ]}
+        ]
+      },
+      'CALCOMPETE': {
+        name: 'CalCompete Grant Application',
+        description: 'California tax credit application workflow with document requirements',
+        stepCount: 10,
+        estimatedTime: '2-3 weeks',
+        steps: [
+          { title: 'Eligibility Check', description: 'Verify business meets CalCompete eligibility requirements.', docs: [
+            { name: 'Business License', description: 'Current California business license' }
+          ]},
+          { title: 'Project Description', description: 'Write detailed project narrative including job creation projections.', docs: [
+            { name: 'Project Narrative', description: '3-5 page project description' }
+          ]},
+          { title: 'Financial Projections', description: 'Prepare 5-year financial projections for the project.', docs: [
+            { name: 'Financial Projections Spreadsheet', description: 'Excel file with revenue/expense projections' }
+          ]},
+          { title: 'Job Creation Plan', description: 'Document planned job creation with salary ranges and timelines.', docs: [
+            { name: 'Job Creation Schedule', description: 'Hiring timeline and position details' }
+          ]},
+          { title: 'Capital Investment', description: 'Detail capital investment plans and timelines.', docs: [
+            { name: 'Capital Expenditure Plan', description: 'Investment schedule and amounts' }
+          ]},
+          { title: 'Site Documentation', description: 'Provide documentation for California facility location.', docs: [
+            { name: 'Lease Agreement', description: 'Signed lease or ownership documentation' }
+          ]},
+          { title: 'Tax Compliance', description: 'Verify business is current on all California taxes.', docs: [
+            { name: 'Tax Clearance Certificate', description: 'Certificate from Franchise Tax Board' }
+          ]},
+          { title: 'Background Check', description: 'Complete required background checks for principals.', docs: [
+            { name: 'Background Check Results', description: 'Completed checks for company officers' }
+          ]},
+          { title: 'Application Assembly', description: 'Compile all documents into final application package.', docs: [
+            { name: 'Complete Application Package', description: 'All documents organized per requirements' }
+          ]},
+          { title: 'Submission', description: 'Submit application through GO-Biz portal.', docs: [
+            { name: 'Submission Confirmation', description: 'Receipt from GO-Biz portal' }
+          ]}
+        ]
+      },
+      'CA_RESIDENCY': {
+        name: 'CA Residency Change',
+        description: 'California residency change documentation and tax implications',
+        stepCount: 10,
+        estimatedTime: '1-2 weeks',
+        steps: [
+          { title: 'Determine Domicile', description: 'Establish intent to change domicile to/from California.', docs: [
+            { name: 'Domicile Declaration', description: 'Written statement of intent' }
+          ]},
+          { title: 'Physical Presence', description: 'Document physical presence in new state.', docs: [
+            { name: 'Presence Log', description: 'Calendar of days in each state' }
+          ]},
+          { title: 'Drivers License', description: 'Obtain drivers license in new state.', docs: [
+            { name: 'New Drivers License', description: 'Copy of new state DL' }
+          ]},
+          { title: 'Voter Registration', description: 'Register to vote in new state.', docs: [
+            { name: 'Voter Registration Card', description: 'Confirmation of registration' }
+          ]},
+          { title: 'Vehicle Registration', description: 'Register vehicles in new state.', docs: [
+            { name: 'Vehicle Registration', description: 'New state registration documents' }
+          ]},
+          { title: 'Bank Accounts', description: 'Update bank account addresses.', docs: [
+            { name: 'Bank Statements', description: 'Statements showing new address' }
+          ]},
+          { title: 'Professional Licenses', description: 'Transfer or obtain professional licenses in new state.', docs: [
+            { name: 'License Transfer Documentation', description: 'New state license or transfer receipt' }
+          ]},
+          { title: 'Estate Planning', description: 'Update wills and trusts for new state law.', docs: [
+            { name: 'Updated Estate Documents', description: 'Revised will/trust documents' }
+          ]},
+          { title: 'Tax Elections', description: 'Make any required tax elections for change year.', docs: [
+            { name: 'Tax Election Forms', description: 'Filed election forms' }
+          ]},
+          { title: 'Final Documentation', description: 'Compile complete residency change documentation.', docs: [
+            { name: 'Residency Change Package', description: 'Complete file for tax defense' }
+          ]}
+        ]
+      }
+    };
+
+    function loadWorkflowTemplates() {
+      const container = document.getElementById('templateList');
+      container.innerHTML = Object.entries(WORKFLOW_TEMPLATES).map(([id, template]) => `
+        <div class="template-card">
+          <div class="template-info">
+            <h3>${template.name}</h3>
+            <p>${template.description}</p>
+            <div class="template-meta">
+              <span class="template-meta-item">&#x1F4CB; ${template.stepCount} steps</span>
+              <span class="template-meta-item">&#x23F1; ${template.estimatedTime}</span>
+            </div>
+          </div>
+          <div class="template-actions">
+            <button class="btn btn-primary" onclick="startWorkflow('${id}')">Start Workflow</button>
+            <button class="btn btn-secondary" onclick="viewTemplateDetails('${id}')">View Steps</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function viewTemplateDetails(templateId) {
+      const template = WORKFLOW_TEMPLATES[templateId];
+      if (!template) return;
+
+      // Hide template list, show detail view
+      document.getElementById('workflow-templates').classList.remove('active');
+      document.getElementById('workflowDetail').classList.add('active');
+
+      // Set header info
+      document.getElementById('workflowDetailTitle').textContent = template.name;
+      document.getElementById('workflowDetailDesc').textContent = template.description;
+      document.getElementById('workflowProgress').textContent = '0';
+      document.getElementById('workflowProgressFill').style.width = '0%';
+
+      // Render steps
+      const stepsContainer = document.getElementById('stepsList');
+      stepsContainer.innerHTML = template.steps.map((step, index) => `
+        <div class="step-card" id="step-${index}">
+          <div class="step-header" onclick="toggleStep(${index})">
+            <div class="step-number">${index + 1}</div>
+            <div class="step-info">
+              <div class="step-title">${step.title}</div>
+              <div class="step-summary">${step.docs.length} document${step.docs.length !== 1 ? 's' : ''} required</div>
+            </div>
+            <span class="step-status pending">Pending</span>
+            <button class="step-expand">&#x25BC;</button>
+          </div>
+          <div class="step-body">
+            <div class="step-section">
+              <div class="step-section-title">Instructions</div>
+              <p class="step-description">${step.description}</p>
+            </div>
+            <div class="step-section">
+              <div class="step-section-title">Required Documents</div>
+              <div class="doc-checklist">
+                ${step.docs.map((doc, docIndex) => `
+                  <div class="doc-item" id="doc-${index}-${docIndex}">
+                    <div class="doc-checkbox" onclick="toggleDocUploaded(${index}, ${docIndex})">&#x2713;</div>
+                    <div class="doc-info">
+                      <div class="doc-name">${doc.name}</div>
+                      <div class="doc-description">${doc.description}</div>
+                    </div>
+                    <button class="doc-upload-btn" onclick="uploadDocForStep(${index}, ${docIndex})">Upload</button>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="step-actions">
+              <button class="btn btn-secondary" onclick="toggleStep(${index})">Collapse</button>
+              <button class="btn btn-primary" onclick="markStepComplete(${index})">Mark Complete</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Add back button at top
+      const backBtn = document.createElement('button');
+      backBtn.className = 'btn btn-secondary';
+      backBtn.style.marginBottom = '24px';
+      backBtn.innerHTML = '&#x2190; Back to Templates';
+      backBtn.onclick = () => {
+        document.getElementById('workflowDetail').classList.remove('active');
+        document.getElementById('workflow-templates').classList.add('active');
+      };
+      stepsContainer.insertBefore(backBtn, stepsContainer.firstChild);
+    }
+
+    function toggleStep(index) {
+      const stepCard = document.getElementById('step-' + index);
+      stepCard.classList.toggle('expanded');
+    }
+
+    function toggleDocUploaded(stepIndex, docIndex) {
+      const docItem = document.getElementById('doc-' + stepIndex + '-' + docIndex);
+      docItem.classList.toggle('uploaded');
+      updateProgress();
+    }
+
+    function uploadDocForStep(stepIndex, docIndex) {
+      // Trigger file upload
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.onchange = (e) => {
+        if (e.target.files.length > 0) {
+          const docItem = document.getElementById('doc-' + stepIndex + '-' + docIndex);
+          docItem.classList.add('uploaded');
+          showToast('Document uploaded: ' + e.target.files[0].name, 'success');
+          updateProgress();
+        }
+      };
+      input.click();
+    }
+
+    function markStepComplete(index) {
+      const stepCard = document.getElementById('step-' + index);
+      stepCard.classList.add('completed');
+      stepCard.classList.remove('expanded');
+      stepCard.querySelector('.step-status').className = 'step-status completed';
+      stepCard.querySelector('.step-status').textContent = 'Completed';
+      updateProgress();
+      showToast('Step ' + (index + 1) + ' marked complete', 'success');
+    }
+
+    function updateProgress() {
+      const steps = document.querySelectorAll('.step-card');
+      const completed = document.querySelectorAll('.step-card.completed').length;
+      const percentage = Math.round((completed / steps.length) * 100);
+      document.getElementById('workflowProgress').textContent = percentage;
+      document.getElementById('workflowProgressFill').style.width = percentage + '%';
+    }
+
+    function startWorkflow(templateId) {
+      document.getElementById('workflowTemplate').value = templateId;
+      showModal('newWorkflow');
+    }
+
+    function submitNewWorkflow() {
+      const templateId = document.getElementById('workflowTemplate').value;
+      const clientName = document.getElementById('workflowClientName').value;
+
+      if (!templateId || !clientName) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+      }
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((result) => {
+            closeModal('newWorkflow');
+            showToast('Workflow started: ' + clientName, 'success');
+            viewTemplateDetails(templateId);
+          })
+          .withFailureHandler((err) => {
+            showToast('Error: ' + err.message, 'error');
+          })
+          .startWorkflowFromUI({
+            templateId: templateId,
+            clientName: clientName,
+            assignee: document.getElementById('workflowAssignee').value
+          });
+      } else {
+        closeModal('newWorkflow');
+        showToast('Workflow started (demo mode)', 'success');
+        viewTemplateDetails(templateId);
+      }
+    }
+
+    // ===== DOCUMENTS PAGE =====
+    function loadDocuments() {
+      const container = document.getElementById('documentsList');
+
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(renderDocuments)
+          .withFailureHandler((err) => {
+            container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">Error loading documents</p>';
+          })
+          .getDocumentsList();
+      } else {
+        // Demo data
+        renderDocuments([
+          { id: '1', name: 'AI Policy Document.pdf', type: 'pdf', status: 'verified', date: '2026-01-22' },
+          { id: '2', name: 'Risk Assessment Report.docx', type: 'doc', status: 'pending', date: '2026-01-21' },
+          { id: '3', name: 'Training Curriculum.pdf', type: 'pdf', status: 'verified', date: '2026-01-20' }
+        ]);
+      }
+    }
+
+    function renderDocuments(docs) {
+      const container = document.getElementById('documentsList');
+
+      if (!docs || docs.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 40px;">No documents uploaded yet</p>';
+        return;
+      }
+
+      const icons = {
+        'pdf': '&#x1F4D5;',
+        'doc': '&#x1F4C4;',
+        'docx': '&#x1F4C4;',
+        'xls': '&#x1F4CA;',
+        'xlsx': '&#x1F4CA;',
+        'default': '&#x1F4C1;'
+      };
+
+      container.innerHTML = docs.map(doc => `
+        <div class="document-row">
+          <div class="document-icon">${icons[doc.type] || icons.default}</div>
+          <div class="document-info">
+            <h4>${doc.name}</h4>
+            <p>Uploaded ${doc.date}</p>
+          </div>
+          <span class="document-status ${doc.status}">${doc.status === 'verified' ? 'Verified' : 'Pending Review'}</span>
+          <span class="document-date">${doc.date}</span>
+          <div class="document-actions">
+            <button class="document-action-btn" title="View" onclick="viewDocument('${doc.id}')">&#x1F441;</button>
+            <button class="document-action-btn" title="Verify" onclick="verifyDocument('${doc.id}')">&#x2705;</button>
+            <button class="document-action-btn" title="Delete" onclick="deleteDocument('${doc.id}')">&#x1F5D1;</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      document.getElementById('uploadZone').classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+      document.getElementById('uploadZone').classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      document.getElementById('uploadZone').classList.remove('dragover');
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFileUpload({ target: { files: files } });
+      }
+    }
+
+    function handleFileUpload(e) {
+      const files = e.target.files;
+      for (let file of files) {
+        showToast('Uploading: ' + file.name, 'success');
+        // In real implementation, upload to Google Drive
+      }
+      loadDocuments();
+    }
+
+    function viewDocument(docId) {
+      showToast('Opening document...', 'success');
+    }
+
+    function verifyDocument(docId) {
+      if (typeof google !== 'undefined' && google.script) {
+        showToast('Running AI verification...', 'warning');
+        google.script.run
+          .withSuccessHandler((result) => {
+            showToast('Document verified', 'success');
+            loadDocuments();
+          })
+          .verifyDocumentFromUI(docId);
+      } else {
+        showToast('Document verified (demo)', 'success');
+      }
+    }
+
+    function deleteDocument(docId) {
+      if (confirm('Are you sure you want to delete this document?')) {
+        showToast('Document deleted', 'success');
+        loadDocuments();
+      }
+    }
+
+    // ===== INITIALIZATION =====
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHomeStats();
+    });
+  </script>
+</body>
+</html>
