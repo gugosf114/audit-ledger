@@ -158,7 +158,7 @@ const COPILOT_CONFIG = {
  * @param {string} sheetType - 'TEMPLATES' | 'MUTATIONS' | 'OUTCOMES'
  * @returns {string[]} - Ordered header array
  */
-function getOrderedHeaders_(sheetType) {
+function getCoPilotHeaders_(sheetType) {
   switch (sheetType) {
     case 'TEMPLATES':
       return COPILOT_CONFIG.TEMPLATE_HEADERS;
@@ -184,7 +184,7 @@ function setupCoPilotSheets() {
 
   for (const sheetDef of sheetsToCreate) {
     let sheet = ss.getSheetByName(sheetDef.name);
-    const headers = getOrderedHeaders_(sheetDef.type);
+    const headers = getCoPilotHeaders_(sheetDef.type);
 
     if (!sheet) {
       sheet = ss.insertSheet(sheetDef.name);
@@ -210,7 +210,7 @@ function setupCoPilotSheets() {
     }
   }
 
-  logToLedger_('COPILOT_SETUP', 'System', 'Co-Pilot sheets initialized', null, {
+  logToCoPilotLedger_('COPILOT_SETUP', 'System', 'Co-Pilot sheets initialized', null, {
     sheets: sheetsToCreate.map(s => s.name)
   });
 
@@ -226,15 +226,15 @@ function setupCoPilotSheets() {
 
 /**
  * Append a row using object with column-order safety.
- * Uses getOrderedHeaders_ to ensure consistent column order regardless of object key order.
+ * Uses getCoPilotHeaders_ to ensure consistent column order regardless of object key order.
  *
  * @param {GoogleAppsScript.Spreadsheet.Sheet} sheet - Target sheet
  * @param {string} sheetType - 'TEMPLATES' | 'MUTATIONS' | 'OUTCOMES'
  * @param {Object} rowData - Object with column names as keys
  * @returns {number} - Row number of appended row
  */
-function safeAppendObject_(sheet, sheetType, rowData) {
-  const headers = getOrderedHeaders_(sheetType);
+function coPilotAppendObject_(sheet, sheetType, rowData) {
+  const headers = getCoPilotHeaders_(sheetType);
   const rowArray = headers.map(header => {
     const value = rowData[header];
     // Handle special cases
@@ -256,8 +256,8 @@ function safeAppendObject_(sheet, sheetType, rowData) {
  * @param {number} row - Row number to update
  * @param {Object} updates - Object with column names as keys (partial updates allowed)
  */
-function safeUpdateObject_(sheet, sheetType, row, updates) {
-  const headers = getOrderedHeaders_(sheetType);
+function coPilotUpdateObject_(sheet, sheetType, row, updates) {
+  const headers = getCoPilotHeaders_(sheetType);
   const currentRow = sheet.getRange(row, 1, 1, headers.length).getValues()[0];
 
   const newRow = headers.map((header, idx) => {
@@ -281,8 +281,8 @@ function safeUpdateObject_(sheet, sheetType, row, updates) {
  * @param {number} row - Row number to read
  * @returns {Object} - Row data as object with column names as keys
  */
-function safeReadObject_(sheet, sheetType, row) {
-  const headers = getOrderedHeaders_(sheetType);
+function coPilotReadObject_(sheet, sheetType, row) {
+  const headers = getCoPilotHeaders_(sheetType);
   const values = sheet.getRange(row, 1, 1, headers.length).getValues()[0];
 
   const obj = {};
@@ -306,7 +306,7 @@ function safeReadObject_(sheet, sheetType, row) {
  * @param {string} referenceId - Optional reference ID (mutation, template, etc.)
  * @param {Object} metadata - Additional metadata to include
  */
-function logToLedger_(eventType, actor, description, referenceId, metadata) {
+function logToCoPilotLedger_(eventType, actor, description, referenceId, metadata) {
   try {
     const text = [
       `[${eventType}]`,
@@ -315,7 +315,7 @@ function logToLedger_(eventType, actor, description, referenceId, metadata) {
       metadata ? `Metadata: ${JSON.stringify(metadata)}` : ''
     ].filter(Boolean).join('\n');
 
-    // Use existing ledger function
+    // Use existing ledger function if available
     if (typeof safeNewEntry === 'function') {
       safeNewEntry(actor || 'System', eventType, text, '', 'VERIFIED');
     } else {
@@ -332,7 +332,7 @@ function logToLedger_(eventType, actor, description, referenceId, metadata) {
  * @param {Object} filters - Optional filters { templateId, status, startDate, endDate }
  * @returns {Object[]} - Array of outcome objects
  */
-function loadOutcomes_(filters) {
+function loadCoPilotOutcomes_(filters) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.OUTCOMES);
 
@@ -340,7 +340,7 @@ function loadOutcomes_(filters) {
     return [];
   }
 
-  const headers = getOrderedHeaders_('OUTCOMES');
+  const headers = getCoPilotHeaders_('OUTCOMES');
   const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getValues();
 
   let outcomes = data.map((row, idx) => {
@@ -379,30 +379,30 @@ function loadOutcomes_(filters) {
 // ==========================
 
 // Template config cache
-let _templateConfigCache = null;
-let _templateConfigCacheTime = 0;
-const TEMPLATE_CACHE_TTL = 60000; // 1 minute
+let _coPilotTemplateCache = null;
+let _coPilotTemplateCacheTime = 0;
+const COPILOT_TEMPLATE_CACHE_TTL = 60000; // 1 minute
 
 /**
  * Get template config map with caching.
  * @returns {Map<string, Object>} - Map of template ID to config object
  */
-function getTemplateConfigMap_() {
+function getCoPilotTemplateConfigMap_() {
   const now = Date.now();
-  if (_templateConfigCache && (now - _templateConfigCacheTime) < TEMPLATE_CACHE_TTL) {
-    return _templateConfigCache;
+  if (_coPilotTemplateCache && (now - _coPilotTemplateCacheTime) < COPILOT_TEMPLATE_CACHE_TTL) {
+    return _coPilotTemplateCache;
   }
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.TEMPLATES);
 
   if (!sheet || sheet.getLastRow() < 2) {
-    _templateConfigCache = new Map();
-    _templateConfigCacheTime = now;
-    return _templateConfigCache;
+    _coPilotTemplateCache = new Map();
+    _coPilotTemplateCacheTime = now;
+    return _coPilotTemplateCache;
   }
 
-  const headers = getOrderedHeaders_('TEMPLATES');
+  const headers = getCoPilotHeaders_('TEMPLATES');
   const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getValues();
 
   const map = new Map();
@@ -417,17 +417,17 @@ function getTemplateConfigMap_() {
     }
   });
 
-  _templateConfigCache = map;
-  _templateConfigCacheTime = now;
+  _coPilotTemplateCache = map;
+  _coPilotTemplateCacheTime = now;
   return map;
 }
 
 /**
  * Clear template cache (call after updates).
  */
-function clearTemplateCache_() {
-  _templateConfigCache = null;
-  _templateConfigCacheTime = 0;
+function clearCoPilotTemplateCache_() {
+  _coPilotTemplateCache = null;
+  _coPilotTemplateCacheTime = 0;
 }
 
 /**
@@ -436,7 +436,7 @@ function clearTemplateCache_() {
  * @param {Object} templateData - Template configuration
  * @returns {Object} - Created template info
  */
-function createTemplate(templateData) {
+function createCoPilotTemplate(templateData) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.TEMPLATES);
 
@@ -465,10 +465,10 @@ function createTemplate(templateData) {
     'Active': true
   };
 
-  const row = safeAppendObject_(sheet, 'TEMPLATES', rowData);
-  clearTemplateCache_();
+  const row = coPilotAppendObject_(sheet, 'TEMPLATES', rowData);
+  clearCoPilotTemplateCache_();
 
-  logToLedger_(
+  logToCoPilotLedger_(
     COPILOT_CONFIG.EVENT_TYPES.TEMPLATE_CREATED,
     user,
     `Created template: ${rowData.Name}`,
@@ -490,8 +490,8 @@ function createTemplate(templateData) {
  * @param {string} templateId - Template ID
  * @returns {Object|null} - Template object or null if not found
  */
-function getTemplate(templateId) {
-  const map = getTemplateConfigMap_();
+function getCoPilotTemplate(templateId) {
+  const map = getCoPilotTemplateConfigMap_();
   return map.get(templateId) || null;
 }
 
@@ -500,8 +500,8 @@ function getTemplate(templateId) {
  *
  * @returns {Object[]} - Array of template objects
  */
-function listTemplates() {
-  const map = getTemplateConfigMap_();
+function listCoPilotTemplates() {
+  const map = getCoPilotTemplateConfigMap_();
   return Array.from(map.values());
 }
 
@@ -511,8 +511,8 @@ function listTemplates() {
  * @param {string} templateId - Template ID
  * @returns {number} - Current version number
  */
-function getCurrentTemplateVersion_(templateId) {
-  const template = getTemplate(templateId);
+function getCurrentCoPilotTemplateVersion_(templateId) {
+  const template = getCoPilotTemplate(templateId);
   return template ? (template.Version || 1) : 0;
 }
 
@@ -523,10 +523,10 @@ function getCurrentTemplateVersion_(templateId) {
  * @param {Object} updates - Updates to apply
  * @returns {Object} - New version info
  */
-function createTemplateVersion_(templateId, updates) {
+function createCoPilotTemplateVersion_(templateId, updates) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.TEMPLATES);
-  const template = getTemplate(templateId);
+  const template = getCoPilotTemplate(templateId);
 
   if (!template) {
     throw new Error(`Template not found: ${templateId}`);
@@ -543,10 +543,10 @@ function createTemplateVersion_(templateId, updates) {
     'Updated_At': timestamp
   };
 
-  safeUpdateObject_(sheet, 'TEMPLATES', template._row, updateData);
-  clearTemplateCache_();
+  coPilotUpdateObject_(sheet, 'TEMPLATES', template._row, updateData);
+  clearCoPilotTemplateCache_();
 
-  logToLedger_(
+  logToCoPilotLedger_(
     COPILOT_CONFIG.EVENT_TYPES.TEMPLATE_UPDATED,
     user,
     `Updated template: ${template.Name} to v${newVersion}`,
@@ -572,7 +572,7 @@ function createTemplateVersion_(templateId, updates) {
  * @param {Object} mutationData - Mutation details
  * @returns {Object} - Created mutation info
  */
-function createMutation_(mutationData) {
+function createCoPilotMutation_(mutationData) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.MUTATIONS);
 
@@ -604,9 +604,9 @@ function createMutation_(mutationData) {
     'Rejection_Reason': ''
   };
 
-  const row = safeAppendObject_(sheet, 'MUTATIONS', rowData);
+  const row = coPilotAppendObject_(sheet, 'MUTATIONS', rowData);
 
-  logToLedger_(
+  logToCoPilotLedger_(
     COPILOT_CONFIG.EVENT_TYPES.MUTATION_CREATED,
     'System',
     `Created mutation: ${mutationData.mutationType} on ${mutationData.targetSheet}`,
@@ -631,7 +631,7 @@ function createMutation_(mutationData) {
  * @param {string} mutationId - Mutation ID
  * @returns {Object|null} - Mutation object or null
  */
-function getMutation_(mutationId) {
+function getCoPilotMutation_(mutationId) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.MUTATIONS);
 
@@ -639,7 +639,7 @@ function getMutation_(mutationId) {
     return null;
   }
 
-  const headers = getOrderedHeaders_('MUTATIONS');
+  const headers = getCoPilotHeaders_('MUTATIONS');
   const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getValues();
 
   for (let i = 0; i < data.length; i++) {
@@ -662,7 +662,7 @@ function getMutation_(mutationId) {
  * @param {Object} filters - Optional filters
  * @returns {Object[]} - Array of pending mutations
  */
-function getPendingMutations_(filters) {
+function getPendingCoPilotMutations_(filters) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.MUTATIONS);
 
@@ -670,7 +670,7 @@ function getPendingMutations_(filters) {
     return [];
   }
 
-  const headers = getOrderedHeaders_('MUTATIONS');
+  const headers = getCoPilotHeaders_('MUTATIONS');
   const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, headers.length).getValues();
 
   let mutations = [];
@@ -706,7 +706,7 @@ function getPendingMutations_(filters) {
  * @param {Object} template - Template object with auto-apply rules
  * @returns {boolean} - True if can auto-apply
  */
-function canAutoApply_(mutation, template) {
+function canCoPilotAutoApply_(mutation, template) {
   if (!mutation || !template) {
     return false;
   }
@@ -728,9 +728,11 @@ function canAutoApply_(mutation, template) {
       // Check if we have a confidence declaration with high confidence
       if (mutation.Confidence_UUID) {
         try {
-          const declaration = findConfidenceDeclaration(mutation.Confidence_UUID);
-          if (declaration && declaration.numericConfidence >= COPILOT_CONFIG.THRESHOLDS.AUTO_APPLY_MIN_CONFIDENCE) {
-            return true;
+          if (typeof findConfidenceDeclaration === 'function') {
+            const declaration = findConfidenceDeclaration(mutation.Confidence_UUID);
+            if (declaration && declaration.numericConfidence >= COPILOT_CONFIG.THRESHOLDS.AUTO_APPLY_MIN_CONFIDENCE) {
+              return true;
+            }
           }
         } catch (e) {
           // If can't verify confidence, don't auto-apply
@@ -755,7 +757,7 @@ function canAutoApply_(mutation, template) {
  * @param {Object} mutation - Mutation object with _row
  * @param {Object} updates - Updates to apply
  */
-function saveMutation_(mutation, updates) {
+function saveCoPilotMutation_(mutation, updates) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.MUTATIONS);
 
@@ -763,7 +765,7 @@ function saveMutation_(mutation, updates) {
     throw new Error('Cannot save mutation: invalid mutation or missing row');
   }
 
-  safeUpdateObject_(sheet, 'MUTATIONS', mutation._row, updates);
+  coPilotUpdateObject_(sheet, 'MUTATIONS', mutation._row, updates);
 }
 
 /**
@@ -772,8 +774,8 @@ function saveMutation_(mutation, updates) {
  * @param {string} mutationId - Mutation ID to apply
  * @returns {Object} - Result of application
  */
-function applyMutation_(mutationId) {
-  const mutation = getMutation_(mutationId);
+function applyCoPilotMutation_(mutationId) {
+  const mutation = getCoPilotMutation_(mutationId);
 
   if (!mutation) {
     throw new Error(`Mutation not found: ${mutationId}`);
@@ -788,7 +790,7 @@ function applyMutation_(mutationId) {
   const targetSheet = ss.getSheetByName(mutation.Target_Sheet);
 
   if (!targetSheet) {
-    saveMutation_(mutation, {
+    saveCoPilotMutation_(mutation, {
       'Status': COPILOT_CONFIG.MUTATION_STATUS.FAILED,
       'Rejection_Reason': `Target sheet not found: ${mutation.Target_Sheet}`
     });
@@ -834,12 +836,12 @@ function applyMutation_(mutationId) {
 
     // Update mutation status
     const timestamp = new Date().toISOString();
-    saveMutation_(mutation, {
+    saveCoPilotMutation_(mutation, {
       'Status': COPILOT_CONFIG.MUTATION_STATUS.APPLIED,
       'Applied_At': timestamp
     });
 
-    logToLedger_(
+    logToCoPilotLedger_(
       COPILOT_CONFIG.EVENT_TYPES.MUTATION_APPLIED,
       Session.getEffectiveUser().getEmail() || 'System',
       `Applied mutation ${mutationId}`,
@@ -859,12 +861,12 @@ function applyMutation_(mutationId) {
     };
 
   } catch (e) {
-    saveMutation_(mutation, {
+    saveCoPilotMutation_(mutation, {
       'Status': COPILOT_CONFIG.MUTATION_STATUS.FAILED,
       'Rejection_Reason': e.message
     });
 
-    logToLedger_(
+    logToCoPilotLedger_(
       COPILOT_CONFIG.EVENT_TYPES.MUTATION_FAILED,
       'System',
       `Failed to apply mutation ${mutationId}: ${e.message}`,
@@ -883,8 +885,8 @@ function applyMutation_(mutationId) {
  * @param {boolean} autoApply - Whether to immediately apply after approval
  * @returns {Object} - Result
  */
-function approveMutation(mutationId, autoApply) {
-  const mutation = getMutation_(mutationId);
+function approveCoPilotMutation(mutationId, autoApply) {
+  const mutation = getCoPilotMutation_(mutationId);
 
   if (!mutation) {
     throw new Error(`Mutation not found: ${mutationId}`);
@@ -897,13 +899,13 @@ function approveMutation(mutationId, autoApply) {
   const user = Session.getEffectiveUser().getEmail() || 'System';
   const timestamp = new Date().toISOString();
 
-  saveMutation_(mutation, {
+  saveCoPilotMutation_(mutation, {
     'Status': COPILOT_CONFIG.MUTATION_STATUS.APPROVED,
     'Reviewed_By': user,
     'Reviewed_At': timestamp
   });
 
-  logToLedger_(
+  logToCoPilotLedger_(
     COPILOT_CONFIG.EVENT_TYPES.MUTATION_APPROVED,
     user,
     `Approved mutation ${mutationId}`,
@@ -912,7 +914,7 @@ function approveMutation(mutationId, autoApply) {
   );
 
   if (autoApply) {
-    return applyMutation_(mutationId);
+    return applyCoPilotMutation_(mutationId);
   }
 
   return {
@@ -931,8 +933,8 @@ function approveMutation(mutationId, autoApply) {
  * @param {string} reason - Rejection reason
  * @returns {Object} - Result
  */
-function rejectMutation(mutationId, reason) {
-  const mutation = getMutation_(mutationId);
+function rejectCoPilotMutation(mutationId, reason) {
+  const mutation = getCoPilotMutation_(mutationId);
 
   if (!mutation) {
     throw new Error(`Mutation not found: ${mutationId}`);
@@ -945,14 +947,14 @@ function rejectMutation(mutationId, reason) {
   const user = Session.getEffectiveUser().getEmail() || 'System';
   const timestamp = new Date().toISOString();
 
-  saveMutation_(mutation, {
+  saveCoPilotMutation_(mutation, {
     'Status': COPILOT_CONFIG.MUTATION_STATUS.REJECTED,
     'Reviewed_By': user,
     'Reviewed_At': timestamp,
     'Rejection_Reason': reason || 'No reason provided'
   });
 
-  logToLedger_(
+  logToCoPilotLedger_(
     COPILOT_CONFIG.EVENT_TYPES.MUTATION_REJECTED,
     user,
     `Rejected mutation ${mutationId}: ${reason || 'No reason'}`,
@@ -1004,13 +1006,13 @@ function runCoPilotAnalysis(templateId, inputData, options) {
 
   try {
     // Get template
-    const template = getTemplate(templateId);
+    const template = getCoPilotTemplate(templateId);
     if (!template) {
       throw new Error(`Template not found: ${templateId}`);
     }
 
     // Log analysis start
-    logToLedger_(
+    logToCoPilotLedger_(
       COPILOT_CONFIG.EVENT_TYPES.ANALYSIS_STARTED,
       Session.getEffectiveUser().getEmail() || 'System',
       `Started analysis with template: ${template.Name}`,
@@ -1083,17 +1085,17 @@ function runCoPilotAnalysis(templateId, inputData, options) {
     results.aiResponse = aiResponse;
 
     // Parse AI response for mutations
-    const mutations = parseAIResponseForMutations_(aiResponse, template, analysisId, confidenceLevel, confidenceUuid);
+    const mutations = parseCoPilotAIResponseForMutations_(aiResponse, template, analysisId, confidenceLevel, confidenceUuid);
     results.mutations = mutations;
 
     // Create mutation records
     for (const mutationData of mutations) {
-      const created = createMutation_(mutationData);
+      const created = createCoPilotMutation_(mutationData);
 
-      // Check for auto-apply
-      if (canAutoApply_(mutationData, template)) {
+      // Check for auto-apply (NO await - synchronous call)
+      if (canCoPilotAutoApply_(mutationData, template)) {
         try {
-          await applyMutation_(created.mutationId);
+          applyCoPilotMutation_(created.mutationId);
           results.mutationsApplied++;
         } catch (e) {
           Logger.log(`Auto-apply failed for ${created.mutationId}: ${e.message}`);
@@ -1105,10 +1107,10 @@ function runCoPilotAnalysis(templateId, inputData, options) {
     results.duration = Date.now() - startTime;
 
     // Save outcome
-    saveOutcome_(results, template, inputData, confidenceLevel, confidenceUuid);
+    saveCoPilotOutcome_(results, template, inputData, confidenceLevel, confidenceUuid);
 
     // Log completion
-    logToLedger_(
+    logToCoPilotLedger_(
       COPILOT_CONFIG.EVENT_TYPES.ANALYSIS_COMPLETED,
       'System',
       `Completed analysis: ${mutations.length} mutations generated`,
@@ -1127,9 +1129,9 @@ function runCoPilotAnalysis(templateId, inputData, options) {
     results.duration = Date.now() - startTime;
 
     // Save failed outcome
-    saveOutcome_(results, null, inputData, null, null);
+    saveCoPilotOutcome_(results, null, inputData, null, null);
 
-    logToLedger_(
+    logToCoPilotLedger_(
       COPILOT_CONFIG.EVENT_TYPES.ANALYSIS_FAILED,
       'System',
       `Analysis failed: ${e.message}`,
@@ -1151,7 +1153,7 @@ function runCoPilotAnalysis(templateId, inputData, options) {
  * @param {string} confidenceUuid - Confidence UUID
  * @returns {Object[]} - Array of mutation data objects
  */
-function parseAIResponseForMutations_(response, template, analysisId, confidenceLevel, confidenceUuid) {
+function parseCoPilotAIResponseForMutations_(response, template, analysisId, confidenceLevel, confidenceUuid) {
   const mutations = [];
 
   // Try to parse as JSON first
@@ -1229,7 +1231,7 @@ function parseAIResponseForMutations_(response, template, analysisId, confidence
  * @param {string} confidenceLevel - Confidence level
  * @param {string} confidenceUuid - Confidence UUID
  */
-function saveOutcome_(results, template, inputData, confidenceLevel, confidenceUuid) {
+function saveCoPilotOutcome_(results, template, inputData, confidenceLevel, confidenceUuid) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(COPILOT_CONFIG.SHEETS.OUTCOMES);
 
@@ -1259,7 +1261,7 @@ function saveOutcome_(results, template, inputData, confidenceLevel, confidenceU
     'Completed_At': results.success ? timestamp : ''
   };
 
-  safeAppendObject_(sheet, 'OUTCOMES', rowData);
+  coPilotAppendObject_(sheet, 'OUTCOMES', rowData);
 }
 
 
@@ -1268,12 +1270,22 @@ function saveOutcome_(results, template, inputData, confidenceLevel, confidenceU
 // ==========================
 
 /**
- * Generate HTML for recording outcome (for review dialog).
+ * Generate HTML for a mutation card.
  *
  * @param {Object} mutation - Mutation object
  * @returns {string} - HTML string
  */
-function getRecordOutcomeHTML_(mutation) {
+function getCoPilotMutationCardHTML_(mutation) {
+  const escapeHtml = (text) => {
+    if (!text) return '';
+    return text.toString()
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   const statusClass = mutation.Status === 'PENDING_REVIEW' ? 'pending' :
                       mutation.Status === 'APPROVED' ? 'approved' :
                       mutation.Status === 'REJECTED' ? 'rejected' : 'other';
@@ -1281,36 +1293,36 @@ function getRecordOutcomeHTML_(mutation) {
   return `
     <div class="mutation-card ${statusClass}">
       <div class="mutation-header">
-        <span class="mutation-id">${mutation.Mutation_ID}</span>
-        <span class="mutation-status badge-${statusClass}">${mutation.Status}</span>
+        <span class="mutation-id">${escapeHtml(mutation.Mutation_ID)}</span>
+        <span class="mutation-status badge-${statusClass}">${escapeHtml(mutation.Status)}</span>
       </div>
       <div class="mutation-body">
         <div class="mutation-field">
           <label>Target:</label>
-          <span>${mutation.Target_Sheet} [Row ${mutation.Target_Row}, Col ${mutation.Target_Column}]</span>
+          <span>${escapeHtml(mutation.Target_Sheet)} [Row ${escapeHtml(mutation.Target_Row)}, Col ${escapeHtml(mutation.Target_Column)}]</span>
         </div>
         <div class="mutation-field">
           <label>Current Value:</label>
-          <span class="value-current">${mutation.Current_Value || '(empty)'}</span>
+          <span class="value-current">${escapeHtml(mutation.Current_Value) || '(empty)'}</span>
         </div>
         <div class="mutation-field">
           <label>Proposed Value:</label>
-          <span class="value-proposed">${mutation.Proposed_Value || '(empty)'}</span>
+          <span class="value-proposed">${escapeHtml(mutation.Proposed_Value) || '(empty)'}</span>
         </div>
         <div class="mutation-field">
           <label>Confidence:</label>
-          <span class="confidence-${mutation.Confidence_Level}">${mutation.Confidence_Level}</span>
+          <span class="confidence-${escapeHtml(mutation.Confidence_Level)}">${escapeHtml(mutation.Confidence_Level)}</span>
         </div>
         <div class="mutation-field">
           <label>Justification:</label>
-          <span>${mutation.Justification || 'No justification provided'}</span>
+          <span>${escapeHtml(mutation.Justification) || 'No justification provided'}</span>
         </div>
       </div>
       <div class="mutation-actions">
-        <button class="btn-approve" onclick="approveMutation('${mutation.Mutation_ID}')">
+        <button class="btn-approve" onclick="approveMutation('${escapeHtml(mutation.Mutation_ID)}')">
           Approve & Apply
         </button>
-        <button class="btn-reject" onclick="promptReject('${mutation.Mutation_ID}')">
+        <button class="btn-reject" onclick="promptReject('${escapeHtml(mutation.Mutation_ID)}')">
           Reject
         </button>
       </div>
@@ -1321,8 +1333,8 @@ function getRecordOutcomeHTML_(mutation) {
 /**
  * Show review approval dialog for pending mutations.
  */
-function showReviewApprovalDialog() {
-  const pendingMutations = getPendingMutations_();
+function showCoPilotReviewDialog() {
+  const pendingMutations = getPendingCoPilotMutations_();
 
   if (pendingMutations.length === 0) {
     if (_inUi()) {
@@ -1331,7 +1343,7 @@ function showReviewApprovalDialog() {
     return;
   }
 
-  const mutationCards = pendingMutations.map(m => getRecordOutcomeHTML_(m)).join('\n');
+  const mutationCards = pendingMutations.map(m => getCoPilotMutationCardHTML_(m)).join('\n');
 
   const html = HtmlService.createHtmlOutput(`
     <!DOCTYPE html>
@@ -1382,7 +1394,7 @@ function showReviewApprovalDialog() {
             .withFailureHandler(function(error) {
               alert('Error: ' + error.message);
             })
-            .approveMutation(mutationId, true);
+            .approveCoPilotMutation(mutationId, true);
         }
 
         function promptReject(mutationId) {
@@ -1396,7 +1408,7 @@ function showReviewApprovalDialog() {
               .withFailureHandler(function(error) {
                 alert('Error: ' + error.message);
               })
-              .rejectMutation(mutationId, reason);
+              .rejectCoPilotMutation(mutationId, reason);
           }
         }
       </script>
@@ -1424,7 +1436,7 @@ function setupCoPilotFromUI() {
 /**
  * Create template from UI prompt.
  */
-function createTemplateFromUI() {
+function createCoPilotTemplateFromUI() {
   const ui = SpreadsheetApp.getUi();
 
   const nameResponse = ui.prompt('Create Template', 'Enter template name:', ui.ButtonSet.OK_CANCEL);
@@ -1444,7 +1456,7 @@ function createTemplateFromUI() {
   if (promptResponse.getSelectedButton() !== ui.Button.OK) return;
 
   try {
-    const result = createTemplate({
+    const result = createCoPilotTemplate({
       name: nameResponse.getResponseText(),
       description: descResponse.getResponseText(),
       analysisType: typeResponse.getResponseText() || 'CUSTOM',
@@ -1461,10 +1473,10 @@ function createTemplateFromUI() {
 /**
  * Run analysis from UI.
  */
-function runAnalysisFromUI() {
+function runCoPilotAnalysisFromUI() {
   const ui = SpreadsheetApp.getUi();
 
-  const templates = listTemplates();
+  const templates = listCoPilotTemplates();
   if (templates.length === 0) {
     ui.alert('No Templates', 'Please create a template first using "Create Template".', ui.ButtonSet.OK);
     return;
@@ -1510,8 +1522,8 @@ function runAnalysisFromUI() {
 /**
  * View pending mutations from UI.
  */
-function viewPendingMutationsFromUI() {
-  showReviewApprovalDialog();
+function viewPendingCoPilotMutationsFromUI() {
+  showCoPilotReviewDialog();
 }
 
 /**
@@ -1559,10 +1571,10 @@ function addCoPilotMenu() {
   ui.createMenu('Co-Pilot')
     .addItem('Setup Co-Pilot Sheets', 'setupCoPilotFromUI')
     .addSeparator()
-    .addItem('Create Template', 'createTemplateFromUI')
-    .addItem('Run Analysis', 'runAnalysisFromUI')
+    .addItem('Create Template', 'createCoPilotTemplateFromUI')
+    .addItem('Run Analysis', 'runCoPilotAnalysisFromUI')
     .addSeparator()
-    .addItem('Review Pending Mutations', 'viewPendingMutationsFromUI')
+    .addItem('Review Pending Mutations', 'viewPendingCoPilotMutationsFromUI')
     .addSeparator()
     .addItem('View Templates', 'viewCoPilotTemplates')
     .addItem('View Mutations', 'viewCoPilotMutations')
