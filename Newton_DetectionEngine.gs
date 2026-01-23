@@ -395,8 +395,8 @@ function normalizeTemplateKey_(templateName) {
 function logDetectionScan_(results) {
   if (typeof safeNewEntry === 'function') {
     safeNewEntry(
-      'NEWTON_DETECTION_ENGINE',
-      'SCAN_COMPLETE',
+      'System',
+      'DETECTION_SCAN',
       `Scanned ${results.totalWorkflowsScanned} workflows. Found ${results.totalAlertsGenerated} alerts (${results.summary.criticalAlerts} critical).`,
       'SYSTEM',
       'FINAL'
