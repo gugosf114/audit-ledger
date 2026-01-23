@@ -53,24 +53,30 @@ function getDashboardDataV3(role, tenantFilter, periodFilter) {
   PropertiesService.getUserProperties().setProperty('LAST_DASHBOARD_ROLE', role);
 
   const stats = aggregateLedgerStatsV3(tenantFilter, periodFilter);
+  const prevStats = aggregateLedgerStatsV3(tenantFilter, getPreviousPeriod(periodFilter));
   const alerts = getActiveAlertsV3(tenantFilter);
   const compliance = getComplianceScoreV3(tenantFilter);
   const tenants = getAvailableTenantsV3();
 
   let viewData = {};
 
-  switch(role) {
-    case 'EXEC':
-      viewData = buildExecViewV3(stats, alerts, compliance);
-      break;
-    case 'COMPLIANCE':
-      viewData = buildComplianceViewV3(stats, alerts, compliance);
-      break;
-    case 'ENGINEER':
-      viewData = buildEngineerViewV3(stats, alerts, compliance);
-      break;
-    default:
-      viewData = buildExecViewV3(stats, alerts, compliance);
+  // BRIEFING mode is auto-adaptive - shows what matters most right now
+  if (role === 'BRIEFING') {
+    viewData = buildBriefingView(stats, prevStats, alerts, compliance);
+  } else {
+    switch(role) {
+      case 'EXEC':
+        viewData = buildExecViewV3(stats, alerts, compliance);
+        break;
+      case 'COMPLIANCE':
+        viewData = buildComplianceViewV3(stats, alerts, compliance);
+        break;
+      case 'ENGINEER':
+        viewData = buildEngineerViewV3(stats, alerts, compliance);
+        break;
+      default:
+        viewData = buildExecViewV3(stats, alerts, compliance);
+    }
   }
 
   // Common data for all views
@@ -86,7 +92,225 @@ function getDashboardDataV3(role, tenantFilter, periodFilter) {
   viewData.lastUpdated = new Date().toISOString();
   viewData.isEmpty = stats.totalRecords === 0;
 
+  // Add comparison data for context
+  viewData.comparisons = buildComparisons(stats, prevStats, periodFilter);
+
   return viewData;
+}
+
+/**
+ * Get the previous period for comparison
+ */
+function getPreviousPeriod(period) {
+  // Returns identifier for previous period (for week-over-week comparisons)
+  return period + '_PREV';
+}
+
+/**
+ * Build week-over-week comparison data
+ */
+function buildComparisons(current, previous, period) {
+  const periodLabel = period === '7D' ? 'last week' : period === '30D' ? 'last month' : 'previous period';
+
+  return {
+    aiRequests: {
+      current: current.aiRequests || 0,
+      previous: previous.aiRequests || 0,
+      delta: (current.aiRequests || 0) - (previous.aiRequests || 0),
+      trend: getTrend(current.aiRequests, previous.aiRequests),
+      context: formatComparison(current.aiRequests, previous.aiRequests, periodLabel)
+    },
+    blocks: {
+      current: current.blocks || 0,
+      previous: previous.blocks || 0,
+      delta: (current.blocks || 0) - (previous.blocks || 0),
+      trend: getTrend(current.blocks, previous.blocks),
+      context: formatComparison(current.blocks, previous.blocks, periodLabel)
+    },
+    errors: {
+      current: current.errorRate || 0,
+      previous: previous.errorRate || 0,
+      delta: (current.errorRate || 0) - (previous.errorRate || 0),
+      trend: getTrend(current.errorRate, previous.errorRate),
+      context: formatComparison(current.errorRate, previous.errorRate, periodLabel, '%')
+    }
+  };
+}
+
+function getTrend(current, previous) {
+  if (!previous || previous === 0) return 'NEW';
+  if (current > previous) return 'UP';
+  if (current < previous) return 'DOWN';
+  return 'FLAT';
+}
+
+function formatComparison(current, previous, periodLabel, suffix) {
+  suffix = suffix || '';
+  if (!previous || previous === 0) return 'No previous data';
+
+  const delta = current - previous;
+  const pct = Math.round((delta / previous) * 100);
+
+  if (delta > 0) {
+    return `↑ ${Math.abs(delta)}${suffix} more than ${periodLabel} (+${pct}%)`;
+  } else if (delta < 0) {
+    return `↓ ${Math.abs(delta)}${suffix} fewer than ${periodLabel} (${pct}%)`;
+  }
+  return `Same as ${periodLabel}`;
+}
+
+// ============================================================================
+// MORNING BRIEFING VIEW - Auto-adaptive, no role choice needed
+// ============================================================================
+
+function buildBriefingView(stats, prevStats, alerts, compliance) {
+  const now = new Date();
+  const hour = now.getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  // Determine overall status
+  const criticalCount = alerts.filter(a => a.severity === 'CRITICAL').length;
+  const actionCount = alerts.filter(a => a.severity === 'HIGH' || a.severity === 'CRITICAL').length;
+
+  let overallStatus = 'SAFE';
+  let overallMessage = 'Looking good';
+
+  if (criticalCount > 0) {
+    overallStatus = 'ACTION';
+    overallMessage = `${criticalCount} critical issue${criticalCount > 1 ? 's' : ''} need${criticalCount === 1 ? 's' : ''} attention`;
+  } else if (actionCount > 0 || compliance.missingClauses > 5) {
+    overallStatus = 'WATCH';
+    overallMessage = 'A few items need your attention';
+  }
+
+  // Build priority list - what should user do first?
+  const priorities = buildPriorityList(stats, alerts, compliance);
+
+  return {
+    viewType: 'BRIEFING',
+    viewDescription: `${greeting}. Here's your AI governance status.`,
+    greeting: greeting,
+    overallStatus: overallStatus,
+    overallMessage: overallMessage,
+    priorities: priorities,
+    tiles: [] // Briefing view uses priorities instead of tiles
+  };
+}
+
+/**
+ * Build prioritized action list - what should user do first?
+ */
+function buildPriorityList(stats, alerts, compliance) {
+  const priorities = [];
+
+  // Critical alerts first
+  const criticalAlerts = alerts.filter(a => a.severity === 'CRITICAL');
+  criticalAlerts.forEach(alert => {
+    priorities.push({
+      urgency: 'URGENT',
+      sentence: alert.title,
+      consequence: 'This needs immediate attention',
+      action: {
+        label: 'Fix Now',
+        functionName: 'fixTopRisk'
+      },
+      relativeTime: formatRelativeTime(alert.timestamp)
+    });
+  });
+
+  // Missing documents
+  if (compliance.missingClauses > 0) {
+    priorities.push({
+      urgency: compliance.missingClauses > 5 ? 'ACTION' : 'WATCH',
+      sentence: `${compliance.missingClauses} document${compliance.missingClauses > 1 ? 's are' : ' is'} missing`,
+      consequence: 'Auditors will flag these as non-compliant',
+      action: {
+        label: 'See Which Ones',
+        functionName: 'runGapAnalysisFromUI'
+      },
+      relativeTime: null
+    });
+  }
+
+  // Blocked AI responses needing review
+  if (stats.blocks > 0) {
+    priorities.push({
+      urgency: stats.blocks > 10 ? 'ACTION' : 'WATCH',
+      sentence: `${stats.blocks} AI response${stats.blocks > 1 ? 's were' : ' was'} blocked`,
+      consequence: 'These might need human review or policy adjustment',
+      action: {
+        label: 'Review Blocks',
+        functionName: 'viewGatekeeperStats'
+      },
+      relativeTime: null
+    });
+  }
+
+  // High drift
+  if (stats.drift > 20) {
+    priorities.push({
+      urgency: stats.drift > 30 ? 'ACTION' : 'WATCH',
+      sentence: 'AI behavior has drifted from baseline',
+      consequence: 'Outputs may be less reliable than usual',
+      action: {
+        label: 'Retune',
+        functionName: 'runAutoTuneFromUI'
+      },
+      relativeTime: null
+    });
+  }
+
+  // Active workflows
+  if (stats.activeWorkflows > 0) {
+    priorities.push({
+      urgency: 'INFO',
+      sentence: `${stats.activeWorkflows} workflow${stats.activeWorkflows > 1 ? 's' : ''} in progress`,
+      consequence: 'May need your approval or input',
+      action: {
+        label: 'View Workflows',
+        functionName: 'openWorkflowStatus'
+      },
+      relativeTime: null
+    });
+  }
+
+  // Sort by urgency
+  const urgencyOrder = { 'URGENT': 0, 'ACTION': 1, 'WATCH': 2, 'INFO': 3 };
+  priorities.sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
+
+  // If nothing needs attention
+  if (priorities.length === 0) {
+    priorities.push({
+      urgency: 'SAFE',
+      sentence: 'All systems nominal',
+      consequence: 'No action needed right now',
+      action: null,
+      relativeTime: null
+    });
+  }
+
+  return priorities;
+}
+
+/**
+ * Format timestamp as relative time ("2 hours ago")
+ */
+function formatRelativeTime(timestamp) {
+  if (!timestamp) return null;
+
+  const now = new Date();
+  const then = new Date(timestamp);
+  const diffMs = now - then;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+
+  return then.toLocaleDateString();
 }
 
 // ============================================================================

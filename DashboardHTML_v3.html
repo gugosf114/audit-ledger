@@ -703,6 +703,144 @@
       }
     }
 
+    /* ========== BRIEFING VIEW ========== */
+    .briefing-container {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .briefing-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .briefing-greeting {
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .briefing-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 28px;
+      background: var(--bg-card);
+      border-radius: 50px;
+      border: 2px solid var(--border);
+    }
+
+    .briefing-status.safe { border-color: var(--safe); }
+    .briefing-status.watch { border-color: var(--watch); }
+    .briefing-status.action { border-color: var(--action); animation: pulse-border 2s infinite; }
+
+    .briefing-status-emoji { font-size: 32px; }
+    .briefing-status-text { font-size: 18px; font-weight: 600; }
+
+    .briefing-priorities {
+      margin-top: 40px;
+    }
+
+    .briefing-priorities-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .priority-item {
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      border-left: 4px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .priority-item:hover {
+      background: var(--bg-hover);
+      transform: translateX(4px);
+    }
+
+    .priority-item.urgent { border-left-color: var(--action); background: rgba(239, 68, 68, 0.05); }
+    .priority-item.action { border-left-color: var(--action); }
+    .priority-item.watch { border-left-color: var(--watch); }
+    .priority-item.info { border-left-color: var(--info); }
+    .priority-item.safe { border-left-color: var(--safe); }
+
+    .priority-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .priority-sentence {
+      font-size: 16px;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .priority-time {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-left: 16px;
+    }
+
+    .priority-consequence {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .priority-action {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .priority-btn {
+      padding: 8px 16px;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .priority-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .priority-item.urgent .priority-btn {
+      background: var(--action);
+      border-color: var(--action);
+      color: white;
+    }
+
+    /* Comparison context badges */
+    .comparison-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-hover);
+      color: var(--text-secondary);
+      margin-left: 8px;
+    }
+
+    .comparison-badge.up { color: var(--action); }
+    .comparison-badge.down { color: var(--safe); }
+
     /* ========== LOADING STATE ========== */
     .loading-overlay {
       position: fixed;
@@ -784,6 +922,9 @@
   <!-- ROLE PICKER + FILTERS -->
   <div class="control-bar">
     <div class="role-picker">
+      <button class="role-btn" data-role="BRIEFING" onclick="switchRole('BRIEFING')">
+        <span class="role-icon">&#x2615;</span> Briefing
+      </button>
       <button class="role-btn active" data-role="EXEC" onclick="switchRole('EXEC')">
         <span class="role-icon">&#x1F451;</span> Executive
       </button>
@@ -939,7 +1080,7 @@
     // ============================================================================
     function renderDashboard(data) {
       // View description
-      const viewIcons = { EXEC: '&#x1F451;', COMPLIANCE: '&#x1F6E1;', ENGINEER: '&#x1F527;' };
+      const viewIcons = { BRIEFING: '&#x2615;', EXEC: '&#x1F451;', COMPLIANCE: '&#x1F6E1;', ENGINEER: '&#x1F527;' };
       document.querySelector('.view-description-icon').innerHTML = viewIcons[data.viewType] || '&#x1F4CA;';
       document.getElementById('viewDescriptionText').textContent = data.viewDescription;
 
@@ -949,16 +1090,91 @@
       // Tenants dropdown
       renderTenants(data.tenants);
 
-      // Tiles
-      renderTiles(data.tiles, data.isEmpty);
+      // Handle Briefing view differently
+      if (data.viewType === 'BRIEFING') {
+        renderBriefingView(data);
+        document.getElementById('actionSection').style.display = 'none';
+      } else {
+        // Standard tile views
+        renderTiles(data.tiles, data.isEmpty);
+        renderActionItems(data.tiles);
+        document.getElementById('actionSection').style.display = 'block';
+      }
 
-      // Action items (derive from tiles with issues)
-      renderActionItems(data.tiles);
-
-      // Last updated
+      // Last updated (relative time)
       const updated = new Date(data.lastUpdated);
       document.getElementById('lastUpdated').textContent =
-        'Last updated: ' + updated.toLocaleString();
+        'Last updated: ' + formatRelativeTime(updated);
+    }
+
+    /**
+     * Render the Morning Briefing view
+     */
+    function renderBriefingView(data) {
+      const grid = document.getElementById('tilesGrid');
+      const statusEmoji = { SAFE: '&#x1F7E2;', WATCH: '&#x1F7E1;', ACTION: '&#x1F534;' };
+      const statusClass = (data.overallStatus || 'safe').toLowerCase();
+
+      let prioritiesHTML = '';
+      if (data.priorities && data.priorities.length > 0) {
+        prioritiesHTML = data.priorities.map(p => {
+          const urgencyClass = (p.urgency || 'info').toLowerCase();
+          const timeHTML = p.relativeTime ? `<span class="priority-time">${p.relativeTime}</span>` : '';
+          const actionHTML = p.action ? `
+            <div class="priority-action">
+              <button class="priority-btn" onclick="triggerAction('${p.action.functionName}')">${p.action.label}</button>
+            </div>
+          ` : '';
+
+          return `
+            <div class="priority-item ${urgencyClass}">
+              <div class="priority-header">
+                <div class="priority-sentence">${p.sentence}</div>
+                ${timeHTML}
+              </div>
+              <div class="priority-consequence">${p.consequence}</div>
+              ${actionHTML}
+            </div>
+          `;
+        }).join('');
+      }
+
+      grid.innerHTML = `
+        <div class="briefing-container" style="grid-column: 1 / -1;">
+          <div class="briefing-header">
+            <div class="briefing-greeting">${data.greeting || 'Hello'}. Here's your AI governance:</div>
+            <div class="briefing-status ${statusClass}">
+              <span class="briefing-status-emoji">${statusEmoji[data.overallStatus] || '&#x1F7E2;'}</span>
+              <span class="briefing-status-text">${data.overallMessage}</span>
+            </div>
+          </div>
+
+          <div class="briefing-priorities">
+            <div class="briefing-priorities-title">Today's Priorities</div>
+            ${prioritiesHTML}
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Format timestamp as relative time ("2 hours ago")
+     */
+    function formatRelativeTime(date) {
+      if (!date) return 'Unknown';
+
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 1) return 'Just now';
+      if (diffMins < 60) return diffMins + ' minute' + (diffMins > 1 ? 's' : '') + ' ago';
+      if (diffHours < 24) return diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago';
+      if (diffDays < 7) return diffDays + ' day' + (diffDays > 1 ? 's' : '') + ' ago';
+
+      return date.toLocaleDateString();
     }
 
     function renderPulse(pulse) {
