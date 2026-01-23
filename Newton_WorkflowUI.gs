@@ -39,68 +39,40 @@ function WorkflowUI_getUser() {
 }
 
 /**
- * Get available workflow templates
+ * Get available workflow templates - ALWAYS returns built-in templates
  */
 function WorkflowUI_getTemplates() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const templateSheet = ss.getSheetByName('Workflow_Templates');
-
-  if (!templateSheet || templateSheet.getLastRow() < 2) {
-    // Return built-in templates if sheet doesn't exist
-    return [
-      {
-        id: 'ISO_42001',
-        name: 'ISO 42001 AI Management System',
-        description: 'Complete compliance checklist for ISO/IEC 42001 AI governance standard',
-        stepCount: 24,
-        estimatedTime: '2-4 weeks',
-        category: 'AI Governance'
-      },
-      {
-        id: 'CALCOMPETE',
-        name: 'CalCompete Tax Credit',
-        description: 'California Competes tax credit application workflow',
-        stepCount: 15,
-        estimatedTime: '1-2 weeks',
-        category: 'Tax Incentives'
-      },
-      {
-        id: 'CA_RESIDENCY',
-        name: 'California Residency Determination',
-        description: 'Tax residency determination checklist for California',
-        stepCount: 12,
-        estimatedTime: '1 week',
-        category: 'Tax Compliance'
-      },
-      {
-        id: 'EU_AI_ACT',
-        name: 'EU AI Act Compliance',
-        description: 'European Union AI Act compliance assessment',
-        stepCount: 21,
-        estimatedTime: '3-6 weeks',
-        category: 'AI Governance'
-      }
-    ];
-  }
-
-  // Read from sheet
-  const data = templateSheet.getDataRange().getValues();
-  const headers = data[0];
-  const templates = [];
-
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    templates.push({
-      id: row[headers.indexOf('Template_ID')] || row[0],
-      name: row[headers.indexOf('Name')] || row[1],
-      description: row[headers.indexOf('Description')] || row[2],
-      stepCount: parseInt(row[headers.indexOf('Step_Count')]) || 0,
-      estimatedTime: row[headers.indexOf('Estimated_Time')] || 'Varies',
-      category: row[headers.indexOf('Category')] || 'General'
-    });
-  }
-
-  return templates;
+  // Always return built-in templates with correct IDs and step counts
+  return [
+    {
+      id: 'ISO_42001',
+      name: 'ISO 42001 AI Management System',
+      description: 'Complete compliance checklist for ISO/IEC 42001 AI governance standard',
+      stepCount: 12,
+      category: 'AI Governance'
+    },
+    {
+      id: 'CALCOMPETE',
+      name: 'CalCompete Tax Credit',
+      description: 'California Competes tax credit application workflow',
+      stepCount: 10,
+      category: 'Tax Incentives'
+    },
+    {
+      id: 'CA_RESIDENCY',
+      name: 'California Residency Determination',
+      description: 'Tax residency determination checklist for California FTB',
+      stepCount: 10,
+      category: 'Tax Compliance'
+    },
+    {
+      id: 'EU_AI_ACT',
+      name: 'EU AI Act Compliance',
+      description: 'European Union AI Act compliance assessment',
+      stepCount: 10,
+      category: 'AI Governance'
+    }
+  ];
 }
 
 /**
@@ -447,7 +419,7 @@ function initializeWorkflowSteps_(workflowId, templateId) {
 }
 
 function getTemplateSteps_(templateId) {
-  // Built-in template steps
+  // Built-in template steps - ALWAYS use these for known templates
   const templates = {
     'ISO_42001': [
       { title: 'Define AI Policy', description: 'Establish organizational AI policy aligned with business objectives', evidenceRequired: true },
@@ -501,11 +473,28 @@ function getTemplateSteps_(templateId) {
     ]
   };
 
-  return templates[templateId] || [
-    { title: 'Step 1', description: 'First step', evidenceRequired: false },
-    { title: 'Step 2', description: 'Second step', evidenceRequired: false },
-    { title: 'Step 3', description: 'Third step', evidenceRequired: false }
-  ];
+  // Check for exact match first
+  if (templates[templateId]) {
+    return templates[templateId];
+  }
+
+  // Check if templateId contains a known template name (for sheet-based IDs)
+  const upperTemplateId = templateId.toUpperCase();
+  if (upperTemplateId.includes('ISO') || upperTemplateId.includes('42001')) {
+    return templates['ISO_42001'];
+  }
+  if (upperTemplateId.includes('CALCOMPETE') || upperTemplateId.includes('CAL_COMPETE') || upperTemplateId.includes('TAX_CREDIT')) {
+    return templates['CALCOMPETE'];
+  }
+  if (upperTemplateId.includes('RESIDENCY') || upperTemplateId.includes('CA_RES')) {
+    return templates['CA_RESIDENCY'];
+  }
+  if (upperTemplateId.includes('EU') || upperTemplateId.includes('AI_ACT')) {
+    return templates['EU_AI_ACT'];
+  }
+
+  // Default fallback - return ISO 42001 as a sensible default
+  return templates['ISO_42001'];
 }
 
 function updateWorkflowProgress_(workflowId) {
