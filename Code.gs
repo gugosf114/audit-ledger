@@ -333,18 +333,23 @@ function safeNewEntryWithCitations(a,b,c,d,e,f,g,h,i,j){
 function auditLedger() {
   try {
     const sh = _getLedgerSheet();
-    _validateLedgerSchemaOrThrow(sh);
+    // Don't validate strict 14-column schema - we now support 14 or 17
+    const lastCol = sh.getLastColumn();
+    const is17Col = lastCol >= 17;
 
     const last = sh.getLastRow();
     const broken = [];
     const mismatches = [];
 
-    logSystemEvent('INFO','AUDIT','Audit started',{rows: Math.max(0,last-1)});
+    logSystemEvent('INFO','AUDIT','Audit started',{rows: Math.max(0,last-1), schema: is17Col ? '17-col' : '14-col'});
 
     for (let r = 2; r <= last; r++) {
-      const row = sh.getRange(r,1,1,14).getValues()[0];
+      // Read up to 17 columns if available
+      const colsToRead = is17Col ? 17 : 14;
+      const row = sh.getRange(r,1,1,colsToRead).getValues()[0];
       const [uuid, ts, actor, eventType, text, gift, prevHash, recordHash, status,
-        provisionIds, provisionTitles, provisionSnippets, provisionUrls, citationHash] = row;
+        provisionIds, provisionTitles, provisionSnippets, provisionUrls, citationHash,
+        confLevel, confUuid, confJustification] = row;
 
       // Expected prev is prior row's recordHash (or '' for row 2)
       const priorRecordHash = (r === 2) ? '' : (sh.getRange(r-1,8).getValue() || '');
@@ -355,17 +360,33 @@ function auditLedger() {
         });
       }
 
-      const blob = [
-        uuid, ts, actor, eventType, text, gift, prevHash || '', status || '',
-        provisionIds || '', provisionTitles || '', provisionSnippets || '', provisionUrls || '',
-        citationHash || 'no_citations'
-      ].join('|');
+      // Build hash blob - include confidence fields if present and non-empty
+      let blob;
+      const hasConfidenceData = is17Col && (confLevel || confUuid || confJustification);
+
+      if (hasConfidenceData) {
+        // 17-column hash blob
+        blob = [
+          uuid, ts, actor, eventType, text, gift, prevHash || '', status || '',
+          provisionIds || '', provisionTitles || '', provisionSnippets || '', provisionUrls || '',
+          citationHash || 'no_citations',
+          confLevel || '', confUuid || '', confJustification || ''
+        ].join('|');
+      } else {
+        // 14-column hash blob (legacy or no confidence data)
+        blob = [
+          uuid, ts, actor, eventType, text, gift, prevHash || '', status || '',
+          provisionIds || '', provisionTitles || '', provisionSnippets || '', provisionUrls || '',
+          citationHash || 'no_citations'
+        ].join('|');
+      }
+
       const computed = sha(blob);
 
       if ((recordHash || '') !== computed) {
         mismatches.push(r);
         logSystemEvent('ERROR','AUDIT','Hash mismatch detected (tampering)',{
-          row:r, uuid, recordHash, computed
+          row:r, uuid, recordHash, computed, hasConfidenceData
         });
       }
     }
@@ -392,18 +413,36 @@ function auditLedger() {
 function verifyEntry(targetUuid) {
   const sh = _getLedgerSheet();
   const last = sh.getLastRow();
+  const lastCol = sh.getLastColumn();
+  const is17Col = lastCol >= 17;
+  const colsToRead = is17Col ? 17 : 14;
 
   for (let r = 2; r <= last; r++) {
-    const row = sh.getRange(r,1,1,14).getValues()[0];
+    const row = sh.getRange(r,1,1,colsToRead).getValues()[0];
     const [uuid, ts, actor, eventType, text, gift, prevHash, recordHash, status,
-      provisionIds, provisionTitles, provisionSnippets, provisionUrls, citationHash] = row;
+      provisionIds, provisionTitles, provisionSnippets, provisionUrls, citationHash,
+      confLevel, confUuid, confJustification] = row;
 
     if (uuid === targetUuid) {
-      const blob = [
-        uuid, ts, actor, eventType, text, gift, prevHash || '', status || '',
-        provisionIds || '', provisionTitles || '', provisionSnippets || '', provisionUrls || '',
-        citationHash || 'no_citations'
-      ].join('|');
+      // Check if this entry has confidence data
+      const hasConfidenceData = is17Col && (confLevel || confUuid || confJustification);
+
+      let blob;
+      if (hasConfidenceData) {
+        blob = [
+          uuid, ts, actor, eventType, text, gift, prevHash || '', status || '',
+          provisionIds || '', provisionTitles || '', provisionSnippets || '', provisionUrls || '',
+          citationHash || 'no_citations',
+          confLevel || '', confUuid || '', confJustification || ''
+        ].join('|');
+      } else {
+        blob = [
+          uuid, ts, actor, eventType, text, gift, prevHash || '', status || '',
+          provisionIds || '', provisionTitles || '', provisionSnippets || '', provisionUrls || '',
+          citationHash || 'no_citations'
+        ].join('|');
+      }
+
       const computed = sha(blob);
       const valid = (recordHash || '') === computed;
 
@@ -413,7 +452,8 @@ function verifyEntry(targetUuid) {
         valid,
         recordHash,
         computed,
-        match: valid ? 'VERIFIED' : 'TAMPERED'
+        match: valid ? 'VERIFIED' : 'TAMPERED',
+        hasConfidenceData
       };
     }
   }
@@ -798,6 +838,23 @@ function onOpen() {
     .addItem("Generate AI Activity Report", "generateAIReportFromUI")
     .addSeparator()
     .addItem("Setup API Keys", "setupAIProxyKeysFromUI")
+    .addToUi();
+
+  ui.createMenu("Confidence")
+    .addItem("Declare Confidence", "declareConfidenceFromUI")
+    .addItem("Create Linked Entry", "createLinkedEntryFromUI")
+    .addSeparator()
+    .addItem("Audit Declarations", "auditConfidenceFromUI")
+    .addItem("Flag Violation", "flagViolationFromUI")
+    .addSeparator()
+    .addItem("Upgrade Schema to 17 Columns", "upgradeSchemaTo17Columns")
+    .addToUi();
+
+  ui.createMenu("Gatekeeper")
+    .addItem("Set Mode", "setGatekeeperModeFromUI")
+    .addItem("View Stats", "viewGatekeeperStats")
+    .addSeparator()
+    .addItem("Test Detection", "testGatekeeperFromUI")
     .addToUi();
 
   ui.createMenu("Customers")
