@@ -46,12 +46,46 @@ A Google Sheets-based hash chain where:
 - **Document verification** - Uses Gemini API to verify uploaded documents match claimed sources
 - **IRAC case folders** - Creates fingerprinted Google Drive folders for legal research
 - **API endpoint** - External systems can write entries via POST request
+- **Pre-commit confidence declaration** - Forces models to declare confidence BEFORE outputting content (Rumsfeld Protocol)
+
+## Confidence Declaration (NEW)
+
+The Confidence Declaration system moves Newton from forensic (records what happened) to preventive (constrains what can happen).
+
+### The Rumsfeld Protocol
+
+Before any substantive content can be logged, the system requires a confidence declaration:
+
+- **KNOWN_KNOWN** - High confidence, direct evidence supports this claim
+- **KNOWN_UNKNOWN** - I know what I don't know, here's the specific gap
+- **UNKNOWN_UNKNOWN** - Speculation, treat accordingly
+- **NUMERIC (0-100)** - Optional percentage confidence
+
+### How It Works
+
+1. Call `declareConfidence(level, justification, actor)` → returns `confidence_uuid`
+2. Call `newEntryWithConfidence(confidence_uuid, ...)` → content entry linked to declaration
+3. Both entries are hashed into the chain → confidence cannot be retroactively softened
+
+### Why This Matters
+
+If content later proves wrong and confidence was "KNOWN_KNOWN," you have **prosecutable evidence** of the failure mode. The model can no longer hide behind "I said I wasn't sure" because the exact confidence level is sealed in the hash chain.
+
+### Schema Extension
+
+Run `Confidence > Upgrade Schema to 17 Columns` to add:
+- Column 15: `Confidence_Level`
+- Column 16: `Confidence_UUID`
+- Column 17: `Confidence_Justification`
+
+Existing entries are marked as `LEGACY`.
 
 ## File structure
 
 ```
 /
 ├── Code.gs                  # Main ledger logic (entries, hashing, audit)
+├── Newton_Confidence.gs     # Pre-commit confidence declaration (Rumsfeld Protocol)
 ├── Newton_SealedPacket.gs   # Compliance verification engine (Generator/Auditor/Regenerator)
 ├── Newton_Sentinel.gs       # Signal detection and processing
 ├── Newton_IRAC.gs           # Legal research folder creation
@@ -81,7 +115,7 @@ Each entry contains:
 
 To verify integrity, the system recomputes each hash and compares. Any modification breaks the chain.
 
-## Schema (14 columns)
+## Schema (14 columns, expandable to 17)
 
 | Column | Field |
 |--------|-------|
@@ -96,6 +130,9 @@ To verify integrity, the system recomputes each hash and compares. Any modificat
 | 9 | Status |
 | 10-13 | Citation fields |
 | 14 | Citation Hash |
+| 15 | Confidence_Level (optional) |
+| 16 | Confidence_UUID (optional) |
+| 17 | Confidence_Justification (optional) |
 
 ## The Value Proposition
 
@@ -115,3 +152,4 @@ MIT
 
 George Abrahamyants
 [LinkedIn](https://www.linkedin.com/in/gabrahamyants/)
+
