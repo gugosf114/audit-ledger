@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newton Command Center</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-dark: #0f0f1a;
+      --bg-card: #1a1a2e;
+      --bg-hover: #252542;
+      --border: rgba(255,255,255,0.08);
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0a0;
+      --text-muted: #666;
+      --accent: #667eea;
+      --safe: #10b981;
+      --watch: #f59e0b;
+      --action: #ef4444;
+      --info: #3b82f6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ========== ONBOARDING OVERLAY ========== */
+    .onboarding-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      transition: opacity 0.3s;
+    }
+
+    .onboarding-overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .onboarding-card {
+      background: var(--bg-card);
+      border-radius: 24px;
+      padding: 48px;
+      max-width: 600px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .onboarding-emoji { font-size: 64px; margin-bottom: 24px; }
+    .onboarding-title { font-size: 28px; font-weight: 700; margin-bottom: 16px; }
+    .onboarding-text { color: var(--text-secondary); margin-bottom: 32px; font-size: 16px; }
+
+    .onboarding-steps {
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .onboarding-step {
+      display: flex;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .onboarding-step:last-child { border-bottom: none; }
+
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .step-content h4 { font-size: 15px; margin-bottom: 4px; }
+    .step-content p { font-size: 13px; color: var(--text-secondary); }
+
+    .onboarding-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .onboarding-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+    }
+
+    /* ========== HERO PULSE BAR ========== */
+    .pulse-bar {
+      background: linear-gradient(90deg, var(--bg-card), var(--bg-dark));
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .pulse-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .pulse-status {
+      font-size: 36px;
+      line-height: 1;
+      cursor: help;
+    }
+
+    .pulse-workflows {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-hover);
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .pulse-workflows .count {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .pulse-alert {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 18px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: 400px;
+    }
+
+    .pulse-alert:hover {
+      background: rgba(239, 68, 68, 0.2);
+      transform: translateX(-4px);
+    }
+
+    .pulse-alert.watch {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .pulse-alert.safe {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .pulse-alert-text {
+      font-size: 14px;
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .pulse-alert-arrow {
+      font-size: 18px;
+      opacity: 0.7;
+    }
+
+    /* ========== ROLE PICKER + FILTERS ========== */
+    .control-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .role-picker {
+      display: flex;
+      gap: 8px;
+    }
+
+    .role-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .role-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .role-btn .role-icon { font-size: 16px; }
+
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .filter-bar select,
+    .filter-bar input {
+      padding: 10px 14px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 13px;
+      min-width: 130px;
+    }
+
+    .filter-bar input {
+      min-width: 180px;
+    }
+
+    .filter-bar select:focus,
+    .filter-bar input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    /* ========== VIEW DESCRIPTION ========== */
+    .view-description {
+      padding: 16px 24px;
+      background: var(--bg-hover);
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .view-description-icon { font-size: 18px; }
+
+    /* ========== MAIN CONTENT ========== */
+    .main-content {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ========== TILES GRID ========== */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    /* ========== TILE CARD ========== */
+    .tile {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 28px;
+      border: 2px solid var(--border);
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .tile:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    .tile.safe { border-color: var(--safe); }
+    .tile.watch { border-color: var(--watch); }
+    .tile.action {
+      border-color: var(--action);
+      animation: pulse-border 2s infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+    }
+
+    /* Tile Header */
+    .tile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .tile-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tile-badge {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .tile-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Help Icon */
+    .help-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: help;
+      transition: all 0.2s;
+    }
+
+    .help-icon:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* Tile Content */
+    .tile-content {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    /* For EXEC view - giant status */
+    .tile-status-giant {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .tile-status-giant.safe { color: var(--safe); }
+    .tile-status-giant.watch { color: var(--watch); }
+    .tile-status-giant.action { color: var(--action); }
+
+    /* For detail views - metric + label */
+    .tile-metric {
+      font-size: 48px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .tile-metric-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Narrative - plain English */
+    .tile-narrative {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin: 16px 0;
+      min-height: 42px;
+    }
+
+    /* Thresholds indicator */
+    .tile-thresholds {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+      font-size: 11px;
+    }
+
+    .threshold-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+    }
+
+    .threshold-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .threshold-dot.safe { background: var(--safe); }
+    .threshold-dot.watch { background: var(--watch); }
+    .threshold-dot.action { background: var(--action); }
+
+    /* Action Button */
+    .tile-action {
+      width: 100%;
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .action-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .action-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .action-btn-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    /* Empty State */
+    .tile-empty {
+      background: rgba(16, 185, 129, 0.05);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .tile-empty-icon { font-size: 24px; margin-bottom: 8px; }
+    .tile-empty-text { font-size: 13px; color: var(--text-secondary); }
+
+    /* ========== TOOLTIP ========== */
+    .tooltip {
+      position: fixed;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      max-width: 320px;
+      z-index: 1000;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+    }
+
+    .tooltip-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .tooltip-definition {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .tooltip-section {
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .tooltip-section-label {
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .tooltip-section-value {
+      color: var(--text-secondary);
+    }
+
+    /* ========== ACTION ITEMS SECTION ========== */
+    .action-section {
+      margin-top: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-count {
+      background: var(--action);
+      color: white;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 18px 20px;
+      border-left: 4px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .action-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .action-item.action { border-left-color: var(--action); }
+    .action-item.watch { border-left-color: var(--watch); }
+
+    .action-icon { font-size: 24px; }
+
+    .action-content { flex: 1; }
+
+    .action-item-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .action-item-narrative {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .fix-btn {
+      padding: 10px 20px;
+      background: var(--accent);
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .fix-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .fix-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Empty action state */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-emoji { font-size: 48px; margin-bottom: 16px; }
+    .empty-text { font-size: 15px; }
+
+    /* ========== LAST UPDATED ========== */
+    .last-updated {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ========== REFRESH FAB ========== */
+    .refresh-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+      transition: all 0.2s;
+      z-index: 50;
+    }
+
+    .refresh-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .refresh-btn.loading {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .control-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .role-picker {
+        justify-content: center;
+      }
+
+      .filter-bar {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .pulse-bar {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .pulse-left {
+        flex-direction: column;
+      }
+
+      .pulse-alert {
+        max-width: 100%;
+      }
+
+      .tiles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+      }
+    }
+
+    /* ========== LOADING STATE ========== */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .loading-spinner {
+      font-size: 48px;
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ONBOARDING OVERLAY (first-time users) -->
+  <div class="onboarding-overlay" id="onboarding">
+    <div class="onboarding-card">
+      <div class="onboarding-emoji">&#x1F9ED;</div>
+      <h2 class="onboarding-title">Welcome to Newton Command Center</h2>
+      <p class="onboarding-text">
+        This dashboard helps you monitor AI governance and compliance at a glance.
+        Here's what you need to know:
+      </p>
+
+      <div class="onboarding-steps">
+        <div class="onboarding-step">
+          <div class="step-icon">&#x1F451;</div>
+          <div class="step-content">
+            <h4>Pick Your View</h4>
+            <p>Executive sees status only. Compliance sees gaps. Engineers see metrics.</p>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="step-icon">&#x1F7E2;</div>
+          <div class="step-content">
+            <h4>Read the Colors</h4>
+            <p>Green = Safe. Yellow = Watch. Red = Action needed now.</p>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="step-icon">&#x2753;</div>
+          <div class="step-content">
+            <h4>Hover for Help</h4>
+            <p>Every metric has a ? icon. Hover to see what it means.</p>
+          </div>
+        </div>
+        <div class="onboarding-step">
+          <div class="step-icon">&#x1F528;</div>
+          <div class="step-content">
+            <h4>Click to Fix</h4>
+            <p>Every problem has a button that starts the resolution workflow.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="onboarding-btn" onclick="dismissOnboarding()">Got It - Let's Go</button>
+    </div>
+  </div>
+
+  <!-- HERO PULSE BAR -->
+  <div class="pulse-bar">
+    <div class="pulse-left">
+      <div class="pulse-status" id="systemStatus" title="Overall system health">&#x1F7E2;</div>
+      <div class="pulse-workflows">
+        <span class="count" id="workflowCount">0</span> active workflows
+      </div>
+    </div>
+    <div class="pulse-alert safe" id="topAlert" onclick="scrollToActions()">
+      <span class="pulse-alert-text" id="topAlertText">All systems nominal</span>
+      <span class="pulse-alert-arrow">&#x2192;</span>
+    </div>
+  </div>
+
+  <!-- ROLE PICKER + FILTERS -->
+  <div class="control-bar">
+    <div class="role-picker">
+      <button class="role-btn active" data-role="EXEC" onclick="switchRole('EXEC')">
+        <span class="role-icon">&#x1F451;</span> Executive
+      </button>
+      <button class="role-btn" data-role="COMPLIANCE" onclick="switchRole('COMPLIANCE')">
+        <span class="role-icon">&#x1F6E1;</span> Compliance
+      </button>
+      <button class="role-btn" data-role="ENGINEER" onclick="switchRole('ENGINEER')">
+        <span class="role-icon">&#x1F527;</span> Engineer
+      </button>
+    </div>
+    <div class="filter-bar">
+      <select id="tenantFilter" onchange="refreshData()">
+        <option value="ALL">All Tenants</option>
+      </select>
+      <select id="periodFilter" onchange="refreshData()">
+        <option value="7D">Last 7 Days</option>
+        <option value="30D">Last 30 Days</option>
+        <option value="90D">Last 90 Days</option>
+      </select>
+      <input type="text" id="searchFilter" placeholder="Search..." oninput="filterContent()">
+    </div>
+  </div>
+
+  <!-- VIEW DESCRIPTION -->
+  <div class="view-description" id="viewDescription">
+    <span class="view-description-icon">&#x1F451;</span>
+    <span id="viewDescriptionText">High-level status for leadership. No numbers - just what needs attention.</span>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+    <div class="tiles-grid" id="tilesGrid">
+      <!-- Tiles rendered by JS -->
+    </div>
+
+    <!-- ACTION ITEMS -->
+    <div class="action-section" id="actionSection">
+      <div class="section-header">
+        <div class="section-title">
+          &#x26A1; Action Required
+          <span class="section-count" id="actionCount">0</span>
+        </div>
+      </div>
+      <div class="action-list" id="actionList">
+        <div class="empty-state">
+          <div class="empty-emoji">&#x2705;</div>
+          <div class="empty-text">All clear! No action items.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="last-updated" id="lastUpdated"></div>
+  </div>
+
+  <!-- TOOLTIP (for help icons) -->
+  <div class="tooltip" id="tooltip">
+    <div class="tooltip-title" id="tooltipTitle"></div>
+    <div class="tooltip-definition" id="tooltipDefinition"></div>
+    <div class="tooltip-section">
+      <div class="tooltip-section-label">What it measures:</div>
+      <div class="tooltip-section-value" id="tooltipMeasures"></div>
+    </div>
+    <div class="tooltip-section">
+      <div class="tooltip-section-label">Why it matters:</div>
+      <div class="tooltip-section-value" id="tooltipMatters"></div>
+    </div>
+  </div>
+
+  <!-- REFRESH FAB -->
+  <button class="refresh-btn" id="refreshBtn" onclick="refreshData()" title="Refresh data">&#x21BB;</button>
+
+  <script>
+    // ============================================================================
+    // STATE
+    // ============================================================================
+    let currentRole = '<?= savedRole ?>' || 'EXEC';
+    let dashboardData = null;
+    let glossary = {};
+    const hasSeenOnboarding = <?= hasSeenOnboarding ?>;
+
+    // ============================================================================
+    // INITIALIZATION
+    // ============================================================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show/hide onboarding
+      if (hasSeenOnboarding) {
+        document.getElementById('onboarding').classList.add('hidden');
+      }
+
+      // Set initial role button
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.role === currentRole);
+      });
+
+      // Load glossary
+      google.script.run
+        .withSuccessHandler(g => { glossary = g || {}; })
+        .getGlossary();
+
+      // Load initial data
+      refreshData();
+    });
+
+    // ============================================================================
+    // ONBOARDING
+    // ============================================================================
+    function dismissOnboarding() {
+      document.getElementById('onboarding').classList.add('hidden');
+      google.script.run.markOnboardingComplete();
+    }
+
+    // ============================================================================
+    // ROLE SWITCHING
+    // ============================================================================
+    function switchRole(role) {
+      currentRole = role;
+
+      // Update buttons
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.role === role);
+      });
+
+      // Refresh with new role
+      refreshData();
+    }
+
+    // ============================================================================
+    // DATA LOADING
+    // ============================================================================
+    function refreshData() {
+      const btn = document.getElementById('refreshBtn');
+      btn.classList.add('loading');
+
+      const tenant = document.getElementById('tenantFilter').value;
+      const period = document.getElementById('periodFilter').value;
+
+      google.script.run
+        .withSuccessHandler(data => {
+          dashboardData = data;
+          renderDashboard(data);
+          btn.classList.remove('loading');
+        })
+        .withFailureHandler(err => {
+          console.error('Refresh failed:', err);
+          btn.classList.remove('loading');
+          alert('Failed to load data. Please try again.');
+        })
+        .getDashboardDataV3(currentRole, tenant, period);
+    }
+
+    // ============================================================================
+    // RENDERING
+    // ============================================================================
+    function renderDashboard(data) {
+      // View description
+      const viewIcons = { EXEC: '&#x1F451;', COMPLIANCE: '&#x1F6E1;', ENGINEER: '&#x1F527;' };
+      document.querySelector('.view-description-icon').innerHTML = viewIcons[data.viewType] || '&#x1F4CA;';
+      document.getElementById('viewDescriptionText').textContent = data.viewDescription;
+
+      // Pulse bar
+      renderPulse(data.pulse);
+
+      // Tenants dropdown
+      renderTenants(data.tenants);
+
+      // Tiles
+      renderTiles(data.tiles, data.isEmpty);
+
+      // Action items (derive from tiles with issues)
+      renderActionItems(data.tiles);
+
+      // Last updated
+      const updated = new Date(data.lastUpdated);
+      document.getElementById('lastUpdated').textContent =
+        'Last updated: ' + updated.toLocaleString();
+    }
+
+    function renderPulse(pulse) {
+      const statusEmoji = { SAFE: '&#x1F7E2;', WATCH: '&#x1F7E1;', ACTION: '&#x1F534;' };
+      document.getElementById('systemStatus').innerHTML = statusEmoji[pulse.systemStatus] || '&#x1F7E2;';
+      document.getElementById('workflowCount').textContent = pulse.activeWorkflows;
+
+      const alertEl = document.getElementById('topAlert');
+      alertEl.className = 'pulse-alert ' + (pulse.topPriority.type || 'safe').toLowerCase();
+      document.getElementById('topAlertText').textContent = pulse.topPriority.title;
+    }
+
+    function renderTenants(tenants) {
+      const select = document.getElementById('tenantFilter');
+      const current = select.value;
+
+      select.innerHTML = tenants.map(t =>
+        `<option value="${t.id}">${t.name}</option>`
+      ).join('');
+
+      // Restore selection
+      if (current) select.value = current;
+    }
+
+    function renderTiles(tiles, isEmpty) {
+      const grid = document.getElementById('tilesGrid');
+
+      if (isEmpty || !tiles || tiles.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-emoji">&#x1F4ED;</div>
+            <div class="empty-text">
+              No data yet. Start logging AI operations to see metrics here.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = tiles.map(tile => renderTile(tile)).join('');
+
+      // Attach help icon listeners
+      document.querySelectorAll('.help-icon').forEach(icon => {
+        icon.addEventListener('mouseenter', showTooltip);
+        icon.addEventListener('mouseleave', hideTooltip);
+      });
+    }
+
+    function renderTile(tile) {
+      const statusClass = (tile.status || 'safe').toLowerCase();
+
+      // Determine content based on view type
+      let centerContent = '';
+      if (tile.metric !== null && tile.metric !== undefined) {
+        // Show metric + label
+        centerContent = `
+          <div class="tile-metric">${tile.metric}</div>
+          <div class="tile-metric-label">${tile.metricLabel || ''}</div>
+        `;
+      } else {
+        // Show status label (exec view)
+        centerContent = `
+          <div class="tile-status-giant ${statusClass}">${tile.statusLabel || tile.status}</div>
+        `;
+      }
+
+      // Thresholds (if available)
+      let thresholdsHTML = '';
+      if (tile.thresholds) {
+        thresholdsHTML = `
+          <div class="tile-thresholds">
+            <div class="threshold-item">
+              <div class="threshold-dot safe"></div>
+              <span>${tile.thresholds.safe}</span>
+            </div>
+            <div class="threshold-item">
+              <div class="threshold-dot watch"></div>
+              <span>${tile.thresholds.watch}</span>
+            </div>
+            <div class="threshold-item">
+              <div class="threshold-dot action"></div>
+              <span>${tile.thresholds.action}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // Empty state
+      let emptyHTML = '';
+      if (tile.isEmpty && tile.emptyMessage) {
+        emptyHTML = `
+          <div class="tile-empty">
+            <div class="tile-empty-icon">&#x2705;</div>
+            <div class="tile-empty-text">${tile.emptyMessage}</div>
+          </div>
+        `;
+      }
+
+      // Action button
+      let actionHTML = '';
+      if (tile.action && !tile.isEmpty) {
+        const timeHint = tile.action.estimatedTime
+          ? `<span class="action-btn-time">(${tile.action.estimatedTime})</span>`
+          : '';
+        actionHTML = `
+          <div class="tile-action">
+            <button class="action-btn"
+                    onclick="triggerAction('${tile.action.functionName}')"
+                    title="${tile.action.description}">
+              ${tile.action.label} ${timeHint}
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="tile ${statusClass}" data-tile-id="${tile.id}">
+          <div class="tile-header">
+            <div class="tile-title-group">
+              <div class="tile-badge">${tile.badge}</div>
+              <div class="tile-title">${tile.title}</div>
+            </div>
+            <div class="help-icon" data-glossary="${tile.glossaryKey}">?</div>
+          </div>
+
+          <div class="tile-content">
+            ${emptyHTML || centerContent}
+          </div>
+
+          ${thresholdsHTML}
+
+          <div class="tile-narrative">${tile.narrative}</div>
+
+          ${actionHTML}
+        </div>
+      `;
+    }
+
+    function renderActionItems(tiles) {
+      const container = document.getElementById('actionList');
+      const countEl = document.getElementById('actionCount');
+
+      // Filter tiles that need action
+      const actionTiles = tiles.filter(t =>
+        (t.status === 'ACTION' || t.status === 'WATCH') && !t.isEmpty
+      );
+
+      countEl.textContent = actionTiles.length;
+
+      if (actionTiles.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-emoji">&#x2705;</div>
+            <div class="empty-text">All clear! No action items.</div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = actionTiles.map(tile => `
+        <div class="action-item ${tile.status.toLowerCase()}">
+          <div class="action-icon">${tile.badge}</div>
+          <div class="action-content">
+            <div class="action-item-title">${tile.title}: ${tile.statusLabel || tile.status}</div>
+            <div class="action-item-narrative">${tile.narrative}</div>
+          </div>
+          ${tile.action ? `
+            <button class="fix-btn" onclick="triggerAction('${tile.action.functionName}')">
+              ${tile.action.label}
+            </button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // ============================================================================
+    // TOOLTIP
+    // ============================================================================
+    function showTooltip(e) {
+      const key = e.target.dataset.glossary;
+      const entry = glossary[key];
+      if (!entry) return;
+
+      const tooltip = document.getElementById('tooltip');
+      document.getElementById('tooltipTitle').textContent = entry.term;
+      document.getElementById('tooltipDefinition').textContent = entry.definition;
+      document.getElementById('tooltipMeasures').textContent = entry.whatItMeasures || entry.threshold || 'N/A';
+      document.getElementById('tooltipMatters').textContent = entry.whyItMatters || 'N/A';
+
+      // Position tooltip
+      const rect = e.target.getBoundingClientRect();
+      tooltip.style.top = (rect.bottom + 10) + 'px';
+      tooltip.style.left = Math.min(rect.left, window.innerWidth - 340) + 'px';
+      tooltip.classList.add('visible');
+    }
+
+    function hideTooltip() {
+      document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    // ============================================================================
+    // ACTIONS
+    // ============================================================================
+    function triggerAction(functionName) {
+      if (!functionName) return;
+
+      const btns = document.querySelectorAll('.action-btn, .fix-btn');
+      btns.forEach(btn => btn.disabled = true);
+
+      google.script.run
+        .withSuccessHandler(result => {
+          btns.forEach(btn => btn.disabled = false);
+          if (result.success) {
+            // Optionally refresh or show confirmation
+            refreshData();
+          } else {
+            alert('Action failed: ' + (result.error || 'Unknown error'));
+          }
+        })
+        .withFailureHandler(err => {
+          btns.forEach(btn => btn.disabled = false);
+          console.error('Action error:', err);
+          alert('Failed to execute action. Please try again.');
+        })
+        .runDashboardActionV3(functionName, {});
+    }
+
+    function scrollToActions() {
+      document.getElementById('actionSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ============================================================================
+    // FILTERING
+    // ============================================================================
+    function filterContent() {
+      const search = document.getElementById('searchFilter').value.toLowerCase();
+      const tiles = document.querySelectorAll('.tile');
+
+      tiles.forEach(tile => {
+        const text = tile.textContent.toLowerCase();
+        tile.style.display = text.includes(search) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
