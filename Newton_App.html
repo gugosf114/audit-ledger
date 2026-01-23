@@ -128,19 +128,27 @@
 
     /* ===== HERO PULSE BAR ===== */
     .pulse-bar {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #1a1a2e;
+      border-bottom: 2px solid var(--accent);
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 24px;
+      gap: 32px;
+      z-index: 90;
+      height: 100px;
+      box-sizing: border-box;
     }
 
     .pulse-section {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 24px;
     }
 
     .pulse-section.center {
@@ -155,18 +163,20 @@
     .chain-visualizer {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      margin: 8px 0;
     }
 
     .chain-block {
-      width: 24px;
-      height: 24px;
-      border-radius: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
       background: var(--safe);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
+      font-size: 12px;
+      font-weight: 600;
       color: white;
       transition: all 0.3s;
     }
@@ -181,9 +191,10 @@
     }
 
     .chain-connector {
-      width: 8px;
-      height: 2px;
+      width: 12px;
+      height: 3px;
       background: var(--safe);
+      border-radius: 2px;
     }
 
     .chain-connector.broken {
@@ -292,32 +303,42 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 8px 16px;
+      padding: 12px 20px;
       background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 8px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 10px;
     }
 
     .economic-value {
-      font-size: 18px;
+      font-size: 24px;
       font-weight: 700;
       color: var(--safe);
+      line-height: 1;
     }
 
     .economic-label {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--text-secondary);
+      margin-top: 2px;
     }
 
     /* ===== ROLE SELECTOR ===== */
     .role-bar {
-      background: var(--bg-hover);
+      position: fixed;
+      top: 164px; /* 64px nav + 100px pulse bar */
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: #252540;
       border-bottom: 1px solid var(--border);
       padding: 12px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+      z-index: 85;
+      height: 52px;
+      box-sizing: border-box;
     }
 
     .role-selector {
@@ -1645,7 +1666,7 @@
   </div>
 
   <!-- Main Content -->
-  <main class="main" style="padding-top: 180px;">
+  <main class="main" style="padding-top: 230px;">
 
     <!-- HOME PAGE -->
     <div class="page active" id="page-home">

@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newton - AI Governance Platform</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-dark: #0a0a0f;
+      --bg-card: #12121a;
+      --bg-hover: #1a1a25;
+      --bg-active: #252535;
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(255,255,255,0.15);
+      --text-primary: #ffffff;
+      --text-secondary: #a0a0b0;
+      --text-muted: #606070;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --safe: #10b981;
+      --watch: #f59e0b;
+      --action: #ef4444;
+      --info: #3b82f6;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ===== NAVIGATION ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .nav-brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-link {
+      padding: 10px 20px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .nav-link.active {
+      color: var(--text-primary);
+      background: var(--bg-active);
+    }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--safe);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    /* ===== HERO PULSE BAR ===== */
+    .pulse-bar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+      z-index: 99;
+    }
+
+    .pulse-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .pulse-section.center {
+      justify-content: center;
+    }
+
+    .pulse-section.right {
+      justify-content: flex-end;
+    }
+
+    .chain-visualizer {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chain-block {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      background: var(--safe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      transition: all 0.3s;
+    }
+
+    .chain-block.broken {
+      background: var(--action);
+      animation: shake 0.5s;
+    }
+
+    .chain-connector {
+      width: 8px;
+      height: 2px;
+      background: var(--safe);
+    }
+
+    .chain-connector.broken {
+      background: var(--action);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    .pulse-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pulse-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .pulse-value.verified { color: var(--safe); }
+    .pulse-value.broken { color: var(--action); }
+
+    .pulse-subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .pulse-counter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pulse-counter-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .pulse-counter-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .pulse-alert {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: 350px;
+    }
+
+    .pulse-alert.danger {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .pulse-alert-icon {
+      font-size: 18px;
+    }
+
+    .pulse-alert-text {
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .economic-impact {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+    }
+
+    .economic-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--safe);
+    }
+
+    .economic-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== ROLE SELECTOR ===== */
+    .role-bar {
+      position: fixed;
+      top: 140px;
+      left: 0;
+      right: 0;
+      background: var(--bg-hover);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      z-index: 98;
+    }
+
+    .role-selector {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-dark);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .role-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .role-btn:hover {
+      color: var(--text-secondary);
+    }
+
+    .role-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .role-filters {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .role-filter-select {
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .role-identity {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      padding-top: 200px;
+      min-height: 100vh;
+    }
+
+    .page {
+      display: none;
+      padding: 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== HOME PAGE ===== */
+    .hero {
+      text-align: center;
+      padding: 60px 0;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff, #a0a0b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 20px;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      margin-bottom: 60px;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .hero-stat-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== CAPABILITY CARDS ===== */
+    .section-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .capabilities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .capability-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .capability-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .capability-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .capability-card:hover::before {
+      opacity: 1;
+    }
+
+    .capability-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .capability-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: var(--bg-hover);
+    }
+
+    .capability-status {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .capability-status.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .capability-status.ready {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+    }
+
+    .capability-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .capability-description {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .capability-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .capability-feature {
+      padding: 6px 12px;
+      background: var(--bg-hover);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .capability-action {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .capability-action-btn {
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .capability-action-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    /* ===== LEDGER PAGE ===== */
+    .ledger-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .ledger-filters {
+      display: flex;
+      gap: 12px;
+    }
+
+    .filter-select {
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .ledger-search {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ledger-search input {
+      padding: 10px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 8px;
+      font-size: 14px;
+      width: 280px;
+    }
+
+    .ledger-table {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .ledger-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .ledger-table th {
+      padding: 16px 20px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--bg-hover);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ledger-table td {
+      padding: 16px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ledger-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .ledger-table tr:hover td {
+      background: var(--bg-hover);
+    }
+
+    .ledger-uuid {
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .ledger-event-type {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--bg-hover);
+    }
+
+    .ledger-confidence {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .confidence-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .confidence-dot.known-known { background: var(--safe); }
+    .confidence-dot.known-unknown { background: var(--watch); }
+    .confidence-dot.unknown-unknown { background: var(--action); }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-hover);
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-hint {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    /* ===== LOADING ===== */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== TOAST ===== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toast {
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.3s;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .toast.success { border-color: var(--safe); }
+    .toast.error { border-color: var(--action); }
+    .toast.warning { border-color: var(--watch); }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#" class="nav-brand" onclick="showPage('home')">
+      <div class="nav-brand-icon">N</div>
+      Newton
+    </a>
+
+    <div class="nav-links">
+      <a class="nav-link active" onclick="showPage('home')" data-page="home">Home</a>
+      <a class="nav-link" onclick="showPage('ledger')" data-page="ledger">Audit Ledger</a>
+    </div>
+
+    <div class="nav-status">
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span id="systemStatus">System Active</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Pulse Bar -->
+  <div class="pulse-bar" id="pulseBar">
+    <div class="pulse-section">
+      <div>
+        <div class="pulse-label">Ledger Integrity</div>
+        <div class="chain-visualizer" id="chainVisualizer">
+          <div class="chain-block">1</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">2</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">3</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">4</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">5</div>
+        </div>
+        <div class="pulse-subtext" id="chainStatus">Verified: 0 rows</div>
+      </div>
+      <div class="economic-impact">
+        <div>
+          <div class="economic-value" id="economicValue">$0</div>
+          <div class="economic-label">Exposure Prevented</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pulse-section center">
+      <div class="pulse-counter">
+        <div class="pulse-counter-value" id="pulseWorkflows">0</div>
+        <div class="pulse-counter-label">Active Workflows</div>
+      </div>
+    </div>
+
+    <div class="pulse-section right">
+      <div class="pulse-alert" id="priorityAlert">
+        <span class="pulse-alert-icon">&#10003;</span>
+        <span class="pulse-alert-text" id="alertText">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role Selector Bar -->
+  <div class="role-bar">
+    <div class="role-selector">
+      <button class="role-btn active" data-role="briefing">Briefing</button>
+      <button class="role-btn" data-role="exec">Exec</button>
+      <button class="role-btn" data-role="compliance">Compliance</button>
+      <button class="role-btn" data-role="engineer">Engineer</button>
+    </div>
+    <div class="role-filters">
+      <select class="role-filter-select" id="timeFilter">
+        <option value="24h">Last 24 Hours</option>
+        <option value="7d" selected>Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+      </select>
+      <span class="role-identity" id="userIdentity">Actor: Loading...</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <h1 class="hero-title">AI Governance Platform</h1>
+        <p class="hero-subtitle">Tamper-evident audit trails, adversarial verification, and regulatory compliance mapping for AI systems.</p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-value" id="statEntries">0</div>
+            <div class="hero-stat-label">Audit Entries</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value" id="statWorkflows">0</div>
+            <div class="hero-stat-label">Active Workflows</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-value" id="statCompliance">0%</div>
+            <div class="hero-stat-label">Compliance Score</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Capabilities</h2>
+
+      <div class="capabilities-grid">
+
+        <div class="capability-card" onclick="showPage('ledger')">
+          <div class="capability-header">
+            <div class="capability-icon">&#128274;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Tamper-Evident Ledger</h3>
+          <p class="capability-description">SHA-256 hash-chained audit trail. Every entry links cryptographically to the previous. Tampering breaks the chain.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Hash Chain</span>
+            <span class="capability-feature">PostgreSQL</span>
+            <span class="capability-feature">Immutable</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Ledger</button>
+          </div>
+        </div>
+
+        <div class="capability-card">
+          <div class="capability-header">
+            <div class="capability-icon">&#127919;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Confidence Declaration</h3>
+          <p class="capability-description">Rumsfeld Protocol - declare confidence BEFORE logging content. Prevents retroactive softening of claims.</p>
+          <div class="capability-features">
+            <span class="capability-feature">KNOWN_KNOWN</span>
+            <span class="capability-feature">KNOWN_UNKNOWN</span>
+            <span class="capability-feature">Pre-commit</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn" onclick="showModal('newEntry')">Declare</button>
+          </div>
+        </div>
+
+        <div class="capability-card">
+          <div class="capability-header">
+            <div class="capability-icon">&#128737;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">AI Gatekeeper</h3>
+          <p class="capability-description">Filters AI outputs before they reach users. Blocks low-confidence, hallucinated, or policy-violating content.</p>
+          <div class="capability-features">
+            <span class="capability-feature">Confidence Filter</span>
+            <span class="capability-feature">Hallucination Block</span>
+            <span class="capability-feature">Policy Enforcement</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Stats</button>
+          </div>
+        </div>
+
+        <div class="capability-card">
+          <div class="capability-header">
+            <div class="capability-icon">&#128220;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Regulatory Mapping</h3>
+          <p class="capability-description">Auto-tags entries to ISO 42001, EU AI Act, and NIST AI RMF. Shows compliance coverage and gaps.</p>
+          <div class="capability-features">
+            <span class="capability-feature">ISO 42001</span>
+            <span class="capability-feature">EU AI Act</span>
+            <span class="capability-feature">NIST AI RMF</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Compliance</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- LEDGER PAGE -->
+    <div class="page" id="page-ledger">
+      <h1 class="section-title">Audit Ledger</h1>
+
+      <div class="ledger-controls">
+        <div class="ledger-filters">
+          <select class="filter-select" id="filterEventType">
+            <option value="">All Event Types</option>
+            <option value="FINDING">Finding</option>
+            <option value="ALERT">Alert</option>
+            <option value="test">Test</option>
+          </select>
+          <select class="filter-select" id="filterPeriod">
+            <option value="7">Last 7 days</option>
+            <option value="30" selected>Last 30 days</option>
+            <option value="90">Last 90 days</option>
+          </select>
+        </div>
+
+        <div class="ledger-search">
+          <input type="text" placeholder="Search entries..." id="ledgerSearch">
+          <button class="btn btn-secondary" onclick="loadLedgerData()">Search</button>
+          <button class="btn btn-primary" onclick="showModal('newEntry')">+ New Entry</button>
+        </div>
+      </div>
+
+      <div class="ledger-table">
+        <table>
+          <thead>
+            <tr>
+              <th>UUID</th>
+              <th>Timestamp</th>
+              <th>Actor</th>
+              <th>Event Type</th>
+              <th>Text</th>
+              <th>Confidence</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerTableBody">
+            <tr><td colspan="7"><div class="loading"><div class="loading-spinner"></div>Loading...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: New Entry -->
+  <div class="modal-overlay" id="modal-newEntry">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">New Audit Entry</h2>
+        <button class="modal-close" onclick="closeModal('newEntry')">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Confidence Level *</label>
+          <select class="form-input" id="entryConfidence">
+            <option value="">Select confidence level...</option>
+            <option value="KNOWN_KNOWN">KNOWN_KNOWN - High confidence, direct evidence</option>
+            <option value="KNOWN_UNKNOWN">KNOWN_UNKNOWN - Identified gap</option>
+            <option value="UNKNOWN_UNKNOWN">UNKNOWN_UNKNOWN - Speculation</option>
+          </select>
+          <p class="form-hint">Declare confidence before the entry is logged (Rumsfeld Protocol)</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Event Type *</label>
+          <select class="form-input" id="entryEventType">
+            <option value="">Select event type...</option>
+            <option value="FINDING">Finding</option>
+            <option value="OBSERVATION">Observation</option>
+            <option value="DECISION">Decision</option>
+            <option value="ALERT">Alert</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Text *</label>
+          <textarea class="form-input form-textarea" id="entryText" placeholder="Describe the finding, observation, or decision..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('newEntry')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitNewEntry()">Create Entry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    // ===== API CONFIGURATION =====
+    const API_BASE = 'https://baycomply-api-827642717513.us-central1.run.app';
+    const DEFAULT_TENANT = '00000000-0000-0000-0000-000000000001';
+    const DEFAULT_USER = '00000000-0000-0000-0000-000000000001';
+
+    // ===== API HELPER =====
+    async function api(endpoint, options = {}) {
+      try {
+        const response = await fetch(API_BASE + endpoint, {
+          headers: { 'Content-Type': 'application/json' },
+          ...options
+        });
+        return await response.json();
+      } catch (err) {
+        console.error('API Error:', err);
+        return null;
+      }
+    }
+
+    // ===== PAGE NAVIGATION =====
+    function showPage(pageId) {
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.page === pageId) link.classList.add('active');
+      });
+
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById('page-' + pageId).classList.add('active');
+
+      if (pageId === 'ledger') loadLedgerData();
+      if (pageId === 'home') loadHomeStats();
+    }
+
+    // ===== MODALS =====
+    function showModal(modalId) {
+      document.getElementById('modal-' + modalId).classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById('modal-' + modalId).classList.remove('active');
+    }
+
+    // ===== TOAST =====
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast ' + type;
+      toast.innerHTML = '<span>' + (type === 'success' ? '&#10003;' : '&#9888;') + '</span><span>' + message + '</span>';
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // ===== LOAD HOME STATS =====
+    async function loadHomeStats() {
+      const stats = await api('/api/stats');
+      if (stats) {
+        document.getElementById('statEntries').textContent = stats.entries.toLocaleString();
+        document.getElementById('statWorkflows').textContent = stats.workflows;
+        document.getElementById('statCompliance').textContent = stats.compliance + '%';
+      }
+    }
+
+    // ===== LOAD PULSE BAR =====
+    async function loadPulseBar() {
+      // Chain integrity
+      const chain = await api('/api/chain/integrity');
+      if (chain) {
+        document.getElementById('chainStatus').innerHTML =
+          '<span class="pulse-value ' + (chain.verified ? 'verified' : 'broken') + '">' + (chain.verified ? 'VERIFIED' : 'BROKEN') + '</span> - ' + chain.rows.toLocaleString() + ' rows';
+        document.getElementById('systemStatus').textContent = chain.verified ? 'Chain Verified' : 'CHAIN BROKEN';
+      }
+
+      // Economic impact
+      const economic = await api('/api/economic-impact');
+      if (economic) {
+        const total = economic.total;
+        document.getElementById('economicValue').textContent =
+          total >= 1000000 ? '$' + (total / 1000000).toFixed(1) + 'M' : '$' + (total / 1000).toFixed(0) + 'K';
+      }
+
+      // Priority alert
+      const alert = await api('/api/alerts/priority');
+      if (alert) {
+        document.getElementById('alertText').textContent = alert.message;
+        const alertEl = document.getElementById('priorityAlert');
+        if (!alert.safe) alertEl.classList.add('danger');
+      }
+
+      // Workflow count
+      const workflows = await api('/api/workflows/count');
+      if (workflows) {
+        document.getElementById('pulseWorkflows').textContent = workflows.count;
+      }
+
+      // User
+      const user = await api('/api/user');
+      if (user) {
+        document.getElementById('userIdentity').textContent = 'Actor: ' + user.email;
+      }
+    }
+
+    // ===== LOAD LEDGER =====
+    async function loadLedgerData() {
+      const tbody = document.getElementById('ledgerTableBody');
+      tbody.innerHTML = '<tr><td colspan="7"><div class="loading"><div class="loading-spinner"></div>Loading...</div></td></tr>';
+
+      const entries = await api('/api/audit');
+
+      if (!entries || entries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--text-muted); padding: 40px;">No entries yet. Create your first audit entry.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = entries.map(entry =>
+        '<tr>' +
+          '<td><span class="ledger-uuid">' + entry.uuid.substring(0, 8) + '...</span></td>' +
+          '<td>' + entry.timestamp + '</td>' +
+          '<td>' + entry.actor + '</td>' +
+          '<td><span class="ledger-event-type">' + entry.eventType + '</span></td>' +
+          '<td>' + String(entry.text).substring(0, 50) + (String(entry.text).length > 50 ? '...' : '') + '</td>' +
+          '<td><span class="ledger-confidence"><span class="confidence-dot known-known"></span>' + entry.confidence + '</span></td>' +
+          '<td>' + entry.status + '</td>' +
+        '</tr>'
+      ).join('');
+    }
+
+    // ===== SUBMIT NEW ENTRY =====
+    async function submitNewEntry() {
+      const confidence = document.getElementById('entryConfidence').value;
+      const eventType = document.getElementById('entryEventType').value;
+      const text = document.getElementById('entryText').value;
+
+      if (!confidence || !eventType || !text) {
+        showToast('Please fill in all required fields', 'error');
+        return;
+      }
+
+      const result = await api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: eventType,
+          content: { message: text, confidence: confidence }
+        })
+      });
+
+      if (result && !result.error) {
+        closeModal('newEntry');
+        showToast('Entry created with hash-chain verification', 'success');
+        loadLedgerData();
+        loadPulseBar();
+        // Reset form
+        document.getElementById('entryConfidence').value = '';
+        document.getElementById('entryEventType').value = '';
+        document.getElementById('entryText').value = '';
+      } else {
+        showToast('Error: ' + (result?.error || 'Unknown error'), 'error');
+      }
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHomeStats();
+      loadPulseBar();
+    });
+  </script>
+</body>
+</html>
