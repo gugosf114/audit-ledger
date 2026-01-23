@@ -92,6 +92,17 @@ function _getGatekeeperMode() {
 }
 
 /**
+ * Resolve effective gatekeeper mode from options (per-call override).
+ * Allows Tenant Control Tower and Confidence Planner to specify mode per-request.
+ */
+function _resolveGatekeeperMode(options) {
+  if (options && options.mode && Object.values(GATEKEEPER_CONFIG.MODE).includes(options.mode)) {
+    return options.mode;
+  }
+  return _getGatekeeperMode();
+}
+
+/**
  * Set enforcement mode.
  */
 function setGatekeeperMode(mode) {
@@ -113,7 +124,7 @@ function setGatekeeperMode(mode) {
  * @returns {Object} - { allowed: boolean, violations: [], confidence_uuid: string }
  */
 function gatekeeperPrecheck(request, options) {
-  const mode = _getGatekeeperMode();
+  const mode = _resolveGatekeeperMode(options);
   const result = {
     allowed: true,
     violations: [],
@@ -202,7 +213,7 @@ function gatekeeperPrecheck(request, options) {
  * @returns {Object} - { allowed: boolean, violations: [], sanitized_response: string }
  */
 function gatekeeperPostcheck(response, precheckResult, options) {
-  const mode = _getGatekeeperMode();
+  const mode = _resolveGatekeeperMode(options);
   const result = {
     allowed: true,
     violations: [],

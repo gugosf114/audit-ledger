@@ -857,6 +857,30 @@ function onOpen() {
     .addItem("Test Detection", "testGatekeeperFromUI")
     .addToUi();
 
+  ui.createMenu("Brain")
+    .addItem("View Policy Sheet", "viewPolicySheet")
+    .addItem("View Learning Sheet", "viewLearningSheet")
+    .addSeparator()
+    .addItem("Set Policy", "setPolicyFromUI")
+    .addItem("Run Auto-Tune", "runAutoTuneFromUI")
+    .addSeparator()
+    .addItem("Setup Brain Sheets", "setupBrainSheets")
+    .addToUi();
+
+  ui.createMenu("Planner")
+    .addItem("Create Plan", "createPlanFromUI")
+    .addItem("Execute Step", "executePlanStepFromUI")
+    .addItem("View Plans", "viewPlansSheet")
+    .addSeparator()
+    .addItem("Auto-Plan Request", "autoPlanFromUI")
+    .addToUi();
+
+  ui.createMenu("Tenant Policy")
+    .addItem("View Policies", "viewTenantPolicySheet")
+    .addItem("Set Policy", "setTenantPolicyFromUI")
+    .addItem("List Policies", "listTenantPoliciesFromUI")
+    .addToUi();
+
   ui.createMenu("Customers")
     .addItem("Generate New API Key", "generateCustomerKeyFromUI")
     .addItem("View Customers Sheet", "viewCustomersFromUI")
