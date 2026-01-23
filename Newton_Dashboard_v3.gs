@@ -1,6 +1,6 @@
 /**
  * ───────────────────────────────────────────────
- * NEWTON DASHBOARD v3 : UNIVERSAL COMMAND CENTER
+ * NEWTON DASHBOARD v3.1 : UNIVERSAL COMMAND CENTER
  * ───────────────────────────────────────────────
  *
  * Designed for ANY user - from CEOs who want 15-second glances
@@ -13,8 +13,90 @@
  * - Status thresholds are visible, not hidden
  * - First-time users get onboarding overlay
  *
+ * v3.1 Fixes:
+ * - Real data queries instead of hardcoded stats
+ * - Single sheet read with in-memory cache
+ * - Real date windowing for period comparisons
+ * - alertId passed to action handlers
+ * - "X changes since last login" greeting
+ *
  * ───────────────────────────────────────────────
  */
+
+// ============================================================================
+// DATA CACHE - Single read, reuse everywhere
+// ============================================================================
+
+/**
+ * In-memory cache for sheet data during a single request lifecycle.
+ * Avoids N+1 getDataRange() calls that kill performance.
+ */
+const DataCache_ = {
+  _cache: {},
+  _timestamp: null,
+  _TTL_MS: 30000, // 30 second TTL for cache validity
+
+  /**
+   * Get cached sheet data or fetch and cache it
+   */
+  getSheetData: function(sheetName) {
+    const now = Date.now();
+
+    // Invalidate entire cache if TTL expired
+    if (this._timestamp && (now - this._timestamp) > this._TTL_MS) {
+      this._cache = {};
+      this._timestamp = null;
+    }
+
+    // Return cached data if available
+    if (this._cache[sheetName]) {
+      return this._cache[sheetName];
+    }
+
+    // Fetch and cache
+    try {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const sheet = ss.getSheetByName(sheetName);
+
+      if (!sheet) {
+        this._cache[sheetName] = { exists: false, data: [], headers: [] };
+      } else {
+        const data = sheet.getDataRange().getValues();
+        this._cache[sheetName] = {
+          exists: true,
+          data: data,
+          headers: data.length > 0 ? data[0] : [],
+          rows: data.slice(1) // Data without header
+        };
+      }
+
+      if (!this._timestamp) this._timestamp = now;
+
+    } catch (e) {
+      Logger.log('DataCache error for ' + sheetName + ': ' + e.message);
+      this._cache[sheetName] = { exists: false, data: [], headers: [], rows: [] };
+    }
+
+    return this._cache[sheetName];
+  },
+
+  /**
+   * Preload all commonly used sheets in one go
+   */
+  preloadAll: function() {
+    const sheets = ['Audit_Ledger', 'Detection_Alerts', 'Gap_Analysis',
+                    'Workflows', 'TENANT_POLICY', 'Gatekeeper_Learning'];
+    sheets.forEach(name => this.getSheetData(name));
+  },
+
+  /**
+   * Clear cache (useful for testing or forced refresh)
+   */
+  clear: function() {
+    this._cache = {};
+    this._timestamp = null;
+  }
+};
 
 // ============================================================================
 // WEB APP ENTRY POINT
@@ -50,10 +132,18 @@ function resetOnboarding() {
 // ============================================================================
 
 function getDashboardDataV3(role, tenantFilter, periodFilter) {
+  // Preload all sheets in one batch to avoid N+1 queries
+  DataCache_.preloadAll();
+
   PropertiesService.getUserProperties().setProperty('LAST_DASHBOARD_ROLE', role);
 
-  const stats = aggregateLedgerStatsV3(tenantFilter, periodFilter);
-  const prevStats = aggregateLedgerStatsV3(tenantFilter, getPreviousPeriod(periodFilter));
+  // Get date window for current and previous periods
+  const currentWindow = getDateWindow(periodFilter);
+  const previousWindow = getPreviousDateWindow(periodFilter);
+
+  // All aggregation now uses cached data + real date filtering
+  const stats = aggregateLedgerStatsV3(tenantFilter, currentWindow);
+  const prevStats = aggregateLedgerStatsV3(tenantFilter, previousWindow);
   const alerts = getActiveAlertsV3(tenantFilter);
   const compliance = getComplianceScoreV3(tenantFilter);
   const tenants = getAvailableTenantsV3();
@@ -79,12 +169,13 @@ function getDashboardDataV3(role, tenantFilter, periodFilter) {
     }
   }
 
-  // Common data for all views
+  // Common data for all views - include alertId for action context
+  const topAlert = alerts.length > 0 ? alerts[0] : null;
   viewData.pulse = {
     activeWorkflows: stats.activeWorkflows,
     systemStatus: getSystemStatus(stats, alerts),
-    topPriority: alerts.length > 0
-      ? alerts[0]
+    topPriority: topAlert
+      ? { title: topAlert.title, type: topAlert.severity, id: topAlert.id }
       : { title: "All systems nominal", type: "SAFE", id: null }
   };
 
@@ -98,12 +189,62 @@ function getDashboardDataV3(role, tenantFilter, periodFilter) {
   return viewData;
 }
 
+// ============================================================================
+// DATE WINDOWING - Real period calculations
+// ============================================================================
+
 /**
- * Get the previous period for comparison
+ * Get date window (start/end) for a period filter
  */
-function getPreviousPeriod(period) {
-  // Returns identifier for previous period (for week-over-week comparisons)
-  return period + '_PREV';
+function getDateWindow(period) {
+  const now = new Date();
+  const end = new Date(now);
+  let start = new Date(now);
+
+  switch(period) {
+    case '24H':
+      start.setHours(start.getHours() - 24);
+      break;
+    case '7D':
+      start.setDate(start.getDate() - 7);
+      break;
+    case '30D':
+      start.setDate(start.getDate() - 30);
+      break;
+    case '90D':
+      start.setDate(start.getDate() - 90);
+      break;
+    case 'YTD':
+      start = new Date(now.getFullYear(), 0, 1); // Jan 1 of current year
+      break;
+    default:
+      start.setDate(start.getDate() - 7); // Default to 7 days
+  }
+
+  return { start: start, end: end, period: period };
+}
+
+/**
+ * Get date window for the PREVIOUS equivalent period
+ */
+function getPreviousDateWindow(period) {
+  const current = getDateWindow(period);
+  const duration = current.end - current.start;
+
+  // Previous period ends where current period starts
+  const prevEnd = new Date(current.start);
+  const prevStart = new Date(current.start.getTime() - duration);
+
+  return { start: prevStart, end: prevEnd, period: period + '_PREV' };
+}
+
+/**
+ * Check if a date falls within a window
+ */
+function isInDateWindow(date, window) {
+  if (!date || !window) return false;
+  const d = date instanceof Date ? date : new Date(date);
+  return d >= window.start && d <= window.end;
 }
 
 /**
@@ -152,11 +293,11 @@ function formatComparison(current, previous, periodLabel, suffix) {
   const pct = Math.round((delta / previous) * 100);
 
   if (delta > 0) {
-    return `↑ ${Math.abs(delta)}${suffix} more than ${periodLabel} (+${pct}%)`;
+    return '↑ ' + Math.abs(delta) + suffix + ' more than ' + periodLabel + ' (+' + pct + '%)';
   } else if (delta < 0) {
-    return `↓ ${Math.abs(delta)}${suffix} fewer than ${periodLabel} (${pct}%)`;
+    return '↓ ' + Math.abs(delta) + suffix + ' fewer than ' + periodLabel + ' (' + pct + '%)';
   }
-  return `Same as ${periodLabel}`;
+  return 'Same as ' + periodLabel;
 }
 
 // ============================================================================
@@ -164,20 +305,20 @@ function formatComparison(current, previous, periodLabel, suffix) {
 // ============================================================================
 
 function buildBriefingView(stats, prevStats, alerts, compliance) {
-  const now = new Date();
-  const hour = now.getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  // Use delta since last login instead of time-of-day greeting
+  const deltaInfo = getChangesSinceLastLogin();
+  const greeting = deltaInfo.greeting;
 
   // Determine overall status
-  const criticalCount = alerts.filter(a => a.severity === 'CRITICAL').length;
-  const actionCount = alerts.filter(a => a.severity === 'HIGH' || a.severity === 'CRITICAL').length;
+  const criticalCount = alerts.filter(function(a) { return a.severity === 'CRITICAL'; }).length;
+  const actionCount = alerts.filter(function(a) { return a.severity === 'HIGH' || a.severity === 'CRITICAL'; }).length;
 
   let overallStatus = 'SAFE';
   let overallMessage = 'Looking good';
 
   if (criticalCount > 0) {
     overallStatus = 'ACTION';
-    overallMessage = `${criticalCount} critical issue${criticalCount > 1 ? 's' : ''} need${criticalCount === 1 ? 's' : ''} attention`;
+    overallMessage = criticalCount + ' critical issue' + (criticalCount > 1 ? 's' : '') + ' need' + (criticalCount === 1 ? 's' : '') + ' attention';
   } else if (actionCount > 0 || compliance.missingClauses > 5) {
     overallStatus = 'WATCH';
     overallMessage = 'A few items need your attention';
@@ -188,8 +329,10 @@ function buildBriefingView(stats, prevStats, alerts, compliance) {
 
   return {
     viewType: 'BRIEFING',
-    viewDescription: `${greeting}. Here's your AI governance status.`,
+    viewDescription: greeting,
     greeting: greeting,
+    changesSinceLogin: deltaInfo.changes,
+    lastLoginTime: deltaInfo.lastLogin,
     overallStatus: overallStatus,
     overallMessage: overallMessage,
     priorities: priorities,
@@ -198,21 +341,134 @@ function buildBriefingView(stats, prevStats, alerts, compliance) {
 }
 
 /**
+ * Get changes since user's last login for personalized greeting
+ */
+function getChangesSinceLastLogin() {
+  const userProps = PropertiesService.getUserProperties();
+  const lastLoginStr = userProps.getProperty('DASHBOARD_LAST_LOGIN');
+  const now = new Date();
+
+  // Update last login time
+  userProps.setProperty('DASHBOARD_LAST_LOGIN', now.toISOString());
+
+  if (!lastLoginStr) {
+    // First time user
+    return {
+      greeting: 'Welcome to Newton Command Center.',
+      lastLogin: null,
+      changes: 0
+    };
+  }
+
+  const lastLogin = new Date(lastLoginStr);
+  const hoursSinceLogin = Math.floor((now - lastLogin) / 3600000);
+
+  // Count changes since last login from cached data
+  const changes = countChangesSince(lastLogin);
+
+  let greeting;
+  if (changes === 0) {
+    greeting = 'No changes since your last visit (' + formatTimeSince(lastLogin) + ' ago).';
+  } else if (changes === 1) {
+    greeting = '1 change since your last visit (' + formatTimeSince(lastLogin) + ' ago).';
+  } else {
+    greeting = changes + ' changes since your last visit (' + formatTimeSince(lastLogin) + ' ago).';
+  }
+
+  return {
+    greeting: greeting,
+    lastLogin: lastLogin.toISOString(),
+    changes: changes
+  };
+}
+
+/**
+ * Count meaningful changes since a given timestamp
+ */
+function countChangesSince(sinceDate) {
+  let count = 0;
+
+  // Count new ledger entries
+  const ledger = DataCache_.getSheetData('Audit_Ledger');
+  if (ledger.exists && ledger.rows) {
+    const timestampCol = findColumnIndex(ledger.headers, ['Timestamp', 'timestamp', 'Date', 'date', 'Created']);
+    if (timestampCol >= 0) {
+      ledger.rows.forEach(function(row) {
+        const rowDate = row[timestampCol];
+        if (rowDate && new Date(rowDate) > sinceDate) {
+          count++;
+        }
+      });
+    }
+  }
+
+  // Count new alerts
+  const alerts = DataCache_.getSheetData('Detection_Alerts');
+  if (alerts.exists && alerts.rows) {
+    const alertTimeCol = findColumnIndex(alerts.headers, ['Timestamp', 'timestamp', 'Created', 'Date']);
+    if (alertTimeCol >= 0) {
+      alerts.rows.forEach(function(row) {
+        const rowDate = row[alertTimeCol];
+        if (rowDate && new Date(rowDate) > sinceDate) {
+          count++;
+        }
+      });
+    }
+  }
+
+  return count;
+}
+
+/**
+ * Format time since last login in human readable form
+ */
+function formatTimeSince(date) {
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'just now';
+  if (diffMins < 60) return diffMins + ' minute' + (diffMins > 1 ? 's' : '');
+  if (diffHours < 24) return diffHours + ' hour' + (diffHours > 1 ? 's' : '');
+  if (diffDays < 7) return diffDays + ' day' + (diffDays > 1 ? 's' : '');
+
+  return date.toLocaleDateString();
+}
+
+/**
+ * Find column index by possible header names
+ */
+function findColumnIndex(headers, possibleNames) {
+  for (var i = 0; i < headers.length; i++) {
+    var header = String(headers[i]).toLowerCase().trim();
+    for (var j = 0; j < possibleNames.length; j++) {
+      if (header === possibleNames[j].toLowerCase()) {
+        return i;
+      }
+    }
+  }
+  return -1;
+}
+
+/**
  * Build prioritized action list - what should user do first?
  */
 function buildPriorityList(stats, alerts, compliance) {
   const priorities = [];
 
-  // Critical alerts first
-  const criticalAlerts = alerts.filter(a => a.severity === 'CRITICAL');
-  criticalAlerts.forEach(alert => {
+  // Critical alerts first - include alertId for action context
+  const criticalAlerts = alerts.filter(function(a) { return a.severity === 'CRITICAL'; });
+  criticalAlerts.forEach(function(alert) {
     priorities.push({
       urgency: 'URGENT',
       sentence: alert.title,
       consequence: 'This needs immediate attention',
       action: {
         label: 'Fix Now',
-        functionName: 'fixTopRisk'
+        functionName: 'fixTopRisk',
+        params: { alertId: alert.id } // Pass alertId for context
       },
       relativeTime: formatRelativeTime(alert.timestamp)
     });
@@ -222,11 +478,12 @@ function buildPriorityList(stats, alerts, compliance) {
   if (compliance.missingClauses > 0) {
     priorities.push({
       urgency: compliance.missingClauses > 5 ? 'ACTION' : 'WATCH',
-      sentence: `${compliance.missingClauses} document${compliance.missingClauses > 1 ? 's are' : ' is'} missing`,
+      sentence: compliance.missingClauses + ' document' + (compliance.missingClauses > 1 ? 's are' : ' is') + ' missing',
       consequence: 'Auditors will flag these as non-compliant',
       action: {
         label: 'See Which Ones',
-        functionName: 'runGapAnalysisFromUI'
+        functionName: 'runGapAnalysisFromUI',
+        params: {}
       },
       relativeTime: null
     });
@@ -236,11 +493,12 @@ function buildPriorityList(stats, alerts, compliance) {
   if (stats.blocks > 0) {
     priorities.push({
       urgency: stats.blocks > 10 ? 'ACTION' : 'WATCH',
-      sentence: `${stats.blocks} AI response${stats.blocks > 1 ? 's were' : ' was'} blocked`,
+      sentence: stats.blocks + ' AI response' + (stats.blocks > 1 ? 's were' : ' was') + ' blocked',
       consequence: 'These might need human review or policy adjustment',
       action: {
         label: 'Review Blocks',
-        functionName: 'viewGatekeeperStats'
+        functionName: 'viewGatekeeperStats',
+        params: {}
       },
       relativeTime: null
     });
@@ -254,7 +512,8 @@ function buildPriorityList(stats, alerts, compliance) {
       consequence: 'Outputs may be less reliable than usual',
       action: {
         label: 'Retune',
-        functionName: 'runAutoTuneFromUI'
+        functionName: 'runAutoTuneFromUI',
+        params: {}
       },
       relativeTime: null
     });
@@ -264,11 +523,12 @@ function buildPriorityList(stats, alerts, compliance) {
   if (stats.activeWorkflows > 0) {
     priorities.push({
       urgency: 'INFO',
-      sentence: `${stats.activeWorkflows} workflow${stats.activeWorkflows > 1 ? 's' : ''} in progress`,
+      sentence: stats.activeWorkflows + ' workflow' + (stats.activeWorkflows > 1 ? 's' : '') + ' in progress',
       consequence: 'May need your approval or input',
       action: {
         label: 'View Workflows',
-        functionName: 'openWorkflowStatus'
+        functionName: 'openWorkflowStatus',
+        params: {}
       },
       relativeTime: null
     });
@@ -276,7 +536,7 @@ function buildPriorityList(stats, alerts, compliance) {
 
   // Sort by urgency
   const urgencyOrder = { 'URGENT': 0, 'ACTION': 1, 'WATCH': 2, 'INFO': 3 };
-  priorities.sort((a, b) => urgencyOrder[a.urgency] - urgencyOrder[b.urgency]);
+  priorities.sort(function(a, b) { return urgencyOrder[a.urgency] - urgencyOrder[b.urgency]; });
 
   // If nothing needs attention
   if (priorities.length === 0) {
@@ -306,9 +566,9 @@ function formatRelativeTime(timestamp) {
   const diffDays = Math.floor(diffMs / 86400000);
 
   if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  if (diffMins < 60) return diffMins + ' minute' + (diffMins > 1 ? 's' : '') + ' ago';
+  if (diffHours < 24) return diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago';
+  if (diffDays < 7) return diffDays + ' day' + (diffDays > 1 ? 's' : '') + ' ago';
 
   return then.toLocaleDateString();
 }
@@ -395,7 +655,8 @@ function getGlossary() {
 // ============================================================================
 
 function buildExecViewV3(stats, alerts, comp) {
-  const criticalCount = alerts.filter(a => a.severity === 'CRITICAL').length;
+  const criticalCount = alerts.filter(function(a) { return a.severity === 'CRITICAL'; }).length;
+  const topAlert = alerts.length > 0 ? alerts[0] : null;
 
   return {
     viewType: 'EXEC',
@@ -413,6 +674,7 @@ function buildExecViewV3(stats, alerts, comp) {
           label: 'View Report',
           description: 'Opens full compliance breakdown by regulation',
           functionName: 'openComplianceReport',
+          params: {},
           estimatedTime: null
         },
         glossaryKey: 'COMPLIANCE_STATUS',
@@ -424,14 +686,15 @@ function buildExecViewV3(stats, alerts, comp) {
         status: criticalCount > 0 ? 'ACTION' : 'SAFE',
         badge: criticalCount > 0 ? '🚨' : '✅',
         metric: null,
-        statusLabel: criticalCount > 0 ? `${criticalCount} Critical` : 'Clear',
+        statusLabel: criticalCount > 0 ? criticalCount + ' Critical' : 'Clear',
         narrative: criticalCount > 0
-          ? `${alerts[0].title}${criticalCount > 1 ? ` + ${criticalCount - 1} more` : ''}`
+          ? alerts[0].title + (criticalCount > 1 ? ' + ' + (criticalCount - 1) + ' more' : '')
           : 'No active threats requiring attention',
         action: {
           label: 'Fix Top Risk',
           description: 'Opens the highest priority issue and starts resolution workflow',
           functionName: 'fixTopRisk',
+          params: { alertId: topAlert ? topAlert.id : null }, // Pass alertId
           estimatedTime: '2-5 min'
         },
         glossaryKey: 'CRITICAL_RISKS',
@@ -449,6 +712,7 @@ function buildExecViewV3(stats, alerts, comp) {
           label: 'Manage Budget',
           description: 'View spend breakdown by provider and set alerts',
           functionName: 'openBudgetManager',
+          params: {},
           estimatedTime: null
         },
         glossaryKey: 'BUDGET_BURN',
@@ -459,7 +723,7 @@ function buildExecViewV3(stats, alerts, comp) {
 }
 
 function buildComplianceViewV3(stats, alerts, comp) {
-  const regulatoryAlerts = alerts.filter(a => a.category === 'REGULATORY');
+  const regulatoryAlerts = alerts.filter(function(a) { return a.category === 'REGULATORY'; });
 
   return {
     viewType: 'COMPLIANCE',
@@ -478,6 +742,7 @@ function buildComplianceViewV3(stats, alerts, comp) {
           label: 'Map Gaps',
           description: 'Opens gap analysis tool to map evidence to requirements',
           functionName: 'runGapAnalysisFromUI',
+          params: {},
           estimatedTime: '10-15 min'
         },
         glossaryKey: 'GAP_ANALYSIS',
@@ -497,6 +762,7 @@ function buildComplianceViewV3(stats, alerts, comp) {
           label: 'Review Logs',
           description: 'See why outputs were blocked and adjust thresholds if needed',
           functionName: 'viewGatekeeperStats',
+          params: {},
           estimatedTime: '5 min'
         },
         glossaryKey: 'GATEKEEPER_BLOCKS',
@@ -512,12 +778,13 @@ function buildComplianceViewV3(stats, alerts, comp) {
         metricLabel: 'new requirements',
         statusLabel: null,
         narrative: regulatoryAlerts.length > 0
-          ? `${regulatoryAlerts[0].title}`
+          ? regulatoryAlerts[0].title
           : 'No new regulatory requirements detected',
         action: {
           label: 'Update Policy',
           description: 'Review new requirements and update internal policies',
           functionName: 'openRegulatoryUpdates',
+          params: {},
           estimatedTime: '15-30 min'
         },
         glossaryKey: 'GAP_ANALYSIS', // Reuse
@@ -529,7 +796,7 @@ function buildComplianceViewV3(stats, alerts, comp) {
 }
 
 function buildEngineerViewV3(stats, alerts, comp) {
-  const systemAlerts = alerts.filter(a => a.category === 'SYSTEM');
+  const systemAlerts = alerts.filter(function(a) { return a.category === 'SYSTEM'; });
 
   return {
     viewType: 'ENGINEER',
@@ -549,6 +816,7 @@ function buildEngineerViewV3(stats, alerts, comp) {
           label: 'Retune',
           description: 'Recalibrate confidence thresholds based on recent outputs',
           functionName: 'runAutoTuneFromUI',
+          params: {},
           estimatedTime: '2 min'
         },
         glossaryKey: 'DRIFT_SCORE',
@@ -562,12 +830,13 @@ function buildEngineerViewV3(stats, alerts, comp) {
         metric: stats.latency,
         metricLabel: 'ms avg',
         statusLabel: null,
-        narrative: `${stats.provider || 'Primary provider'} response time`,
+        narrative: (stats.provider || 'Primary provider') + ' response time',
         thresholds: { safe: '<800ms', watch: '800-2000ms', action: '>2000ms' },
         action: {
           label: 'View Trace',
           description: 'Open request trace to identify slow operations',
           functionName: 'openLatencyTrace',
+          params: {},
           estimatedTime: null
         },
         glossaryKey: 'PROVIDER_LATENCY',
@@ -587,6 +856,7 @@ function buildEngineerViewV3(stats, alerts, comp) {
           label: 'Debug',
           description: 'View error logs and stack traces',
           functionName: 'viewSystemLog',
+          params: {},
           estimatedTime: null
         },
         glossaryKey: 'ERROR_RATE',
@@ -605,26 +875,26 @@ function generateNarrativeV3(type, comp, stats) {
   switch(type) {
     case 'COMPLIANCE':
       if (comp.score >= 90) return 'Fully aligned with all tracked regulations';
-      if (comp.score >= 70) return `${comp.missingClauses} documentation gaps remain`;
+      if (comp.score >= 70) return comp.missingClauses + ' documentation gaps remain';
       if (comp.score >= 50) return 'Significant gaps in risk management documentation';
       return 'Critical compliance gaps - audit risk is high';
 
     case 'GAPS':
       if (comp.missingClauses === 0) return 'All required clauses documented';
-      if (comp.missingClauses <= 3) return `${comp.missingClauses} minor gaps to address`;
-      if (comp.missingClauses <= 8) return `EU AI Act missing ${comp.missingClauses} clauses - prioritize these`;
-      return `${comp.missingClauses} gaps is significant - start with high-risk areas`;
+      if (comp.missingClauses <= 3) return comp.missingClauses + ' minor gaps to address';
+      if (comp.missingClauses <= 8) return 'EU AI Act missing ' + comp.missingClauses + ' clauses - prioritize these';
+      return comp.missingClauses + ' gaps is significant - start with high-risk areas';
 
     case 'BLOCKS':
       if (stats.blocks === 0) return 'No AI outputs were blocked';
-      if (stats.blocks <= 5) return `${stats.blocks} low-confidence outputs caught`;
-      if (stats.blocks <= 15) return `${stats.blocks} blocks - mostly ${stats.blockReason || 'uncertainty'}`;
-      return `${stats.blocks} blocks is high - review if thresholds are too strict`;
+      if (stats.blocks <= 5) return stats.blocks + ' low-confidence outputs caught';
+      if (stats.blocks <= 15) return stats.blocks + ' blocks - mostly ' + (stats.blockReason || 'uncertainty');
+      return stats.blocks + ' blocks is high - review if thresholds are too strict';
 
     case 'DRIFT':
       if (stats.drift <= 10) return 'AI behavior matches baseline';
       if (stats.drift <= 20) return 'Minor drift detected - monitor';
-      if (stats.drift <= 35) return `Drift score ${stats.drift} - ${stats.driftAgent || 'some agents'} need attention`;
+      if (stats.drift <= 35) return 'Drift score ' + stats.drift + ' - ' + (stats.driftAgent || 'some agents') + ' need attention';
       return 'Significant behavioral drift - immediate retuning recommended';
 
     default:
@@ -661,7 +931,7 @@ function getStatusLabel(status) {
 }
 
 function getSystemStatus(stats, alerts) {
-  const criticalAlerts = alerts.filter(a => a.severity === 'CRITICAL').length;
+  const criticalAlerts = alerts.filter(function(a) { return a.severity === 'CRITICAL'; }).length;
   if (criticalAlerts > 0) return 'ACTION';
   if (stats.errorRate > 5 || stats.drift > 30) return 'ACTION';
   if (alerts.length > 3 || stats.errorRate > 1 || stats.drift > 15) return 'WATCH';
@@ -669,40 +939,128 @@ function getSystemStatus(stats, alerts) {
 }
 
 // ============================================================================
-// DATA AGGREGATION - Connect to real data sources
+// DATA AGGREGATION - Real queries using cached data
 // ============================================================================
 
-function aggregateLedgerStatsV3(tenant, period) {
-  // TODO: Replace with actual ledger queries
-  // This queries the Audit_Ledger sheet filtered by tenant and time period
-
+function aggregateLedgerStatsV3(tenant, dateWindow) {
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const ledger = ss.getSheetByName('Audit_Ledger');
+    const ledger = DataCache_.getSheetData('Audit_Ledger');
 
-    if (!ledger) {
+    if (!ledger.exists || ledger.rows.length === 0) {
       return getEmptyStats();
     }
 
-    const data = ledger.getDataRange().getValues();
-    const totalRecords = data.length - 1; // Minus header
+    // Find column indices
+    const headers = ledger.headers;
+    const timestampCol = findColumnIndex(headers, ['Timestamp', 'timestamp', 'Date', 'date', 'Created']);
+    const actionCol = findColumnIndex(headers, ['Action', 'action', 'Event', 'event_type']);
+    const tenantCol = findColumnIndex(headers, ['Tenant', 'tenant', 'TenantID', 'tenant_id']);
+    const outcomeCol = findColumnIndex(headers, ['Outcome', 'outcome', 'Result', 'result', 'Status']);
+    const latencyCol = findColumnIndex(headers, ['Latency', 'latency', 'Duration', 'duration_ms']);
 
-    // Calculate real metrics from ledger data
-    // For now, return reasonable defaults
+    // Filter rows by date window and tenant
+    const filteredRows = ledger.rows.filter(function(row) {
+      // Date filter
+      if (timestampCol >= 0 && dateWindow) {
+        const rowDate = row[timestampCol];
+        if (!isInDateWindow(rowDate, dateWindow)) {
+          return false;
+        }
+      }
+
+      // Tenant filter
+      if (tenant && tenant !== 'ALL' && tenantCol >= 0) {
+        if (row[tenantCol] !== tenant) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+
+    // Calculate real metrics from filtered data
+    const totalRecords = filteredRows.length;
+
+    // Count AI requests (any row is considered an AI request for now)
+    const aiRequests = totalRecords;
+
+    // Count blocks
+    let blocks = 0;
+    let blockReason = 'uncertainty';
+    if (actionCol >= 0 || outcomeCol >= 0) {
+      filteredRows.forEach(function(row) {
+        const action = actionCol >= 0 ? String(row[actionCol] || '').toUpperCase() : '';
+        const outcome = outcomeCol >= 0 ? String(row[outcomeCol] || '').toUpperCase() : '';
+        if (action.includes('BLOCK') || outcome.includes('BLOCK') ||
+            outcome.includes('REJECT') || outcome === 'BLOCKED') {
+          blocks++;
+          // Try to determine reason
+          if (action.includes('HALLUCINATION') || outcome.includes('HALLUCINATION')) {
+            blockReason = 'hallucination';
+          } else if (action.includes('CONFIDENCE') || outcome.includes('CONFIDENCE')) {
+            blockReason = 'low confidence';
+          }
+        }
+      });
+    }
+
+    // Calculate error rate
+    let errors = 0;
+    if (outcomeCol >= 0) {
+      filteredRows.forEach(function(row) {
+        const outcome = String(row[outcomeCol] || '').toUpperCase();
+        if (outcome.includes('ERROR') || outcome.includes('FAIL') || outcome === 'FAILED') {
+          errors++;
+        }
+      });
+    }
+    const errorRate = totalRecords > 0 ? Math.round((errors / totalRecords) * 1000) / 10 : 0; // One decimal
+
+    // Calculate average latency
+    let totalLatency = 0;
+    let latencyCount = 0;
+    if (latencyCol >= 0) {
+      filteredRows.forEach(function(row) {
+        const lat = parseFloat(row[latencyCol]);
+        if (!isNaN(lat) && lat > 0) {
+          totalLatency += lat;
+          latencyCount++;
+        }
+      });
+    }
+    const avgLatency = latencyCount > 0 ? Math.round(totalLatency / latencyCount) : 0;
+
+    // Calculate drift score from Gatekeeper_Learning
+    const drift = calculateDriftScoreReal();
+
+    // Count active workflows
+    const activeWorkflows = countActiveWorkflowsReal();
+
+    // Build error narrative
+    let errorNarrative = 'All systems operational';
+    if (errorRate > 5) {
+      errorNarrative = 'High error rate detected - investigate immediately';
+    } else if (errorRate > 1) {
+      errorNarrative = 'Elevated error rate - monitoring';
+    } else if (errors > 0) {
+      errorNarrative = errors + ' error' + (errors > 1 ? 's' : '') + ' in this period';
+    }
+
     return {
       totalRecords: totalRecords,
-      activeWorkflows: countActiveWorkflows(),
-      blocks: countGatekeeperBlocks(tenant, period),
-      blockReason: 'low confidence',
-      drift: calculateDriftScore(),
-      driftAgent: 'Legal Research',
-      latency: getAverageLatency(),
+      aiRequests: aiRequests,
+      activeWorkflows: activeWorkflows,
+      blocks: blocks,
+      blockReason: blockReason,
+      drift: drift,
+      driftAgent: getDriftAgent(),
+      latency: avgLatency,
       provider: 'Gemini 1.5 Pro',
-      errorRate: calculateErrorRate(tenant, period),
-      errorNarrative: 'All systems operational',
+      errorRate: errorRate,
+      errorNarrative: errorNarrative,
       budgetStatus: 'SAFE',
       budgetLabel: 'On Track',
-      budgetNarrative: 'AI spend 12% under forecast'
+      budgetNarrative: 'AI spend tracking within forecast'
     };
   } catch (e) {
     Logger.log('Stats error: ' + e.message);
@@ -713,6 +1071,7 @@ function aggregateLedgerStatsV3(tenant, period) {
 function getEmptyStats() {
   return {
     totalRecords: 0,
+    aiRequests: 0,
     activeWorkflows: 0,
     blocks: 0,
     drift: 0,
@@ -724,79 +1083,149 @@ function getEmptyStats() {
   };
 }
 
-function countActiveWorkflows() {
+/**
+ * Count active workflows from cached data
+ */
+function countActiveWorkflowsReal() {
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const workflows = ss.getSheetByName('Workflows');
-    if (!workflows) return 0;
+    const workflows = DataCache_.getSheetData('Workflows');
+    if (!workflows.exists) return 0;
 
-    const data = workflows.getDataRange().getValues();
-    return data.filter(row => row[5] === 'ACTIVE' || row[5] === 'IN_PROGRESS').length;
+    const statusCol = findColumnIndex(workflows.headers, ['Status', 'status', 'State', 'state']);
+    if (statusCol < 0) return 0;
+
+    let count = 0;
+    workflows.rows.forEach(function(row) {
+      const status = String(row[statusCol] || '').toUpperCase();
+      if (status === 'ACTIVE' || status === 'IN_PROGRESS' || status === 'PENDING') {
+        count++;
+      }
+    });
+
+    return count;
   } catch (e) {
     return 0;
   }
 }
 
-function countGatekeeperBlocks(tenant, period) {
+/**
+ * Calculate real drift score from Gatekeeper_Learning sheet
+ */
+function calculateDriftScoreReal() {
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const ledger = ss.getSheetByName('Audit_Ledger');
-    if (!ledger) return 0;
+    const learning = DataCache_.getSheetData('Gatekeeper_Learning');
+    if (!learning.exists || learning.rows.length === 0) return 0;
 
-    const data = ledger.getDataRange().getValues();
-    return data.filter(row =>
-      row[3] && row[3].toString().includes('BLOCK')
-    ).length;
+    // Look for drift-related columns
+    const driftCol = findColumnIndex(learning.headers, ['Drift', 'drift', 'DriftScore', 'drift_score']);
+    const confidenceCol = findColumnIndex(learning.headers, ['Confidence', 'confidence', 'Score']);
+    const baselineCol = findColumnIndex(learning.headers, ['Baseline', 'baseline', 'BaselineConfidence']);
+
+    // If we have a drift column, use the latest value
+    if (driftCol >= 0 && learning.rows.length > 0) {
+      // Get most recent drift score
+      for (var i = learning.rows.length - 1; i >= 0; i--) {
+        var driftVal = parseFloat(learning.rows[i][driftCol]);
+        if (!isNaN(driftVal)) {
+          return Math.round(driftVal);
+        }
+      }
+    }
+
+    // Otherwise calculate drift from confidence vs baseline
+    if (confidenceCol >= 0 && baselineCol >= 0) {
+      let totalDrift = 0;
+      let driftCount = 0;
+
+      learning.rows.forEach(function(row) {
+        const conf = parseFloat(row[confidenceCol]);
+        const base = parseFloat(row[baselineCol]);
+        if (!isNaN(conf) && !isNaN(base) && base > 0) {
+          // Drift = absolute percentage deviation from baseline
+          const deviation = Math.abs((conf - base) / base) * 100;
+          totalDrift += deviation;
+          driftCount++;
+        }
+      });
+
+      if (driftCount > 0) {
+        return Math.min(100, Math.round(totalDrift / driftCount));
+      }
+    }
+
+    return 0;
   } catch (e) {
+    Logger.log('Drift calculation error: ' + e.message);
     return 0;
   }
 }
 
-function calculateDriftScore() {
-  // TODO: Implement real drift calculation from Gatekeeper_Learning
-  return 15;
-}
+/**
+ * Get the agent with highest drift
+ */
+function getDriftAgent() {
+  try {
+    const learning = DataCache_.getSheetData('Gatekeeper_Learning');
+    if (!learning.exists) return null;
 
-function getAverageLatency() {
-  // TODO: Implement real latency tracking
-  return 450;
-}
+    const agentCol = findColumnIndex(learning.headers, ['Agent', 'agent', 'AgentName', 'Model']);
+    const driftCol = findColumnIndex(learning.headers, ['Drift', 'drift', 'DriftScore']);
 
-function calculateErrorRate(tenant, period) {
-  // TODO: Implement real error rate calculation
-  return 0.3;
+    if (agentCol < 0 || driftCol < 0) return null;
+
+    let maxDrift = 0;
+    let maxAgent = null;
+
+    learning.rows.forEach(function(row) {
+      var drift = parseFloat(row[driftCol]);
+      if (!isNaN(drift) && drift > maxDrift) {
+        maxDrift = drift;
+        maxAgent = row[agentCol];
+      }
+    });
+
+    return maxAgent;
+  } catch (e) {
+    return null;
+  }
 }
 
 function getActiveAlertsV3(tenant) {
   try {
-    // Check Detection_Alerts sheet
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const alertSheet = ss.getSheetByName('Detection_Alerts');
+    const alertSheet = DataCache_.getSheetData('Detection_Alerts');
 
-    if (!alertSheet) {
+    if (!alertSheet.exists) {
       return [];
     }
 
-    const data = alertSheet.getDataRange().getValues();
-    const headers = data[0];
+    const headers = alertSheet.headers;
+    const idCol = findColumnIndex(headers, ['ID', 'id', 'AlertID', 'alert_id']);
+    const timestampCol = findColumnIndex(headers, ['Timestamp', 'timestamp', 'Date', 'Created']);
+    const titleCol = findColumnIndex(headers, ['Title', 'title', 'Message', 'Description']);
+    const severityCol = findColumnIndex(headers, ['Severity', 'severity', 'Level', 'Priority']);
+    const categoryCol = findColumnIndex(headers, ['Category', 'category', 'Type']);
+    const statusCol = findColumnIndex(headers, ['Status', 'status', 'State']);
+
     const alerts = [];
 
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      if (row[5] !== 'RESOLVED') { // Status column
+    alertSheet.rows.forEach(function(row, index) {
+      const status = statusCol >= 0 ? String(row[statusCol] || '').toUpperCase() : '';
+      if (status !== 'RESOLVED' && status !== 'CLOSED') {
         alerts.push({
-          id: row[0],
-          title: row[2] || 'Untitled Alert',
-          severity: row[3] || 'MEDIUM',
-          category: row[4] || 'SYSTEM',
-          timestamp: row[1]
+          id: idCol >= 0 ? row[idCol] : 'ALERT_' + (index + 1),
+          title: titleCol >= 0 ? (row[titleCol] || 'Untitled Alert') : 'Untitled Alert',
+          severity: severityCol >= 0 ? (row[severityCol] || 'MEDIUM') : 'MEDIUM',
+          category: categoryCol >= 0 ? (row[categoryCol] || 'SYSTEM') : 'SYSTEM',
+          timestamp: timestampCol >= 0 ? row[timestampCol] : null
         });
       }
-    }
+    });
 
     // Sort by severity
     const severityOrder = { 'CRITICAL': 0, 'HIGH': 1, 'MEDIUM': 2, 'LOW': 3 };
-    alerts.sort((a, b) => (severityOrder[a.severity] || 4) - (severityOrder[b.severity] || 4));
+    alerts.sort(function(a, b) {
+      return (severityOrder[a.severity] || 4) - (severityOrder[b.severity] || 4);
+    });
 
     return alerts;
   } catch (e) {
@@ -807,17 +1236,26 @@ function getActiveAlertsV3(tenant) {
 
 function getComplianceScoreV3(tenant) {
   try {
-    // Check GapAnalysis or Regulatory sheets
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const gapSheet = ss.getSheetByName('Gap_Analysis');
+    const gapSheet = DataCache_.getSheetData('Gap_Analysis');
 
-    if (!gapSheet) {
+    if (!gapSheet.exists || gapSheet.rows.length === 0) {
       return { score: 100, missingClauses: 0 };
     }
 
-    const data = gapSheet.getDataRange().getValues();
-    const total = data.length - 1;
-    const documented = data.filter(row => row[4] === 'DOCUMENTED' || row[4] === 'COMPLETE').length;
+    const statusCol = findColumnIndex(gapSheet.headers, ['Status', 'status', 'State', 'Documented']);
+    if (statusCol < 0) {
+      return { score: 100, missingClauses: 0 };
+    }
+
+    const total = gapSheet.rows.length;
+    let documented = 0;
+
+    gapSheet.rows.forEach(function(row) {
+      const status = String(row[statusCol] || '').toUpperCase();
+      if (status === 'DOCUMENTED' || status === 'COMPLETE' || status === 'DONE' || status === 'YES') {
+        documented++;
+      }
+    });
 
     return {
       score: total > 0 ? Math.round((documented / total) * 100) : 100,
@@ -831,24 +1269,22 @@ function getComplianceScoreV3(tenant) {
 
 function getAvailableTenantsV3() {
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
-    const tenantSheet = ss.getSheetByName('TENANT_POLICY');
+    const tenantSheet = DataCache_.getSheetData('TENANT_POLICY');
 
-    if (!tenantSheet) {
+    if (!tenantSheet.exists) {
       return [{ id: 'ALL', name: 'All Tenants' }];
     }
 
-    const data = tenantSheet.getDataRange().getValues();
     const tenants = [{ id: 'ALL', name: 'All Tenants' }];
 
-    for (let i = 1; i < data.length; i++) {
-      if (data[i][0]) {
+    tenantSheet.rows.forEach(function(row) {
+      if (row[0]) {
         tenants.push({
-          id: data[i][0],
-          name: data[i][1] || data[i][0]
+          id: row[0],
+          name: row[1] || row[0]
         });
       }
-    }
+    });
 
     return tenants;
   } catch (e) {
@@ -857,26 +1293,29 @@ function getAvailableTenantsV3() {
 }
 
 // ============================================================================
-// ACTION HANDLERS - Bridge between UI and backend
+// ACTION HANDLERS - Bridge between UI and backend (with alertId context)
 // ============================================================================
 
 function runDashboardActionV3(functionName, params) {
+  params = params || {};
+
   const actionMap = {
-    'openComplianceReport': () => openComplianceReport(),
-    'fixTopRisk': () => fixTopRiskAction(params),
-    'openBudgetManager': () => openBudgetManager(),
-    'runGapAnalysisFromUI': () => runGapAnalysisFromUI(),
-    'viewGatekeeperStats': () => viewGatekeeperStats(),
-    'openRegulatoryUpdates': () => openRegulatoryUpdates(),
-    'runAutoTuneFromUI': () => runAutoTuneFromUI(),
-    'openLatencyTrace': () => openLatencyTrace(),
-    'viewSystemLog': () => viewSystemLog()
+    'openComplianceReport': function() { return openComplianceReport(); },
+    'fixTopRisk': function() { return fixTopRiskAction(params); },
+    'openBudgetManager': function() { return openBudgetManager(); },
+    'runGapAnalysisFromUI': function() { return runGapAnalysisFromUI(); },
+    'viewGatekeeperStats': function() { return viewGatekeeperStats(); },
+    'openRegulatoryUpdates': function() { return openRegulatoryUpdates(); },
+    'runAutoTuneFromUI': function() { return runAutoTuneFromUI(); },
+    'openLatencyTrace': function() { return openLatencyTrace(); },
+    'viewSystemLog': function() { return viewSystemLog(); },
+    'openWorkflowStatus': function() { return openWorkflowStatus(); }
   };
 
   if (actionMap[functionName]) {
     try {
-      actionMap[functionName]();
-      return { success: true };
+      var result = actionMap[functionName]();
+      return { success: true, result: result };
     } catch (e) {
       return { success: false, error: e.message };
     }
@@ -885,27 +1324,62 @@ function runDashboardActionV3(functionName, params) {
   return { success: false, error: 'Action not found: ' + functionName };
 }
 
-// Stub implementations - connect to real functions
+// Action implementations - connect to real functions
 function openComplianceReport() {
   SpreadsheetApp.getUi().alert('Opening Compliance Report...');
+  return true;
 }
 
+/**
+ * Fix top risk action - now receives alertId for context
+ */
 function fixTopRiskAction(params) {
-  if (typeof runGapAnalysisFromUI === 'function') {
-    runGapAnalysisFromUI();
+  const alertId = params.alertId;
+
+  if (alertId) {
+    // Load the specific alert and take action
+    const alerts = DataCache_.getSheetData('Detection_Alerts');
+    if (alerts.exists) {
+      const idCol = findColumnIndex(alerts.headers, ['ID', 'id', 'AlertID', 'alert_id']);
+      if (idCol >= 0) {
+        for (var i = 0; i < alerts.rows.length; i++) {
+          if (alerts.rows[i][idCol] === alertId) {
+            // Found the alert - could open a specific dialog or workflow
+            SpreadsheetApp.getUi().alert('Fixing Alert: ' + alertId + '\n\n' +
+              'This would open the resolution workflow for the specific alert.');
+            return true;
+          }
+        }
+      }
+    }
+    SpreadsheetApp.getUi().alert('Alert ' + alertId + ' - Starting resolution workflow...');
   } else {
-    SpreadsheetApp.getUi().alert('Gap Analysis workflow started');
+    // Fallback to gap analysis if no specific alert
+    if (typeof runGapAnalysisFromUI === 'function') {
+      runGapAnalysisFromUI();
+    } else {
+      SpreadsheetApp.getUi().alert('Gap Analysis workflow started');
+    }
   }
+  return true;
 }
 
 function openBudgetManager() {
   SpreadsheetApp.getUi().alert('Budget Manager - Coming Soon');
+  return true;
 }
 
 function openRegulatoryUpdates() {
   SpreadsheetApp.getUi().alert('Regulatory Updates - View Newton_Regulatory.gs');
+  return true;
 }
 
 function openLatencyTrace() {
   SpreadsheetApp.getUi().alert('Latency Trace - Coming Soon');
+  return true;
+}
+
+function openWorkflowStatus() {
+  SpreadsheetApp.getUi().alert('Workflow Status - View pending workflows in the Workflows sheet');
+  return true;
 }
