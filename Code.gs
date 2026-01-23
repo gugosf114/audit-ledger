@@ -892,8 +892,11 @@ function onOpen() {
     .addToUi();
 
   ui.createMenu("Dashboard")
-    .addItem("Open Dashboard", "openDashboard")
-    .addItem("Preview Dashboard Data", "previewDashboardData")
+    .addItem("Open Command Center (v2)", "openDashboardV2")
+    .addItem("Preview Data (v2)", "previewDashboardDataV2")
+    .addSeparator()
+    .addItem("Open Legacy Dashboard", "openDashboard")
+    .addItem("Preview Legacy Data", "previewDashboardData")
     .addSeparator()
     .addItem("Set Dashboard URL", "setDashboardUrl")
     .addToUi();
