@@ -910,4 +910,17 @@ function onOpen() {
     .addItem("Install CA Residency Template", "installCAResidencyTemplate")
     .addItem("Install CalCompete Tax Credit Template", "installCalCompeteTemplate")
     .addToUi();
+
+  ui.createMenu("Co-Pilot")
+    .addItem("Setup Co-Pilot Sheets", "setupCoPilotFromUI")
+    .addSeparator()
+    .addItem("Create Template", "createTemplateFromUI")
+    .addItem("Run Analysis", "runAnalysisFromUI")
+    .addSeparator()
+    .addItem("Review Pending Mutations", "viewPendingMutationsFromUI")
+    .addSeparator()
+    .addItem("View Templates", "viewCoPilotTemplates")
+    .addItem("View Mutations", "viewCoPilotMutations")
+    .addItem("View Outcomes", "viewCoPilotOutcomes")
+    .addToUi();
 }
