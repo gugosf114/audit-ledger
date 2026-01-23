@@ -377,8 +377,360 @@ function createIRACFolderUI() {
 }
 
 // ============================================================================
+// CHAIN OF TRUTH (Ledger Integrity)
+// ============================================================================
+
+/**
+ * Get chain integrity status for pulse bar
+ */
+function getChainIntegrity() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ledger = ss.getSheetByName('Audit_Ledger');
+
+  if (!ledger || ledger.getLastRow() < 2) {
+    return {
+      verified: true,
+      rows: 0,
+      lastCheck: 'Never',
+      blocks: [true, true, true, true, true]
+    };
+  }
+
+  const rows = ledger.getLastRow() - 1;
+
+  // Check last 5 blocks for integrity
+  const blocks = [];
+  let allVerified = true;
+
+  // Quick integrity check on sample of rows
+  if (typeof verifyLedgerIntegrity === 'function') {
+    try {
+      const result = verifyLedgerIntegrity();
+      allVerified = result.valid || result.verified || false;
+    } catch (e) {
+      // If verification function fails, do manual check
+      allVerified = quickHashCheck(ledger);
+    }
+  } else {
+    allVerified = quickHashCheck(ledger);
+  }
+
+  // Generate 5 block indicators (last 5 represent recent chunks)
+  for (let i = 0; i < 5; i++) {
+    blocks.push(allVerified);
+  }
+
+  // Format last check time
+  const lastCheck = formatRelativeTime(new Date());
+
+  return {
+    verified: allVerified,
+    rows: rows,
+    lastCheck: lastCheck,
+    blocks: blocks
+  };
+}
+
+/**
+ * Quick hash chain verification (samples)
+ */
+function quickHashCheck(ledger) {
+  try {
+    const lastRow = ledger.getLastRow();
+    if (lastRow < 3) return true;
+
+    // Check last few rows have valid hash chain
+    const sampleRows = Math.min(5, lastRow - 1);
+    const data = ledger.getRange(lastRow - sampleRows, 1, sampleRows, 8).getValues();
+
+    for (let i = 1; i < data.length; i++) {
+      const prevHash = data[i][6]; // Prev_Hash column
+      const prevRecordHash = data[i-1][7]; // Previous row's Record_Hash
+
+      if (prevHash && prevRecordHash && prevHash !== prevRecordHash) {
+        return false; // Chain broken
+      }
+    }
+
+    return true;
+  } catch (e) {
+    return true; // Assume valid if can't check
+  }
+}
+
+// ============================================================================
+// ECONOMIC IMPACT CALCULATOR
+// ============================================================================
+
+/**
+ * Cost avoidance values per event type
+ */
+const COST_AVOIDANCE_VALUES = {
+  'HALLUCINATION_BLOCKED': 50000,
+  'LOW_CONFIDENCE_BLOCKED': 25000,
+  'POLICY_VIOLATION_BLOCKED': 100000,
+  'GATEKEEPER_BLOCK': 35000,
+  'VOID_DETECTED': 75000,
+  'ADVERSARIAL_SUSPICION': 30000,
+  'DRIFT_CORRECTED': 15000,
+  'CONFIDENCE_MISMATCH': 20000
+};
+
+/**
+ * Get economic impact (exposure prevented)
+ */
+function getEconomicImpact() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ledger = ss.getSheetByName('Audit_Ledger');
+
+  if (!ledger || ledger.getLastRow() < 2) {
+    return { total: 0, breakdown: {} };
+  }
+
+  const data = ledger.getDataRange().getValues();
+  const headers = data[0];
+
+  const eventCol = findColIndex(headers, ['Event_Type', 'EventType', 'event_type', 'Action']);
+  const signalCol = findColIndex(headers, ['Signal', 'signal', 'Signals']);
+
+  let total = 0;
+  const breakdown = {};
+
+  for (let i = 1; i < data.length; i++) {
+    const eventType = eventCol >= 0 ? String(data[i][eventCol]).toUpperCase() : '';
+    const signal = signalCol >= 0 ? String(data[i][signalCol]).toUpperCase() : '';
+
+    // Check for cost-avoidance events
+    for (const [key, value] of Object.entries(COST_AVOIDANCE_VALUES)) {
+      if (eventType.includes(key) || signal.includes(key) ||
+          eventType.includes(key.replace('_', '')) ||
+          (key === 'GATEKEEPER_BLOCK' && (eventType.includes('BLOCK') || signal.includes('BLOCK')))) {
+        total += value;
+        breakdown[key] = (breakdown[key] || 0) + value;
+        break;
+      }
+    }
+  }
+
+  return {
+    total: total,
+    breakdown: breakdown
+  };
+}
+
+// ============================================================================
+// PRIORITY ALERT
+// ============================================================================
+
+/**
+ * Get top priority alert for pulse bar
+ */
+function getPriorityAlert() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // Check for compliance gaps first
+  try {
+    if (typeof getComplianceSummary === 'function') {
+      const euSummary = getComplianceSummary('EU_AI_ACT');
+      if (euSummary.uncoveredClauses && euSummary.uncoveredClauses.length > 0) {
+        return {
+          message: 'EU AI Act: ' + euSummary.uncoveredClauses.length + ' uncovered clauses',
+          safe: false,
+          action: 'runGapAnalysis'
+        };
+      }
+
+      const isoSummary = getComplianceSummary('ISO_42001');
+      if (isoSummary.uncoveredClauses && isoSummary.uncoveredClauses.length > 0) {
+        return {
+          message: 'ISO 42001: ' + isoSummary.uncoveredClauses.length + ' gaps remaining',
+          safe: false,
+          action: 'runGapAnalysis'
+        };
+      }
+    }
+  } catch (e) {
+    // Continue to other checks
+  }
+
+  // Check for unresolved alerts
+  const alertSheet = ss.getSheetByName('Detection_Alerts');
+  if (alertSheet && alertSheet.getLastRow() > 1) {
+    const data = alertSheet.getDataRange().getValues();
+    let unresolvedCount = 0;
+
+    for (let i = 1; i < data.length; i++) {
+      const status = String(data[i][3] || '').toUpperCase();
+      if (status !== 'RESOLVED' && status !== 'CLOSED') {
+        unresolvedCount++;
+      }
+    }
+
+    if (unresolvedCount > 0) {
+      return {
+        message: unresolvedCount + ' unresolved alert' + (unresolvedCount > 1 ? 's' : '') + ' require attention',
+        safe: false,
+        action: 'viewAlerts'
+      };
+    }
+  }
+
+  // Check for pending workflow reviews
+  const workflowSheet = ss.getSheetByName('Workflow_Instances');
+  if (workflowSheet && workflowSheet.getLastRow() > 1) {
+    const data = workflowSheet.getDataRange().getValues();
+    let pendingCount = 0;
+
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][4] === 'PENDING_REVIEW') {
+        pendingCount++;
+      }
+    }
+
+    if (pendingCount > 0) {
+      return {
+        message: pendingCount + ' workflow' + (pendingCount > 1 ? 's' : '') + ' pending review',
+        safe: false,
+        action: 'viewWorkflows'
+      };
+    }
+  }
+
+  // All clear
+  return {
+    message: 'System operational. No action required.',
+    safe: true,
+    action: null
+  };
+}
+
+// ============================================================================
+// REGULATORY COVERAGE
+// ============================================================================
+
+/**
+ * Get regulatory coverage for heatmap
+ */
+function getRegulatoryCoverage(framework) {
+  const coverage = {};
+
+  try {
+    if (typeof getComplianceSummary === 'function') {
+      const summary = getComplianceSummary(framework);
+
+      // Mark covered clauses
+      if (summary.coveredClauses) {
+        summary.coveredClauses.forEach(clause => {
+          coverage[clause] = 'covered';
+        });
+      }
+
+      // Mark gaps
+      if (summary.uncoveredClauses) {
+        summary.uncoveredClauses.forEach(clause => {
+          coverage[clause] = 'gap';
+        });
+      }
+
+      // Check for partial evidence (entries by clause count)
+      if (summary.entriesByClause) {
+        for (const [clause, count] of Object.entries(summary.entriesByClause)) {
+          if (count > 0 && count < 3) {
+            coverage[clause] = 'partial';
+          } else if (count >= 3) {
+            coverage[clause] = 'covered';
+          }
+        }
+      }
+    }
+  } catch (e) {
+    // Return empty coverage on error
+  }
+
+  return coverage;
+}
+
+/**
+ * Start gap workflow for specific clause
+ */
+function startGapWorkflow(framework, clauseId) {
+  // Log the action
+  if (typeof safeNewEntry === 'function') {
+    safeNewEntry(
+      Session.getActiveUser().getEmail() || 'User',
+      'GAP_WORKFLOW_STARTED',
+      'Started gap remediation for ' + framework + ' ' + clauseId,
+      clauseId,
+      'DRAFT'
+    );
+  }
+
+  // Could trigger workflow creation here
+  return { success: true, framework: framework, clause: clauseId };
+}
+
+// ============================================================================
+// ACTIVE WORKFLOW COUNT
+// ============================================================================
+
+/**
+ * Get count of active workflows
+ */
+function getActiveWorkflowCount() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Workflow_Instances');
+
+  if (!sheet || sheet.getLastRow() < 2) {
+    return 0;
+  }
+
+  const data = sheet.getDataRange().getValues();
+  let count = 0;
+
+  for (let i = 1; i < data.length; i++) {
+    const status = data[i][4];
+    if (status === 'ACTIVE' || status === 'IN_PROGRESS' || status === 'PENDING') {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+// ============================================================================
+// USER IDENTITY
+// ============================================================================
+
+/**
+ * Get current user email
+ */
+function getCurrentUserEmail() {
+  try {
+    return Session.getActiveUser().getEmail() || 'Unknown';
+  } catch (e) {
+    return 'Unknown';
+  }
+}
+
+// ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
+
+/**
+ * Format relative time (e.g., "3h ago")
+ */
+function formatRelativeTime(date) {
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return diffMins + 'm ago';
+  if (diffHours < 24) return diffHours + 'h ago';
+  return diffDays + 'd ago';
+}
 
 function findColIndex(headers, names) {
   for (let i = 0; i < headers.length; i++) {

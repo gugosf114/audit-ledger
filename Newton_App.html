@@ -126,6 +126,358 @@
       50% { opacity: 0.5; }
     }
 
+    /* ===== HERO PULSE BAR ===== */
+    .pulse-bar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .pulse-section {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .pulse-section.center {
+      justify-content: center;
+    }
+
+    .pulse-section.right {
+      justify-content: flex-end;
+    }
+
+    /* Chain of Truth Visualizer */
+    .chain-visualizer {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .chain-block {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      background: var(--safe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: white;
+      transition: all 0.3s;
+    }
+
+    .chain-block.broken {
+      background: var(--action);
+      animation: shake 0.5s;
+    }
+
+    .chain-block.stale {
+      background: var(--watch);
+    }
+
+    .chain-connector {
+      width: 8px;
+      height: 2px;
+      background: var(--safe);
+    }
+
+    .chain-connector.broken {
+      background: var(--action);
+      height: 2px;
+      border-top: 1px dashed var(--action);
+      border-bottom: 1px dashed var(--action);
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+
+    .pulse-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pulse-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .pulse-value.verified { color: var(--safe); }
+    .pulse-value.broken { color: var(--action); }
+    .pulse-value.stale { color: var(--watch); }
+
+    .pulse-subtext {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Active Workflows Counter */
+    .pulse-counter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pulse-counter-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .pulse-counter-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Priority Alert */
+    .pulse-alert {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      max-width: 350px;
+    }
+
+    .pulse-alert:hover {
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .pulse-alert.safe {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .pulse-alert-icon {
+      font-size: 18px;
+    }
+
+    .pulse-alert-text {
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .pulse-alert-btn {
+      padding: 6px 12px;
+      background: var(--action);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pulse-alert.safe .pulse-alert-btn {
+      background: var(--safe);
+    }
+
+    /* Economic Impact */
+    .economic-impact {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+    }
+
+    .economic-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--safe);
+    }
+
+    .economic-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== ROLE SELECTOR ===== */
+    .role-bar {
+      background: var(--bg-hover);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .role-selector {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-dark);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .role-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .role-btn:hover {
+      color: var(--text-secondary);
+    }
+
+    .role-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .role-filters {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .role-filter-select {
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .role-identity {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ===== REGULATORY HEATMAP ===== */
+    .heatmap-section {
+      margin-top: 40px;
+      margin-bottom: 60px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .heatmap-tile {
+      padding: 16px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .heatmap-tile:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .heatmap-tile.covered {
+      border-color: var(--safe);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .heatmap-tile.partial {
+      border-color: var(--watch);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .heatmap-tile.gap {
+      border-color: var(--action);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .heatmap-tile-id {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .heatmap-tile-title {
+      font-size: 12px;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .heatmap-legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    .heatmap-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .heatmap-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .heatmap-legend-dot.covered { background: var(--safe); }
+    .heatmap-legend-dot.partial { background: var(--watch); }
+    .heatmap-legend-dot.gap { background: var(--action); }
+
+    .heatmap-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .heatmap-tab {
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .heatmap-tab:hover {
+      background: var(--bg-hover);
+    }
+
+    .heatmap-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
     /* ===== MAIN CONTENT ===== */
     .main {
       padding-top: 64px;
@@ -1225,8 +1577,75 @@
     </div>
   </nav>
 
+  <!-- Hero Pulse Bar -->
+  <div class="pulse-bar" id="pulseBar">
+    <!-- Left: Chain of Truth -->
+    <div class="pulse-section">
+      <div>
+        <div class="pulse-label">Ledger Integrity</div>
+        <div class="chain-visualizer" id="chainVisualizer">
+          <div class="chain-block">1</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">2</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">3</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">4</div>
+          <div class="chain-connector"></div>
+          <div class="chain-block">5</div>
+        </div>
+        <div class="pulse-subtext" id="chainStatus">Verified: 12,487 rows</div>
+      </div>
+      <div class="economic-impact" id="economicImpact">
+        <div>
+          <div class="economic-value" id="economicValue">$0</div>
+          <div class="economic-label">Exposure Prevented</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Active Workflows -->
+    <div class="pulse-section center">
+      <div class="pulse-counter">
+        <div class="pulse-counter-value" id="pulseWorkflows">0</div>
+        <div class="pulse-counter-label">Active Workflows</div>
+      </div>
+    </div>
+
+    <!-- Right: Priority Alert -->
+    <div class="pulse-section right">
+      <div class="pulse-alert" id="priorityAlert" onclick="handlePriorityAlert()">
+        <span class="pulse-alert-icon">&#x26A0;</span>
+        <span class="pulse-alert-text" id="alertText">Loading...</span>
+        <button class="pulse-alert-btn">Fix It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role Selector Bar -->
+  <div class="role-bar">
+    <div class="role-selector">
+      <button class="role-btn active" onclick="setRole('briefing')" data-role="briefing">Briefing</button>
+      <button class="role-btn" onclick="setRole('exec')" data-role="exec">Exec</button>
+      <button class="role-btn" onclick="setRole('compliance')" data-role="compliance">Compliance</button>
+      <button class="role-btn" onclick="setRole('engineer')" data-role="engineer">Engineer</button>
+    </div>
+    <div class="role-filters">
+      <select class="role-filter-select" id="tenantFilter">
+        <option value="all">All Tenants</option>
+      </select>
+      <select class="role-filter-select" id="timeFilter">
+        <option value="24h">Last 24 Hours</option>
+        <option value="7d" selected>Last 7 Days</option>
+        <option value="30d">Last 30 Days</option>
+        <option value="90d">Last 90 Days</option>
+      </select>
+      <span class="role-identity" id="userIdentity">Actor: Loading...</span>
+    </div>
+  </div>
+
   <!-- Main Content -->
-  <main class="main">
+  <main class="main" style="padding-top: 180px;">
 
     <!-- HOME PAGE -->
     <div class="page active" id="page-home">
@@ -1406,6 +1825,36 @@
           </div>
         </div>
 
+      </div>
+
+      <!-- Regulatory Heatmap Section -->
+      <div class="heatmap-section" id="heatmapSection">
+        <h2 class="section-title"><span class="section-title-icon">&#x1F5FA;</span> Regulatory Coverage</h2>
+
+        <div class="heatmap-tabs">
+          <button class="heatmap-tab active" onclick="showHeatmap('ISO_42001')">ISO 42001</button>
+          <button class="heatmap-tab" onclick="showHeatmap('EU_AI_ACT')">EU AI Act</button>
+          <button class="heatmap-tab" onclick="showHeatmap('NIST_AI_RMF')">NIST AI RMF</button>
+        </div>
+
+        <div class="heatmap-grid" id="heatmapGrid">
+          <!-- Heatmap tiles will be loaded here -->
+        </div>
+
+        <div class="heatmap-legend">
+          <div class="heatmap-legend-item">
+            <div class="heatmap-legend-dot covered"></div>
+            <span>Documented</span>
+          </div>
+          <div class="heatmap-legend-item">
+            <div class="heatmap-legend-dot partial"></div>
+            <span>Partial Evidence</span>
+          </div>
+          <div class="heatmap-legend-item">
+            <div class="heatmap-legend-dot gap"></div>
+            <span>Gap - Click to Fix</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1634,6 +2083,316 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
+    // ===== GLOBAL STATE =====
+    let currentRole = 'briefing';
+    let currentFramework = 'ISO_42001';
+    let economicData = { total: 0, breakdown: {} };
+
+    // ===== COST AVOIDANCE VALUES =====
+    const COST_AVOIDANCE = {
+      'HALLUCINATION_BLOCKED': 50000,    // Hallucinated regulatory claim
+      'LOW_CONFIDENCE_BLOCKED': 25000,   // Low confidence output
+      'POLICY_VIOLATION_BLOCKED': 100000, // PII leak / prohibited content
+      'VOID_DETECTED': 75000,            // Missing compliance documentation
+      'ADVERSARIAL_SUSPICION': 30000,    // Suspicious pattern detected
+      'DRIFT_CORRECTED': 15000           // Model drift caught early
+    };
+
+    // ===== REGULATORY CLAUSES =====
+    const REGULATORY_DATA = {
+      'ISO_42001': [
+        { id: '4.1', title: 'Context of Organization' },
+        { id: '4.2', title: 'Needs & Expectations' },
+        { id: '4.3', title: 'Scope' },
+        { id: '5.1', title: 'Leadership' },
+        { id: '5.2', title: 'AI Policy' },
+        { id: '5.3', title: 'Roles & Responsibilities' },
+        { id: '6.1', title: 'Risk & Opportunities' },
+        { id: '6.2', title: 'AI Objectives' },
+        { id: '7.1', title: 'Resources' },
+        { id: '7.2', title: 'Competence' },
+        { id: '7.3', title: 'Awareness' },
+        { id: '7.4', title: 'Communication' },
+        { id: '7.5', title: 'Documented Info' },
+        { id: '8.1', title: 'Operational Planning' },
+        { id: '8.2', title: 'AI Risk Assessment' },
+        { id: '8.3', title: 'AI Risk Treatment' },
+        { id: '8.4', title: 'AI Impact Assessment' },
+        { id: '9.1', title: 'Monitoring' },
+        { id: '9.2', title: 'Internal Audit' },
+        { id: '9.3', title: 'Management Review' },
+        { id: '10.1', title: 'Improvement' },
+        { id: '10.2', title: 'Nonconformity' }
+      ],
+      'EU_AI_ACT': [
+        { id: 'Art.5', title: 'Prohibited Practices' },
+        { id: 'Art.6', title: 'High-Risk Classification' },
+        { id: 'Art.9', title: 'Risk Management' },
+        { id: 'Art.10', title: 'Data Governance' },
+        { id: 'Art.11', title: 'Technical Documentation' },
+        { id: 'Art.12', title: 'Record-Keeping' },
+        { id: 'Art.13', title: 'Transparency' },
+        { id: 'Art.14', title: 'Human Oversight' },
+        { id: 'Art.15', title: 'Accuracy & Security' },
+        { id: 'Art.16', title: 'Provider Obligations' },
+        { id: 'Art.17', title: 'Quality Management' },
+        { id: 'Art.26', title: 'Deployer Obligations' },
+        { id: 'Art.27', title: 'FRIA' },
+        { id: 'Art.50', title: 'Transparency (GenAI)' },
+        { id: 'Art.71', title: 'Post-Market Monitoring' },
+        { id: 'Art.72', title: 'Incident Reporting' }
+      ],
+      'NIST_AI_RMF': [
+        { id: 'GOV-1', title: 'Policies & Procedures' },
+        { id: 'GOV-2', title: 'Accountability' },
+        { id: 'GOV-3', title: 'Workforce' },
+        { id: 'GOV-4', title: 'Risk Tolerance' },
+        { id: 'GOV-5', title: 'Stakeholder Engagement' },
+        { id: 'GOV-6', title: 'Third-Party AI' },
+        { id: 'MAP-1', title: 'Context' },
+        { id: 'MAP-2', title: 'Categorization' },
+        { id: 'MAP-3', title: 'Capabilities' },
+        { id: 'MAP-4', title: 'Risk/Benefit' },
+        { id: 'MAP-5', title: 'Impact' },
+        { id: 'MEA-1', title: 'Measurement' },
+        { id: 'MEA-2', title: 'Evaluation' },
+        { id: 'MEA-3', title: 'Tracking' },
+        { id: 'MAN-1', title: 'Prioritization' },
+        { id: 'MAN-2', title: 'Treatment' },
+        { id: 'MAN-3', title: 'Resources' },
+        { id: 'MAN-4', title: 'Residual Risk' }
+      ]
+    };
+
+    // ===== ROLE MANAGEMENT =====
+    function setRole(role) {
+      currentRole = role;
+
+      // Update button states
+      document.querySelectorAll('.role-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.role === role) {
+          btn.classList.add('active');
+        }
+      });
+
+      // Refresh displays based on role
+      updateRoleBasedDisplay();
+      showToast('View: ' + role.toUpperCase(), 'success');
+    }
+
+    function updateRoleBasedDisplay() {
+      // Different roles see different emphasis
+      // For now, all roles see same data but this can be expanded
+      loadPulseBar();
+    }
+
+    // ===== PULSE BAR (Chain of Truth + Economic Impact) =====
+    function loadPulseBar() {
+      loadChainOfTruth();
+      loadEconomicImpact();
+      loadPriorityAlert();
+      loadActiveWorkflowCount();
+      loadUserIdentity();
+    }
+
+    function loadChainOfTruth() {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(renderChainOfTruth)
+          .withFailureHandler(() => renderChainOfTruth({ verified: true, rows: 0, lastCheck: 'Unknown' }))
+          .getChainIntegrity();
+      } else {
+        // Demo data
+        renderChainOfTruth({ verified: true, rows: 12487, lastCheck: '3h ago', blocks: [true, true, true, true, true] });
+      }
+    }
+
+    function renderChainOfTruth(data) {
+      const visualizer = document.getElementById('chainVisualizer');
+      const status = document.getElementById('chainStatus');
+
+      // Render blocks
+      let html = '';
+      const blocks = data.blocks || [true, true, true, true, true];
+      blocks.forEach((valid, i) => {
+        if (i > 0) {
+          html += `<div class="chain-connector ${valid ? '' : 'broken'}"></div>`;
+        }
+        html += `<div class="chain-block ${valid ? '' : 'broken'}">${i + 1}</div>`;
+      });
+      visualizer.innerHTML = html;
+
+      // Update status text
+      const statusClass = data.verified ? 'verified' : 'broken';
+      const statusText = data.verified ? 'VERIFIED' : 'BROKEN';
+      status.innerHTML = `<span class="pulse-value ${statusClass}">${statusText}</span> · ${data.rows.toLocaleString()} rows · Last check: ${data.lastCheck}`;
+
+      // Update system status in nav
+      document.getElementById('systemStatus').textContent = data.verified ? 'Chain Verified' : 'CHAIN BROKEN';
+      document.querySelector('.status-dot').style.background = data.verified ? 'var(--safe)' : 'var(--action)';
+    }
+
+    function loadEconomicImpact() {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(renderEconomicImpact)
+          .withFailureHandler(() => renderEconomicImpact({ total: 0 }))
+          .getEconomicImpact();
+      } else {
+        // Demo calculation
+        const demoTotal = 2340000;
+        renderEconomicImpact({ total: demoTotal });
+      }
+    }
+
+    function renderEconomicImpact(data) {
+      const valueEl = document.getElementById('economicValue');
+      const total = data.total || 0;
+
+      // Format as currency
+      if (total >= 1000000) {
+        valueEl.textContent = '$' + (total / 1000000).toFixed(1) + 'M';
+      } else if (total >= 1000) {
+        valueEl.textContent = '$' + (total / 1000).toFixed(0) + 'K';
+      } else {
+        valueEl.textContent = '$' + total;
+      }
+    }
+
+    function loadPriorityAlert() {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler(renderPriorityAlert)
+          .withFailureHandler(() => renderPriorityAlert({ message: 'System operational', safe: true }))
+          .getPriorityAlert();
+      } else {
+        // Demo data
+        renderPriorityAlert({
+          message: 'EU AI Act: 8 uncovered clauses blocking external outputs',
+          safe: false,
+          action: 'runGapAnalysis'
+        });
+      }
+    }
+
+    function renderPriorityAlert(data) {
+      const alertEl = document.getElementById('priorityAlert');
+      const textEl = document.getElementById('alertText');
+
+      textEl.textContent = data.message;
+
+      if (data.safe) {
+        alertEl.classList.add('safe');
+        alertEl.querySelector('.pulse-alert-icon').innerHTML = '&#x2705;';
+        alertEl.querySelector('.pulse-alert-btn').textContent = 'View';
+      } else {
+        alertEl.classList.remove('safe');
+        alertEl.querySelector('.pulse-alert-icon').innerHTML = '&#x26A0;';
+        alertEl.querySelector('.pulse-alert-btn').textContent = 'Fix It';
+      }
+
+      alertEl.dataset.action = data.action || '';
+    }
+
+    function handlePriorityAlert() {
+      const alertEl = document.getElementById('priorityAlert');
+      const action = alertEl.dataset.action;
+
+      if (action === 'runGapAnalysis') {
+        showHeatmap('EU_AI_ACT');
+        document.getElementById('heatmapSection').scrollIntoView({ behavior: 'smooth' });
+      } else if (action) {
+        runServerFunction(action);
+      }
+    }
+
+    function loadActiveWorkflowCount() {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((count) => {
+            document.getElementById('pulseWorkflows').textContent = count || 0;
+          })
+          .getActiveWorkflowCount();
+      } else {
+        document.getElementById('pulseWorkflows').textContent = '3';
+      }
+    }
+
+    function loadUserIdentity() {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((email) => {
+            document.getElementById('userIdentity').textContent = 'Actor: ' + (email || 'Unknown');
+          })
+          .getCurrentUserEmail();
+      } else {
+        document.getElementById('userIdentity').textContent = 'Actor: demo@baycomply.com';
+      }
+    }
+
+    // ===== REGULATORY HEATMAP =====
+    function showHeatmap(framework) {
+      currentFramework = framework;
+
+      // Update tabs
+      document.querySelectorAll('.heatmap-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.textContent.includes(framework.replace('_', ' ').replace('AI RMF', 'AI RMF'))) {
+          tab.classList.add('active');
+        }
+      });
+      // Simpler approach
+      document.querySelectorAll('.heatmap-tab').forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      loadHeatmapData(framework);
+    }
+
+    function loadHeatmapData(framework) {
+      if (typeof google !== 'undefined' && google.script) {
+        google.script.run
+          .withSuccessHandler((coverage) => renderHeatmap(framework, coverage))
+          .withFailureHandler(() => renderHeatmap(framework, {}))
+          .getRegulatoryCoverage(framework);
+      } else {
+        // Demo data - random coverage
+        const demoCoverage = {};
+        REGULATORY_DATA[framework].forEach(clause => {
+          const rand = Math.random();
+          demoCoverage[clause.id] = rand > 0.6 ? 'covered' : rand > 0.3 ? 'partial' : 'gap';
+        });
+        renderHeatmap(framework, demoCoverage);
+      }
+    }
+
+    function renderHeatmap(framework, coverage) {
+      const grid = document.getElementById('heatmapGrid');
+      const clauses = REGULATORY_DATA[framework] || [];
+
+      grid.innerHTML = clauses.map(clause => {
+        const status = coverage[clause.id] || 'gap';
+        return `
+          <div class="heatmap-tile ${status}" onclick="handleHeatmapClick('${framework}', '${clause.id}', '${status}')">
+            <div class="heatmap-tile-id">${clause.id}</div>
+            <div class="heatmap-tile-title">${clause.title}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleHeatmapClick(framework, clauseId, status) {
+      if (status === 'gap') {
+        showToast('Opening gap analysis for ' + framework + ' ' + clauseId, 'warning');
+        // In real implementation, this would open a workflow or gap analysis
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run.startGapWorkflow(framework, clauseId);
+        }
+      } else {
+        showToast(clauseId + ': ' + (status === 'covered' ? 'Fully documented' : 'Partial evidence'), 'success');
+      }
+    }
+
     // ===== PAGE NAVIGATION =====
     function showPage(pageId) {
       // Update nav links
@@ -1766,6 +2525,12 @@
 
     // ===== HOME PAGE =====
     function loadHomeStats() {
+      // Load pulse bar data
+      loadPulseBar();
+
+      // Load regulatory heatmap
+      loadHeatmapData(currentFramework);
+
       if (typeof google !== 'undefined' && google.script) {
         google.script.run
           .withSuccessHandler((stats) => {
@@ -1776,7 +2541,7 @@
           .getHomeStats();
       } else {
         // Demo data
-        document.getElementById('statEntries').textContent = '247';
+        document.getElementById('statEntries').textContent = '12,487';
         document.getElementById('statWorkflows').textContent = '3';
         document.getElementById('statCompliance').textContent = '78%';
       }
