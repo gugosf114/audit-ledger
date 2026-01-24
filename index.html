@@ -1240,7 +1240,7 @@
 
       tbody.innerHTML = entries.map(entry =>
         '<tr>' +
-          '<td><span class="ledger-uuid">' + entry.uuid.substring(0, 8) + '...</span></td>' +
+          '<td><span class="ledger-uuid">' + String(entry.uuid).substring(0, 8) + '</span></td>' +
           '<td>' + entry.timestamp + '</td>' +
           '<td>' + entry.actor + '</td>' +
           '<td><span class="ledger-event-type">' + entry.eventType + '</span></td>' +
