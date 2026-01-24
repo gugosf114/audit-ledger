@@ -1446,6 +1446,768 @@
       color: var(--text-muted);
       margin-bottom: 12px;
     }
+
+    /* ===== WORKFLOW TABS ===== */
+    .workflow-tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-hover);
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .workflow-tab {
+      padding: 10px 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .workflow-tab:hover {
+      color: var(--text-secondary);
+      background: var(--bg-active);
+    }
+
+    .workflow-tab.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .workflow-tab-content {
+      display: none;
+    }
+
+    .workflow-tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* ===== SAFE HARBOR SECTION ===== */
+    .safe-harbor-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .safe-harbor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .safe-harbor-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .safe-harbor-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .safe-harbor-badge.eligible {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .safe-harbor-badge.ineligible {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--action);
+    }
+
+    .safe-harbor-badge.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .safe-harbor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .safe-harbor-metric {
+      background: var(--bg-hover);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .safe-harbor-metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .safe-harbor-metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .safe-harbor-metric-status {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .safe-harbor-metric-status.pass {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--safe);
+    }
+
+    .safe-harbor-metric-status.fail {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--action);
+    }
+
+    .safe-harbor-metric-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .safe-harbor-metric-target {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .safe-harbor-progress {
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+
+    .safe-harbor-progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .safe-harbor-contract {
+      background: var(--bg-hover);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .safe-harbor-contract-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .safe-harbor-contract-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .safe-harbor-form {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .safe-harbor-form-full {
+      grid-column: 1 / -1;
+    }
+
+    .safe-harbor-requirements {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .safe-harbor-requirement {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+    }
+
+    .safe-harbor-requirement-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .safe-harbor-requirement-icon.pass {
+      background: var(--safe);
+      color: white;
+    }
+
+    .safe-harbor-requirement-icon.fail {
+      background: var(--action);
+      color: white;
+    }
+
+    .safe-harbor-requirement-icon.pending {
+      background: var(--watch);
+      color: white;
+    }
+
+    .safe-harbor-requirement-text {
+      font-size: 13px;
+    }
+
+    .safe-harbor-requirement-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .safe-harbor-requirement-desc {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* ===== EVIDENCE REPOSITORY ===== */
+    .evidence-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .evidence-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .evidence-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .evidence-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 13px;
+    }
+
+    .evidence-stat {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+    }
+
+    .evidence-stat-count {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .evidence-categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .evidence-category {
+      background: var(--bg-hover);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .evidence-category:hover {
+      border-color: var(--border-hover);
+    }
+
+    .evidence-category.active {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .evidence-category-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .evidence-category-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .evidence-category-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .evidence-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .evidence-upload-zone:hover {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .evidence-upload-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+    }
+
+    .evidence-upload-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .evidence-upload-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .evidence-list {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .evidence-item {
+      display: grid;
+      grid-template-columns: 40px 1fr auto auto auto;
+      gap: 16px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .evidence-item:last-child {
+      border-bottom: none;
+    }
+
+    .evidence-item-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .evidence-item-info {
+      min-width: 0;
+    }
+
+    .evidence-item-name {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .evidence-item-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .evidence-item-category {
+      padding: 4px 10px;
+      background: var(--bg-hover);
+      border-radius: 12px;
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .evidence-item-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .evidence-item-status.verified {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .evidence-item-status.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    /* ===== REALIZATION EVENTS TIMELINE ===== */
+    .timeline-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .timeline-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .timeline-info-box {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--info);
+    }
+
+    .timeline-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 2fr;
+      gap: 12px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      align-items: end;
+    }
+
+    .timeline-events {
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .timeline-events::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-event {
+      position: relative;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .timeline-event::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 20px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg-dark);
+    }
+
+    .timeline-event.realized::before {
+      background: var(--action);
+    }
+
+    .timeline-event.pending::before {
+      background: var(--watch);
+    }
+
+    .timeline-event-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .timeline-event-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .timeline-event-type {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .timeline-event-type.stock {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+    }
+
+    .timeline-event-type.rsu {
+      background: rgba(168, 85, 247, 0.15);
+      color: #a855f7;
+    }
+
+    .timeline-event-type.sale {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--action);
+    }
+
+    .timeline-event-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-event-amount {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .timeline-event-details {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* ===== ADDRESS TIMELINE ===== */
+    .address-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .address-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      align-items: end;
+    }
+
+    .address-timeline {
+      position: relative;
+    }
+
+    .address-entry {
+      display: grid;
+      grid-template-columns: 120px 1fr 100px 60px;
+      gap: 16px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .address-entry-dates {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .address-entry-current {
+      font-weight: 600;
+      color: var(--safe);
+    }
+
+    .address-entry-info {
+      font-size: 14px;
+    }
+
+    .address-entry-street {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .address-entry-city {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .address-entry-type {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .address-entry-type.primary {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .address-entry-type.secondary {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--info);
+    }
+
+    .address-entry-type.business {
+      background: rgba(168, 85, 247, 0.15);
+      color: #a855f7;
+    }
+
+    /* ===== THIRD PARTY REQUESTS ===== */
+    .requests-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .requests-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .requests-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .requests-info {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--watch);
+    }
+
+    .requests-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      align-items: end;
+    }
+
+    .requests-list {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .request-item {
+      display: grid;
+      grid-template-columns: 1fr 120px 120px 100px 60px;
+      gap: 16px;
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .request-item:last-child {
+      border-bottom: none;
+    }
+
+    .request-item-entity {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .request-item-type {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .request-item-date {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .request-item-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .request-item-status.sent {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--info);
+    }
+
+    .request-item-status.received {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .request-item-status.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .request-item-status.overdue {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--action);
+    }
   </style>
 </head>
 <body>
@@ -1678,137 +2440,435 @@
         </div>
       </div>
 
-      <!-- DAY COUNTER SECTION -->
-      <div class="day-counter-section" id="dayCounterSection">
-        <div class="day-counter-header">
-          <div class="day-counter-title">
-            <span class="day-counter-title-icon">&#128197;</span>
-            CA Day Counter - 183 Day Rule
-          </div>
-          <button class="btn btn-secondary" onclick="exportDayEntries()">Export CSV</button>
-        </div>
+      <!-- WORKFLOW TABS -->
+      <div class="workflow-tabs" id="workflowTabs">
+        <button class="workflow-tab active" onclick="showWorkflowTab('dayCounter')">Day Counter</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('safeHarbor')">Safe Harbor</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('addresses')">Addresses</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('evidence')">Evidence</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('realization')">Realization Events</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('requests')">3rd Party Requests</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('checklist')">FTB Checklist</button>
+      </div>
 
-        <!-- Stats Cards -->
-        <div class="day-counter-stats">
-          <div class="day-stat-card">
-            <div class="day-stat-value" id="dayStatCA">0</div>
-            <div class="day-stat-label">Days in CA</div>
+      <!-- TAB: DAY COUNTER -->
+      <div class="workflow-tab-content active" id="tab-dayCounter">
+        <div class="day-counter-section">
+          <div class="day-counter-header">
+            <div class="day-counter-title">
+              <span class="day-counter-title-icon">&#128197;</span>
+              CA Day Counter - 183 Day Rule
+            </div>
+            <button class="btn btn-secondary" onclick="exportDayEntries()">Export CSV</button>
           </div>
-          <div class="day-stat-card">
-            <div class="day-stat-value safe" id="dayStatOther">0</div>
-            <div class="day-stat-label">Days Outside CA</div>
-          </div>
-          <div class="day-stat-card">
-            <div class="day-stat-value" id="dayStatRemaining">183</div>
-            <div class="day-stat-label">Days Until Limit</div>
-          </div>
-          <div class="day-stat-card">
-            <div class="day-stat-value" id="dayStatYear">2025</div>
-            <div class="day-stat-label">Tax Year</div>
-          </div>
-        </div>
 
-        <!-- Progress Bar -->
-        <div class="day-progress-container">
-          <div class="day-progress-header">
-            <span class="day-progress-label">Progress to 183-Day Threshold</span>
-            <span class="day-progress-value" id="dayProgressText">0 / 183 (0%)</span>
-          </div>
-          <div class="day-progress-bar">
-            <div class="day-progress-fill safe" id="dayProgressFill" style="width: 0%"></div>
-          </div>
-          <div class="day-progress-markers">
-            <div class="day-progress-marker">
-              <div class="day-progress-marker-line"></div>
-              <span>0</span>
+          <div class="day-counter-stats">
+            <div class="day-stat-card">
+              <div class="day-stat-value" id="dayStatCA">0</div>
+              <div class="day-stat-label">Days in CA</div>
             </div>
-            <div class="day-progress-marker">
-              <div class="day-progress-marker-line"></div>
-              <span>120 Safe</span>
+            <div class="day-stat-card">
+              <div class="day-stat-value safe" id="dayStatOther">0</div>
+              <div class="day-stat-label">Days Outside CA</div>
             </div>
-            <div class="day-progress-marker">
-              <div class="day-progress-marker-line"></div>
-              <span>150 Caution</span>
+            <div class="day-stat-card">
+              <div class="day-stat-value" id="dayStatRemaining">183</div>
+              <div class="day-stat-label">Days Until Limit</div>
             </div>
-            <div class="day-progress-marker">
-              <div class="day-progress-marker-line"></div>
-              <span>183 Limit</span>
+            <div class="day-stat-card">
+              <div class="day-stat-value" id="dayStatYear">2025</div>
+              <div class="day-stat-label">Tax Year</div>
             </div>
           </div>
-        </div>
 
-        <!-- Alert Banner -->
-        <div class="day-alert-banner safe" id="dayAlertBanner">
-          <span class="day-alert-icon">&#10003;</span>
-          <span id="dayAlertText">Safe Zone: You have plenty of room before approaching the 183-day threshold.</span>
-        </div>
+          <div class="day-progress-container">
+            <div class="day-progress-header">
+              <span class="day-progress-label">Progress to 183-Day Threshold</span>
+              <span class="day-progress-value" id="dayProgressText">0 / 183 (0%)</span>
+            </div>
+            <div class="day-progress-bar">
+              <div class="day-progress-fill safe" id="dayProgressFill" style="width: 0%"></div>
+            </div>
+            <div class="day-progress-markers">
+              <div class="day-progress-marker"><div class="day-progress-marker-line"></div><span>0</span></div>
+              <div class="day-progress-marker"><div class="day-progress-marker-line"></div><span>120 Safe</span></div>
+              <div class="day-progress-marker"><div class="day-progress-marker-line"></div><span>150 Caution</span></div>
+              <div class="day-progress-marker"><div class="day-progress-marker-line"></div><span>183 Limit</span></div>
+            </div>
+          </div>
 
-        <!-- Entry Form -->
-        <div class="day-entry-form" id="dayEntryForm">
-          <div class="day-entry-group">
-            <label class="day-entry-label">Date</label>
-            <input type="date" class="day-entry-input" id="dayEntryDate">
+          <div class="day-alert-banner safe" id="dayAlertBanner">
+            <span class="day-alert-icon">&#10003;</span>
+            <span id="dayAlertText">Safe Zone: You have plenty of room before approaching the 183-day threshold.</span>
           </div>
-          <div class="day-entry-group">
-            <label class="day-entry-label">Location</label>
-            <select class="day-entry-input" id="dayEntryLocation">
-              <option value="CA">California</option>
-              <option value="NV">Nevada</option>
-              <option value="OTHER">Other State</option>
-              <option value="INTL">International</option>
-            </select>
-          </div>
-          <div class="day-entry-group">
-            <label class="day-entry-label">Purpose</label>
-            <select class="day-entry-input" id="dayEntryPurpose">
-              <option value="PERSONAL">Personal</option>
-              <option value="BUSINESS">Business</option>
-              <option value="MEDICAL">Medical</option>
-              <option value="TRANSIT">Transit</option>
-              <option value="VACATION">Vacation</option>
-            </select>
-          </div>
-          <div class="day-entry-group">
-            <label class="day-entry-label">Notes (optional)</label>
-            <input type="text" class="day-entry-input" id="dayEntryNotes" placeholder="Brief description...">
-          </div>
-          <button class="day-entry-btn" onclick="addDayEntry()">+ Add Day</button>
-        </div>
 
-        <!-- Bulk Entry Toggle -->
-        <label class="day-bulk-toggle">
-          <input type="checkbox" id="bulkEntryToggle" onchange="toggleBulkEntry()">
-          Enable bulk entry mode (for date ranges)
-        </label>
-
-        <!-- Bulk Entry Form -->
-        <div class="day-bulk-form" id="bulkEntryForm">
-          <div class="day-bulk-hint">
-            Enter date ranges, one per line. Format: YYYY-MM-DD to YYYY-MM-DD: LOCATION, PURPOSE<br>
-            Example: 2025-01-01 to 2025-01-15: NV, Personal
+          <div class="day-entry-form" id="dayEntryForm">
+            <div class="day-entry-group">
+              <label class="day-entry-label">Date</label>
+              <input type="date" class="day-entry-input" id="dayEntryDate">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Location</label>
+              <select class="day-entry-input" id="dayEntryLocation">
+                <option value="CA">California</option>
+                <option value="NV">Nevada</option>
+                <option value="OTHER">Other State</option>
+                <option value="INTL">International</option>
+              </select>
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Purpose</label>
+              <select class="day-entry-input" id="dayEntryPurpose">
+                <option value="PERSONAL">Personal</option>
+                <option value="BUSINESS">Business</option>
+                <option value="MEDICAL">Medical</option>
+                <option value="TRANSIT">Transit</option>
+                <option value="VACATION">Vacation</option>
+              </select>
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Notes</label>
+              <input type="text" class="day-entry-input" id="dayEntryNotes" placeholder="Brief description...">
+            </div>
+            <button class="day-entry-btn" onclick="addDayEntry()">+ Add Day</button>
           </div>
-          <textarea class="day-bulk-textarea" id="bulkEntryText" placeholder="2025-01-01 to 2025-01-15: NV, Personal
-2025-01-16 to 2025-01-18: CA, Business"></textarea>
-          <button class="day-entry-btn" onclick="processBulkEntry()">Process Bulk Entry</button>
-        </div>
 
-        <!-- Entry List -->
-        <div class="day-entries-list" id="dayEntriesList">
-          <div class="day-entries-header">
-            <span>Date</span>
-            <span>Location</span>
-            <span>Purpose</span>
-            <span>Notes</span>
-            <span>Action</span>
+          <label class="day-bulk-toggle">
+            <input type="checkbox" id="bulkEntryToggle" onchange="toggleBulkEntry()">
+            Enable bulk entry mode (for date ranges)
+          </label>
+
+          <div class="day-bulk-form" id="bulkEntryForm">
+            <div class="day-bulk-hint">Format: YYYY-MM-DD to YYYY-MM-DD: LOCATION, PURPOSE</div>
+            <textarea class="day-bulk-textarea" id="bulkEntryText" placeholder="2025-01-01 to 2025-01-15: NV, Personal"></textarea>
+            <button class="day-entry-btn" onclick="processBulkEntry()">Process Bulk Entry</button>
           </div>
-          <div id="dayEntriesBody">
-            <!-- Day entries will be rendered here -->
+
+          <div class="day-entries-list" id="dayEntriesList">
+            <div class="day-entries-header">
+              <span>Date</span><span>Location</span><span>Purpose</span><span>Notes</span><span>Action</span>
+            </div>
+            <div id="dayEntriesBody"></div>
           </div>
         </div>
       </div>
 
-      <div id="checklistContainer">
-        <!-- Checklist categories will be rendered here -->
+      <!-- TAB: SAFE HARBOR -->
+      <div class="workflow-tab-content" id="tab-safeHarbor">
+        <div class="safe-harbor-section">
+          <div class="safe-harbor-header">
+            <div class="safe-harbor-title">
+              <span>&#128737;</span> Safe Harbor Analysis - R&TC 17014(d)
+            </div>
+            <span class="safe-harbor-badge pending" id="safeHarborBadge">PENDING REVIEW</span>
+          </div>
+
+          <div class="timeline-info-box">
+            <strong>Safe Harbor Eligibility:</strong> CA-domiciled individuals may be treated as nonresidents if absent under an employment contract for 546+ consecutive days, with CA visits under 45 days/year and intangible income under $200,000/year.
+          </div>
+
+          <!-- Safe Harbor Metrics -->
+          <div class="safe-harbor-grid">
+            <div class="safe-harbor-metric">
+              <div class="safe-harbor-metric-header">
+                <span class="safe-harbor-metric-label">Days Outside CA</span>
+                <span class="safe-harbor-metric-status pending" id="shDaysStatus">TRACKING</span>
+              </div>
+              <div class="safe-harbor-metric-value" id="shDaysOutside">0</div>
+              <div class="safe-harbor-metric-target">Target: 546 consecutive days</div>
+              <div class="safe-harbor-progress">
+                <div class="safe-harbor-progress-fill" id="shDaysProgress" style="width: 0%; background: var(--accent);"></div>
+              </div>
+            </div>
+            <div class="safe-harbor-metric">
+              <div class="safe-harbor-metric-header">
+                <span class="safe-harbor-metric-label">CA Visits This Year</span>
+                <span class="safe-harbor-metric-status pass" id="shVisitsStatus">PASS</span>
+              </div>
+              <div class="safe-harbor-metric-value" id="shCAVisits">0</div>
+              <div class="safe-harbor-metric-target">Limit: 45 days per tax year</div>
+              <div class="safe-harbor-progress">
+                <div class="safe-harbor-progress-fill" id="shVisitsProgress" style="width: 0%; background: var(--safe);"></div>
+              </div>
+            </div>
+            <div class="safe-harbor-metric">
+              <div class="safe-harbor-metric-header">
+                <span class="safe-harbor-metric-label">Intangible Income</span>
+                <span class="safe-harbor-metric-status pass" id="shIncomeStatus">PASS</span>
+              </div>
+              <div class="safe-harbor-metric-value" id="shIntangibleIncome">$0</div>
+              <div class="safe-harbor-metric-target">Limit: $200,000 per year</div>
+              <div class="safe-harbor-progress">
+                <div class="safe-harbor-progress-fill" id="shIncomeProgress" style="width: 0%; background: var(--safe);"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Employment Contract -->
+          <div class="safe-harbor-contract">
+            <div class="safe-harbor-contract-header">
+              <div class="safe-harbor-contract-title">Employment Contract Details</div>
+              <button class="btn btn-secondary" onclick="saveSafeHarborContract()">Save Contract</button>
+            </div>
+            <div class="safe-harbor-form">
+              <div class="day-entry-group">
+                <label class="day-entry-label">Employer Name</label>
+                <input type="text" class="day-entry-input" id="shEmployer" placeholder="Company name">
+              </div>
+              <div class="day-entry-group">
+                <label class="day-entry-label">Contract Start Date</label>
+                <input type="date" class="day-entry-input" id="shContractStart">
+              </div>
+              <div class="day-entry-group">
+                <label class="day-entry-label">Contract End Date</label>
+                <input type="date" class="day-entry-input" id="shContractEnd">
+              </div>
+              <div class="day-entry-group">
+                <label class="day-entry-label">Work Location (Non-CA)</label>
+                <input type="text" class="day-entry-input" id="shWorkLocation" placeholder="City, State/Country">
+              </div>
+              <div class="day-entry-group">
+                <label class="day-entry-label">Annual Intangible Income</label>
+                <input type="number" class="day-entry-input" id="shAnnualIncome" placeholder="0">
+              </div>
+              <div class="day-entry-group">
+                <label class="day-entry-label">Contract Document</label>
+                <input type="text" class="day-entry-input" id="shContractDoc" placeholder="Filename or reference">
+              </div>
+            </div>
+          </div>
+
+          <!-- Requirements Checklist -->
+          <h4 style="margin-bottom: 12px; font-size: 14px;">Safe Harbor Requirements</h4>
+          <div class="safe-harbor-requirements" id="shRequirements">
+            <div class="safe-harbor-requirement">
+              <div class="safe-harbor-requirement-icon pending">?</div>
+              <div class="safe-harbor-requirement-text">
+                <div class="safe-harbor-requirement-title">546 Consecutive Days</div>
+                <div class="safe-harbor-requirement-desc">Must be outside CA for uninterrupted 546+ days under contract</div>
+              </div>
+            </div>
+            <div class="safe-harbor-requirement">
+              <div class="safe-harbor-requirement-icon pending">?</div>
+              <div class="safe-harbor-requirement-text">
+                <div class="safe-harbor-requirement-title">45-Day CA Limit</div>
+                <div class="safe-harbor-requirement-desc">CA visits must not exceed 45 days in any covered tax year</div>
+              </div>
+            </div>
+            <div class="safe-harbor-requirement">
+              <div class="safe-harbor-requirement-icon pending">?</div>
+              <div class="safe-harbor-requirement-text">
+                <div class="safe-harbor-requirement-title">$200K Income Limit</div>
+                <div class="safe-harbor-requirement-desc">Intangible income must be under $200,000 per year</div>
+              </div>
+            </div>
+            <div class="safe-harbor-requirement">
+              <div class="safe-harbor-requirement-icon pending">?</div>
+              <div class="safe-harbor-requirement-text">
+                <div class="safe-harbor-requirement-title">No Tax Avoidance Purpose</div>
+                <div class="safe-harbor-requirement-desc">Principal purpose must not be avoiding CA income tax</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: ADDRESSES -->
+      <div class="workflow-tab-content" id="tab-addresses">
+        <div class="address-section">
+          <div class="day-counter-header">
+            <div class="day-counter-title">
+              <span>&#127968;</span> Address Timeline
+            </div>
+          </div>
+
+          <div class="timeline-info-box">
+            Document all residences with dates. FTB examines where you maintain your primary home and the comparison between CA and non-CA residences.
+          </div>
+
+          <div class="address-form">
+            <div class="day-entry-group">
+              <label class="day-entry-label">Start Date</label>
+              <input type="date" class="day-entry-input" id="addrStartDate">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">End Date</label>
+              <input type="date" class="day-entry-input" id="addrEndDate" placeholder="Present">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Address</label>
+              <input type="text" class="day-entry-input" id="addrStreet" placeholder="Street address">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">City, State</label>
+              <input type="text" class="day-entry-input" id="addrCity" placeholder="City, ST">
+            </div>
+            <button class="day-entry-btn" onclick="addAddress()">+ Add Address</button>
+          </div>
+
+          <div class="address-timeline" id="addressTimeline">
+            <div style="padding: 24px; text-align: center; color: var(--text-muted);">No addresses recorded yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: EVIDENCE -->
+      <div class="workflow-tab-content" id="tab-evidence">
+        <div class="evidence-section">
+          <div class="evidence-header">
+            <div class="evidence-title">
+              <span>&#128193;</span> Evidence Repository
+            </div>
+            <div class="evidence-stats">
+              <div class="evidence-stat"><span class="evidence-stat-count" id="evidenceTotal">0</span> Total</div>
+              <div class="evidence-stat"><span class="evidence-stat-count" id="evidenceVerified">0</span> Verified</div>
+            </div>
+          </div>
+
+          <div class="evidence-categories" id="evidenceCategories">
+            <div class="evidence-category active" onclick="filterEvidence('all')">
+              <div class="evidence-category-icon">&#128194;</div>
+              <div class="evidence-category-name">All Evidence</div>
+              <div class="evidence-category-count" id="evCatAll">0 items</div>
+            </div>
+            <div class="evidence-category" onclick="filterEvidence('official')">
+              <div class="evidence-category-icon">&#128220;</div>
+              <div class="evidence-category-name">Official Documents</div>
+              <div class="evidence-category-count" id="evCatOfficial">0 items</div>
+            </div>
+            <div class="evidence-category" onclick="filterEvidence('records')">
+              <div class="evidence-category-icon">&#128203;</div>
+              <div class="evidence-category-name">Records</div>
+              <div class="evidence-category-count" id="evCatRecords">0 items</div>
+            </div>
+            <div class="evidence-category" onclick="filterEvidence('digital')">
+              <div class="evidence-category-icon">&#128187;</div>
+              <div class="evidence-category-name">Digital Evidence</div>
+              <div class="evidence-category-count" id="evCatDigital">0 items</div>
+            </div>
+            <div class="evidence-category" onclick="filterEvidence('thirdparty')">
+              <div class="evidence-category-icon">&#128101;</div>
+              <div class="evidence-category-name">Third-Party</div>
+              <div class="evidence-category-count" id="evCatThirdparty">0 items</div>
+            </div>
+          </div>
+
+          <div class="evidence-upload-zone" onclick="document.getElementById('evidenceFileInput').click()">
+            <div class="evidence-upload-icon">&#128228;</div>
+            <div class="evidence-upload-text">Drop files here or click to upload</div>
+            <div class="evidence-upload-hint">PDF, images, or documents up to 10MB</div>
+            <input type="file" id="evidenceFileInput" style="display:none" onchange="handleEvidenceUpload(event)">
+          </div>
+
+          <div class="evidence-list" id="evidenceList">
+            <div style="padding: 24px; text-align: center; color: var(--text-muted);">No evidence uploaded yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: REALIZATION EVENTS -->
+      <div class="workflow-tab-content" id="tab-realization">
+        <div class="timeline-section">
+          <div class="timeline-header">
+            <div class="timeline-title">
+              <span>&#128200;</span> Realization Events Timeline
+            </div>
+            <button class="btn btn-primary" onclick="showModal('newRealization')">+ Add Event</button>
+          </div>
+
+          <div class="timeline-info-box">
+            <strong>Why this matters:</strong> Stock sales, RSU vests, and other realization events may be partially sourced to CA based on where you worked during the vesting period. Document all significant events with dates and amounts.
+          </div>
+
+          <div class="timeline-form">
+            <div class="day-entry-group">
+              <label class="day-entry-label">Event Date</label>
+              <input type="date" class="day-entry-input" id="realEventDate">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Event Type</label>
+              <select class="day-entry-input" id="realEventType">
+                <option value="RSU_VEST">RSU Vest</option>
+                <option value="STOCK_SALE">Stock Sale</option>
+                <option value="OPTION_EXERCISE">Option Exercise</option>
+                <option value="BONUS">Bonus Payment</option>
+                <option value="DEFERRED_COMP">Deferred Compensation</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Amount ($)</label>
+              <input type="number" class="day-entry-input" id="realEventAmount" placeholder="0">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Description</label>
+              <input type="text" class="day-entry-input" id="realEventDesc" placeholder="Details...">
+            </div>
+            <button class="day-entry-btn" onclick="addRealizationEvent()">+ Add</button>
+          </div>
+
+          <div class="timeline-events" id="realizationTimeline">
+            <div style="padding: 24px; text-align: center; color: var(--text-muted);">No realization events recorded.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: THIRD-PARTY REQUESTS -->
+      <div class="workflow-tab-content" id="tab-requests">
+        <div class="requests-section">
+          <div class="requests-header">
+            <div class="requests-title">
+              <span>&#128231;</span> Third-Party Information Requests
+            </div>
+          </div>
+
+          <div class="requests-info">
+            <strong>Documentation Strategy:</strong> Proactively request confirmations from employers, banks, and service providers. These third-party letters carry more weight with FTB than self-reported information.
+          </div>
+
+          <div class="requests-form">
+            <div class="day-entry-group">
+              <label class="day-entry-label">Entity Name</label>
+              <input type="text" class="day-entry-input" id="reqEntity" placeholder="Company/Organization">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Request Type</label>
+              <select class="day-entry-input" id="reqType">
+                <option value="EMPLOYMENT_LETTER">Employment Confirmation</option>
+                <option value="BANK_STATEMENT">Bank Statement</option>
+                <option value="UTILITY_RECORDS">Utility Records</option>
+                <option value="MEDICAL_RECORDS">Medical Records</option>
+                <option value="MEMBERSHIP">Club/Membership</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Date Sent</label>
+              <input type="date" class="day-entry-input" id="reqDateSent">
+            </div>
+            <div class="day-entry-group">
+              <label class="day-entry-label">Status</label>
+              <select class="day-entry-input" id="reqStatus">
+                <option value="PENDING">Pending</option>
+                <option value="SENT">Sent</option>
+                <option value="RECEIVED">Received</option>
+                <option value="OVERDUE">Overdue</option>
+              </select>
+            </div>
+            <button class="day-entry-btn" onclick="addRequest()">+ Add</button>
+          </div>
+
+          <div class="requests-list" id="requestsList">
+            <div style="padding: 24px; text-align: center; color: var(--text-muted);">No requests tracked yet.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: FTB CHECKLIST -->
+      <div class="workflow-tab-content" id="tab-checklist">
+        <div id="checklistContainer">
+          <!-- Checklist categories will be rendered here -->
+        </div>
       </div>
     </div>
 
@@ -2078,6 +3138,13 @@
       document.getElementById('workflowProgress').textContent = progress + '%';
 
       renderChecklist(workflow);
+
+      // Reset to first tab
+      document.querySelectorAll('.workflow-tab').forEach(t => t.classList.remove('active'));
+      document.querySelector('.workflow-tab').classList.add('active');
+      document.querySelectorAll('.workflow-tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById('tab-dayCounter').classList.add('active');
+
       renderDayCounter();
 
       // Set default date to today
@@ -2757,6 +3824,617 @@
       URL.revokeObjectURL(url);
 
       showToast('Exported ' + entries.length + ' entries to CSV', 'success');
+    }
+
+    // ===== WORKFLOW TABS =====
+    function showWorkflowTab(tabId) {
+      // Update tab buttons
+      document.querySelectorAll('.workflow-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`.workflow-tab[onclick="showWorkflowTab('${tabId}')"]`).classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.workflow-tab-content').forEach(content => content.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+
+      // Render content for the tab
+      if (tabId === 'dayCounter') renderDayCounter();
+      if (tabId === 'safeHarbor') renderSafeHarbor();
+      if (tabId === 'addresses') renderAddresses();
+      if (tabId === 'evidence') renderEvidence();
+      if (tabId === 'realization') renderRealizationEvents();
+      if (tabId === 'requests') renderRequests();
+      if (tabId === 'checklist') {
+        const workflow = workflows.find(w => w.id === currentWorkflowId);
+        if (workflow) renderChecklist(workflow);
+      }
+    }
+
+    // ===== SAFE HARBOR =====
+    function getSafeHarbor(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.safeHarbor || {
+        employer: '',
+        contractStart: '',
+        contractEnd: '',
+        workLocation: '',
+        annualIncome: 0,
+        contractDoc: ''
+      };
+    }
+
+    function saveSafeHarborContract() {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.safeHarbor = {
+        employer: document.getElementById('shEmployer').value,
+        contractStart: document.getElementById('shContractStart').value,
+        contractEnd: document.getElementById('shContractEnd').value,
+        workLocation: document.getElementById('shWorkLocation').value,
+        annualIncome: parseFloat(document.getElementById('shAnnualIncome').value) || 0,
+        contractDoc: document.getElementById('shContractDoc').value
+      };
+
+      saveWorkflows();
+
+      // Log to audit ledger
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'SAFE_HARBOR_UPDATE',
+          content: {
+            message: workflow.name + ' | Safe Harbor contract saved: ' + workflow.safeHarbor.employer,
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            safeHarbor: workflow.safeHarbor
+          }
+        })
+      });
+
+      renderSafeHarbor();
+      showToast('Safe Harbor contract saved', 'success');
+    }
+
+    function renderSafeHarbor() {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      const sh = getSafeHarbor(currentWorkflowId);
+      const dayEntries = getDayEntries(currentWorkflowId);
+
+      // Populate form
+      document.getElementById('shEmployer').value = sh.employer || '';
+      document.getElementById('shContractStart').value = sh.contractStart || '';
+      document.getElementById('shContractEnd').value = sh.contractEnd || '';
+      document.getElementById('shWorkLocation').value = sh.workLocation || '';
+      document.getElementById('shAnnualIncome').value = sh.annualIncome || '';
+      document.getElementById('shContractDoc').value = sh.contractDoc || '';
+
+      // Calculate metrics
+      let daysOutsideCA = 0;
+      let caVisitsThisYear = 0;
+      const currentYear = new Date().getFullYear();
+
+      if (sh.contractStart) {
+        const contractStart = new Date(sh.contractStart);
+        const today = new Date();
+        const daysSinceStart = Math.floor((today - contractStart) / (1000 * 60 * 60 * 24));
+
+        // Count CA days during contract period
+        const caDaysDuringContract = dayEntries.filter(e => {
+          const entryDate = new Date(e.date);
+          return e.location === 'CA' && entryDate >= contractStart && entryDate <= today;
+        }).length;
+
+        daysOutsideCA = Math.max(0, daysSinceStart - caDaysDuringContract);
+      }
+
+      // CA visits this year
+      caVisitsThisYear = dayEntries.filter(e => {
+        return e.location === 'CA' && new Date(e.date).getFullYear() === currentYear;
+      }).length;
+
+      // Update metrics display
+      document.getElementById('shDaysOutside').textContent = daysOutsideCA;
+      const daysProgress = Math.min(100, Math.round((daysOutsideCA / 546) * 100));
+      document.getElementById('shDaysProgress').style.width = daysProgress + '%';
+
+      const daysStatus = daysOutsideCA >= 546 ? 'pass' : 'pending';
+      document.getElementById('shDaysStatus').textContent = daysOutsideCA >= 546 ? 'PASS' : 'TRACKING';
+      document.getElementById('shDaysStatus').className = 'safe-harbor-metric-status ' + daysStatus;
+      document.getElementById('shDaysProgress').style.background = daysOutsideCA >= 546 ? 'var(--safe)' : 'var(--accent)';
+
+      document.getElementById('shCAVisits').textContent = caVisitsThisYear;
+      const visitsProgress = Math.min(100, Math.round((caVisitsThisYear / 45) * 100));
+      document.getElementById('shVisitsProgress').style.width = visitsProgress + '%';
+
+      const visitsStatus = caVisitsThisYear <= 45 ? 'pass' : 'fail';
+      document.getElementById('shVisitsStatus').textContent = caVisitsThisYear <= 45 ? 'PASS' : 'FAIL';
+      document.getElementById('shVisitsStatus').className = 'safe-harbor-metric-status ' + visitsStatus;
+      document.getElementById('shVisitsProgress').style.background = caVisitsThisYear <= 45 ? 'var(--safe)' : 'var(--action)';
+
+      const income = sh.annualIncome || 0;
+      document.getElementById('shIntangibleIncome').textContent = '$' + income.toLocaleString();
+      const incomeProgress = Math.min(100, Math.round((income / 200000) * 100));
+      document.getElementById('shIncomeProgress').style.width = incomeProgress + '%';
+
+      const incomeStatus = income <= 200000 ? 'pass' : 'fail';
+      document.getElementById('shIncomeStatus').textContent = income <= 200000 ? 'PASS' : 'FAIL';
+      document.getElementById('shIncomeStatus').className = 'safe-harbor-metric-status ' + incomeStatus;
+      document.getElementById('shIncomeProgress').style.background = income <= 200000 ? 'var(--safe)' : 'var(--action)';
+
+      // Overall badge
+      const allPass = daysOutsideCA >= 546 && caVisitsThisYear <= 45 && income <= 200000;
+      const anyFail = caVisitsThisYear > 45 || income > 200000;
+      const badge = document.getElementById('safeHarborBadge');
+
+      if (allPass) {
+        badge.textContent = 'ELIGIBLE';
+        badge.className = 'safe-harbor-badge eligible';
+      } else if (anyFail) {
+        badge.textContent = 'INELIGIBLE';
+        badge.className = 'safe-harbor-badge ineligible';
+      } else {
+        badge.textContent = 'PENDING REVIEW';
+        badge.className = 'safe-harbor-badge pending';
+      }
+
+      // Update requirements icons
+      const reqIcons = document.querySelectorAll('#shRequirements .safe-harbor-requirement-icon');
+      const reqStatuses = [
+        daysOutsideCA >= 546 ? 'pass' : 'pending',
+        caVisitsThisYear <= 45 ? 'pass' : 'fail',
+        income <= 200000 ? 'pass' : 'fail',
+        'pending' // Tax avoidance - manual verification
+      ];
+      const reqSymbols = { pass: '&#10003;', fail: '&#10005;', pending: '?' };
+
+      reqIcons.forEach((icon, i) => {
+        icon.className = 'safe-harbor-requirement-icon ' + reqStatuses[i];
+        icon.innerHTML = reqSymbols[reqStatuses[i]];
+      });
+    }
+
+    // ===== ADDRESSES =====
+    function getAddresses(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.addresses || [];
+    }
+
+    function addAddress() {
+      if (!currentWorkflowId) return;
+
+      const startDate = document.getElementById('addrStartDate').value;
+      const endDate = document.getElementById('addrEndDate').value;
+      const street = document.getElementById('addrStreet').value;
+      const city = document.getElementById('addrCity').value;
+
+      if (!startDate || !street || !city) {
+        showToast('Please fill in required fields', 'error');
+        return;
+      }
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow.addresses) workflow.addresses = [];
+
+      const address = {
+        id: 'addr_' + Date.now(),
+        startDate,
+        endDate: endDate || null,
+        street,
+        city,
+        type: city.toLowerCase().includes('ca') || city.toLowerCase().includes('california') ? 'secondary' : 'primary',
+        createdAt: new Date().toISOString()
+      };
+
+      workflow.addresses.push(address);
+      workflow.addresses.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+      saveWorkflows();
+
+      // Log to audit ledger
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'ADDRESS_ADD',
+          content: {
+            message: workflow.name + ' | Address added: ' + street + ', ' + city,
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            address
+          }
+        })
+      });
+
+      // Clear form
+      document.getElementById('addrStartDate').value = '';
+      document.getElementById('addrEndDate').value = '';
+      document.getElementById('addrStreet').value = '';
+      document.getElementById('addrCity').value = '';
+
+      renderAddresses();
+      showToast('Address added', 'success');
+    }
+
+    function deleteAddress(addrId) {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      workflow.addresses = workflow.addresses.filter(a => a.id !== addrId);
+      saveWorkflows();
+      renderAddresses();
+      showToast('Address deleted', 'success');
+    }
+
+    function renderAddresses() {
+      if (!currentWorkflowId) return;
+
+      const addresses = getAddresses(currentWorkflowId);
+      const container = document.getElementById('addressTimeline');
+
+      if (addresses.length === 0) {
+        container.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-muted);">No addresses recorded yet.</div>';
+        return;
+      }
+
+      container.innerHTML = addresses.map(a => {
+        const isCurrent = !a.endDate;
+        const isCA = a.city.toLowerCase().includes('ca') || a.city.toLowerCase().includes('california');
+        return `
+          <div class="address-entry">
+            <div class="address-entry-dates">
+              <div ${isCurrent ? 'class="address-entry-current"' : ''}>${a.startDate}</div>
+              <div>${a.endDate || 'Present'}</div>
+            </div>
+            <div class="address-entry-info">
+              <div class="address-entry-street">${a.street}</div>
+              <div class="address-entry-city">${a.city}</div>
+            </div>
+            <span class="address-entry-type ${isCA ? 'secondary' : 'primary'}">${isCA ? 'CA' : 'Non-CA'}</span>
+            <button class="day-entry-delete" onclick="deleteAddress('${a.id}')">&times;</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ===== EVIDENCE REPOSITORY =====
+    function getEvidence(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.evidence || [];
+    }
+
+    function handleEvidenceUpload(event) {
+      const file = event.target.files[0];
+      if (!file || !currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow.evidence) workflow.evidence = [];
+
+      // For now, just store metadata (actual file storage would need backend)
+      const evidence = {
+        id: 'ev_' + Date.now(),
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        category: 'records',
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      workflow.evidence.push(evidence);
+      saveWorkflows();
+
+      // Log to audit ledger
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'EVIDENCE_UPLOAD',
+          content: {
+            message: workflow.name + ' | Evidence uploaded: ' + file.name,
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            evidence
+          }
+        })
+      });
+
+      renderEvidence();
+      showToast('Evidence added: ' + file.name, 'success');
+      event.target.value = '';
+    }
+
+    function deleteEvidence(evId) {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      workflow.evidence = workflow.evidence.filter(e => e.id !== evId);
+      saveWorkflows();
+      renderEvidence();
+      showToast('Evidence deleted', 'success');
+    }
+
+    function filterEvidence(category) {
+      document.querySelectorAll('.evidence-category').forEach(c => c.classList.remove('active'));
+      document.querySelector(`.evidence-category[onclick="filterEvidence('${category}')"]`).classList.add('active');
+      renderEvidence(category);
+    }
+
+    function renderEvidence(filterCat = 'all') {
+      if (!currentWorkflowId) return;
+
+      const evidence = getEvidence(currentWorkflowId);
+      const filtered = filterCat === 'all' ? evidence : evidence.filter(e => e.category === filterCat);
+
+      // Update counts
+      document.getElementById('evidenceTotal').textContent = evidence.length;
+      document.getElementById('evidenceVerified').textContent = evidence.filter(e => e.status === 'verified').length;
+      document.getElementById('evCatAll').textContent = evidence.length + ' items';
+      document.getElementById('evCatOfficial').textContent = evidence.filter(e => e.category === 'official').length + ' items';
+      document.getElementById('evCatRecords').textContent = evidence.filter(e => e.category === 'records').length + ' items';
+      document.getElementById('evCatDigital').textContent = evidence.filter(e => e.category === 'digital').length + ' items';
+      document.getElementById('evCatThirdparty').textContent = evidence.filter(e => e.category === 'thirdparty').length + ' items';
+
+      const container = document.getElementById('evidenceList');
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-muted);">No evidence uploaded yet.</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(e => {
+        const icon = e.type?.includes('pdf') ? '&#128196;' : e.type?.includes('image') ? '&#128247;' : '&#128193;';
+        const sizeKB = Math.round(e.size / 1024);
+        return `
+          <div class="evidence-item">
+            <div class="evidence-item-icon">${icon}</div>
+            <div class="evidence-item-info">
+              <div class="evidence-item-name">${e.name}</div>
+              <div class="evidence-item-meta">${sizeKB}KB | ${new Date(e.createdAt).toLocaleDateString()}</div>
+            </div>
+            <span class="evidence-item-category">${e.category}</span>
+            <span class="evidence-item-status ${e.status}">${e.status}</span>
+            <button class="day-entry-delete" onclick="deleteEvidence('${e.id}')">&times;</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ===== REALIZATION EVENTS =====
+    function getRealizationEvents(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.realizationEvents || [];
+    }
+
+    function addRealizationEvent() {
+      if (!currentWorkflowId) return;
+
+      const date = document.getElementById('realEventDate').value;
+      const type = document.getElementById('realEventType').value;
+      const amount = parseFloat(document.getElementById('realEventAmount').value) || 0;
+      const desc = document.getElementById('realEventDesc').value;
+
+      if (!date || !amount) {
+        showToast('Please fill in date and amount', 'error');
+        return;
+      }
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow.realizationEvents) workflow.realizationEvents = [];
+
+      const event = {
+        id: 'real_' + Date.now(),
+        date,
+        type,
+        amount,
+        description: desc,
+        createdAt: new Date().toISOString()
+      };
+
+      workflow.realizationEvents.push(event);
+      workflow.realizationEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+      saveWorkflows();
+
+      // Log to audit ledger
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'REALIZATION_EVENT',
+          content: {
+            message: workflow.name + ' | ' + type + ': $' + amount.toLocaleString(),
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            event
+          }
+        })
+      });
+
+      // Clear form
+      document.getElementById('realEventDate').value = '';
+      document.getElementById('realEventAmount').value = '';
+      document.getElementById('realEventDesc').value = '';
+
+      renderRealizationEvents();
+      showToast('Realization event added', 'success');
+    }
+
+    function deleteRealizationEvent(eventId) {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      workflow.realizationEvents = workflow.realizationEvents.filter(e => e.id !== eventId);
+      saveWorkflows();
+      renderRealizationEvents();
+      showToast('Event deleted', 'success');
+    }
+
+    function renderRealizationEvents() {
+      if (!currentWorkflowId) return;
+
+      const events = getRealizationEvents(currentWorkflowId);
+      const container = document.getElementById('realizationTimeline');
+
+      if (events.length === 0) {
+        container.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-muted);">No realization events recorded.</div>';
+        return;
+      }
+
+      const typeLabels = {
+        'RSU_VEST': 'RSU Vest',
+        'STOCK_SALE': 'Stock Sale',
+        'OPTION_EXERCISE': 'Option Exercise',
+        'BONUS': 'Bonus',
+        'DEFERRED_COMP': 'Deferred Comp',
+        'OTHER': 'Other'
+      };
+
+      const typeClasses = {
+        'RSU_VEST': 'rsu',
+        'STOCK_SALE': 'sale',
+        'OPTION_EXERCISE': 'stock',
+        'BONUS': 'stock',
+        'DEFERRED_COMP': 'rsu',
+        'OTHER': 'stock'
+      };
+
+      container.innerHTML = events.map(e => `
+        <div class="timeline-event ${e.type === 'STOCK_SALE' ? 'realized' : ''}">
+          <div class="timeline-event-header">
+            <span class="timeline-event-date">${e.date}</span>
+            <span class="timeline-event-type ${typeClasses[e.type] || 'stock'}">${typeLabels[e.type] || e.type}</span>
+          </div>
+          <div class="timeline-event-title">${e.description || typeLabels[e.type]}</div>
+          <div class="timeline-event-amount">$${e.amount.toLocaleString()}</div>
+          <button class="day-entry-delete" style="position:absolute;top:12px;right:12px;" onclick="deleteRealizationEvent('${e.id}')">&times;</button>
+        </div>
+      `).join('');
+    }
+
+    // ===== THIRD-PARTY REQUESTS =====
+    function getRequests(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.requests || [];
+    }
+
+    function addRequest() {
+      if (!currentWorkflowId) return;
+
+      const entity = document.getElementById('reqEntity').value;
+      const type = document.getElementById('reqType').value;
+      const dateSent = document.getElementById('reqDateSent').value;
+      const status = document.getElementById('reqStatus').value;
+
+      if (!entity || !type) {
+        showToast('Please fill in entity and type', 'error');
+        return;
+      }
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow.requests) workflow.requests = [];
+
+      const request = {
+        id: 'req_' + Date.now(),
+        entity,
+        type,
+        dateSent: dateSent || null,
+        status,
+        createdAt: new Date().toISOString()
+      };
+
+      workflow.requests.push(request);
+      saveWorkflows();
+
+      // Log to audit ledger
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'REQUEST_ADD',
+          content: {
+            message: workflow.name + ' | Request added: ' + entity + ' - ' + type,
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            request
+          }
+        })
+      });
+
+      // Clear form
+      document.getElementById('reqEntity').value = '';
+      document.getElementById('reqDateSent').value = '';
+
+      renderRequests();
+      showToast('Request added', 'success');
+    }
+
+    function updateRequestStatus(reqId, newStatus) {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      const request = workflow.requests.find(r => r.id === reqId);
+      if (request) {
+        request.status = newStatus;
+        request.updatedAt = new Date().toISOString();
+        saveWorkflows();
+        renderRequests();
+      }
+    }
+
+    function deleteRequest(reqId) {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      workflow.requests = workflow.requests.filter(r => r.id !== reqId);
+      saveWorkflows();
+      renderRequests();
+      showToast('Request deleted', 'success');
+    }
+
+    function renderRequests() {
+      if (!currentWorkflowId) return;
+
+      const requests = getRequests(currentWorkflowId);
+      const container = document.getElementById('requestsList');
+
+      if (requests.length === 0) {
+        container.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-muted);">No requests tracked yet.</div>';
+        return;
+      }
+
+      const typeLabels = {
+        'EMPLOYMENT_LETTER': 'Employment Letter',
+        'BANK_STATEMENT': 'Bank Statement',
+        'UTILITY_RECORDS': 'Utility Records',
+        'MEDICAL_RECORDS': 'Medical Records',
+        'MEMBERSHIP': 'Membership',
+        'OTHER': 'Other'
+      };
+
+      container.innerHTML = requests.map(r => `
+        <div class="request-item">
+          <div>
+            <div class="request-item-entity">${r.entity}</div>
+            <div class="request-item-type">${typeLabels[r.type] || r.type}</div>
+          </div>
+          <span class="request-item-date">${r.dateSent || 'Not sent'}</span>
+          <select class="checklist-select" style="width:100px" onchange="updateRequestStatus('${r.id}', this.value)">
+            <option value="PENDING" ${r.status === 'PENDING' ? 'selected' : ''}>Pending</option>
+            <option value="SENT" ${r.status === 'SENT' ? 'selected' : ''}>Sent</option>
+            <option value="RECEIVED" ${r.status === 'RECEIVED' ? 'selected' : ''}>Received</option>
+            <option value="OVERDUE" ${r.status === 'OVERDUE' ? 'selected' : ''}>Overdue</option>
+          </select>
+          <span class="request-item-status ${r.status.toLowerCase()}">${r.status}</span>
+          <button class="day-entry-delete" onclick="deleteRequest('${r.id}')">&times;</button>
+        </div>
+      `).join('');
     }
 
     // ===== INIT =====
