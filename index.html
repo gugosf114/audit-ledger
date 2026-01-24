@@ -2208,6 +2208,230 @@
       background: rgba(239, 68, 68, 0.15);
       color: var(--action);
     }
+
+    /* ===== BRAGG FRAMEWORK SECTION ===== */
+    .framework-section {
+      margin-bottom: 48px;
+    }
+
+    .framework-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .framework-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .framework-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    .framework-source {
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .framework-source strong {
+      color: var(--text-secondary);
+    }
+
+    .bragg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .bragg-factor {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.2s;
+    }
+
+    .bragg-factor:hover {
+      border-color: var(--border-hover);
+    }
+
+    .bragg-factor-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .bragg-factor-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .bragg-factor-number.highest {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--action);
+    }
+
+    .bragg-factor-number.moderate {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .bragg-factor-number.least {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--info);
+    }
+
+    .bragg-factor-number.corroborative {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+    }
+
+    .bragg-factor-name {
+      font-size: 14px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .bragg-factor-weight {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .bragg-factor-weight.highest {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--action);
+    }
+
+    .bragg-factor-weight.moderate {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .bragg-factor-weight.least {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--info);
+    }
+
+    .bragg-factor-weight.corroborative {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--accent);
+    }
+
+    .bragg-factor-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== FEATURE MAP (BAYCOMPLY STYLE) ===== */
+    .feature-map {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 48px;
+    }
+
+    .feature-map-header {
+      padding: 20px 24px;
+      background: var(--bg-hover);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-map-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .feature-map-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .feature-map-table {
+      width: 100%;
+    }
+
+    .feature-map-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-map-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-map-feature {
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      background: var(--bg-hover);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-right: 1px solid var(--border);
+    }
+
+    .feature-map-icon {
+      font-size: 18px;
+    }
+
+    .feature-map-desc {
+      padding: 16px 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ===== WEIGHT LEGEND ===== */
+    .weight-legend {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .weight-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .weight-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    .weight-legend-dot.highest { background: var(--action); }
+    .weight-legend-dot.moderate { background: var(--watch); }
+    .weight-legend-dot.least { background: var(--info); }
+    .weight-legend-dot.corroborative { background: var(--accent); }
   </style>
 </head>
 <body>
@@ -2297,8 +2521,8 @@
     <!-- HOME PAGE -->
     <div class="page active" id="page-home">
       <div class="hero">
-        <h1 class="hero-title">AI Governance Platform</h1>
-        <p class="hero-subtitle">Tamper-evident audit trails, adversarial verification, and regulatory compliance mapping for AI systems.</p>
+        <h1 class="hero-title">CA Residency Audit Defense</h1>
+        <p class="hero-subtitle">Pre-audit documentation platform built on the 19 Bragg factors. Hash-chained evidence trails for FTB audit readiness.</p>
 
         <div class="hero-stats">
           <div class="hero-stat">
@@ -2307,87 +2531,257 @@
           </div>
           <div class="hero-stat">
             <div class="hero-stat-value" id="statWorkflows">0</div>
-            <div class="hero-stat-label">Active Workflows</div>
+            <div class="hero-stat-label">Active Clients</div>
           </div>
           <div class="hero-stat">
-            <div class="hero-stat-value" id="statCompliance">0%</div>
-            <div class="hero-stat-label">Compliance Score</div>
+            <div class="hero-stat-value">19</div>
+            <div class="hero-stat-label">Bragg Factors</div>
           </div>
         </div>
       </div>
 
-      <h2 class="section-title">Capabilities</h2>
+      <!-- FEATURE MAP (BAYCOMPLY STYLE) -->
+      <div class="feature-map">
+        <div class="feature-map-header">
+          <div class="feature-map-title">How It Works</div>
+          <div class="feature-map-subtitle">Every action maps to an audit-ready evidence chain</div>
+        </div>
+        <div class="feature-map-table">
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#128197;</span> Day Counter</div>
+            <div class="feature-map-desc">Track CA presence against the 183-day statutory threshold. Auto-alerts at Safe/Caution/Warning levels.</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#128737;</span> Safe Harbor</div>
+            <div class="feature-map-desc">546-day employment contract tracking. Monitors 45-day CA visit limit and $200K intangible income threshold per R&TC 17014(d).</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#127968;</span> Address Timeline</div>
+            <div class="feature-map-desc">Document all residences with dates. Compare CA vs non-CA homes for the "closer connections" test.</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#128200;</span> Realization Events</div>
+            <div class="feature-map-desc">RSU vests, stock sales, option exercises. Source-rule documentation for CA-apportioned income.</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#128193;</span> Evidence Vault</div>
+            <div class="feature-map-desc">Upload documents with category tagging. Official, records, digital, third-party classifications.</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#128231;</span> 3rd Party Requests</div>
+            <div class="feature-map-desc">Track confirmation letters from employers, banks, utilities. Status workflow: Pending → Sent → Received.</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#128274;</span> Audit Trail</div>
+            <div class="feature-map-desc">SHA-256 hash-chained ledger. Every entry links cryptographically. Tampering breaks the chain.</div>
+          </div>
+          <div class="feature-map-row">
+            <div class="feature-map-feature"><span class="feature-map-icon">&#127919;</span> Confidence Protocol</div>
+            <div class="feature-map-desc">Declare KNOWN_KNOWN, KNOWN_UNKNOWN, or UNKNOWN_UNKNOWN before logging. No retroactive softening.</div>
+          </div>
+        </div>
+      </div>
 
+      <!-- BRAGG FACTORS FRAMEWORK -->
+      <div class="framework-section">
+        <div class="framework-header">
+          <div>
+            <h2 class="framework-title">The 19 Bragg Factors</h2>
+            <p class="framework-subtitle">The foundation for CA residency analysis. FTB examines these factors holistically - no single factor is determinative, but some carry more weight.</p>
+          </div>
+          <div class="framework-source">
+            <strong>Source:</strong> Appeal of Bragg (2003)<br>
+            <strong>See also:</strong> FTB RSTM 1030, 1040
+          </div>
+        </div>
+
+        <div class="weight-legend">
+          <div class="weight-legend-item"><div class="weight-legend-dot highest"></div> Highest Weight</div>
+          <div class="weight-legend-item"><div class="weight-legend-dot moderate"></div> Moderate Weight</div>
+          <div class="weight-legend-item"><div class="weight-legend-dot least"></div> Least Weight</div>
+          <div class="weight-legend-item"><div class="weight-legend-dot corroborative"></div> Corroborative</div>
+        </div>
+
+        <div class="bragg-grid">
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number highest">1</div>
+              <span class="bragg-factor-name">Physical Presence</span>
+              <span class="bragg-factor-weight highest">Highest</span>
+            </div>
+            <div class="bragg-factor-desc">Amount of time spent in CA vs outside. 183+ days triggers statutory presumption.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number highest">2</div>
+              <span class="bragg-factor-name">Location of Spouse/RDP</span>
+              <span class="bragg-factor-weight highest">Highest</span>
+            </div>
+            <div class="bragg-factor-desc">Where your spouse or registered domestic partner resides.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number highest">3</div>
+              <span class="bragg-factor-name">Location of Minor Children</span>
+              <span class="bragg-factor-weight highest">Highest</span>
+            </div>
+            <div class="bragg-factor-desc">Where minor children reside and attend school.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number highest">4</div>
+              <span class="bragg-factor-name">Principal Residence</span>
+              <span class="bragg-factor-weight highest">Highest</span>
+            </div>
+            <div class="bragg-factor-desc">Comparison of CA home vs new state home (size, value, furnishing).</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number highest">5</div>
+              <span class="bragg-factor-name">Employment</span>
+              <span class="bragg-factor-weight highest">Highest</span>
+            </div>
+            <div class="bragg-factor-desc">Location of principal employment or business operations.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number moderate">6</div>
+              <span class="bragg-factor-name">Business Interests</span>
+              <span class="bragg-factor-weight moderate">Moderate</span>
+            </div>
+            <div class="bragg-factor-desc">Location of business interests and level of participation.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number moderate">7</div>
+              <span class="bragg-factor-name">Real Property</span>
+              <span class="bragg-factor-weight moderate">Moderate</span>
+            </div>
+            <div class="bragg-factor-desc">Ownership of real estate in CA vs elsewhere.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number moderate">8</div>
+              <span class="bragg-factor-name">Bank Accounts</span>
+              <span class="bragg-factor-weight moderate">Moderate</span>
+            </div>
+            <div class="bragg-factor-desc">Location of bank accounts and financial institutions used.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number moderate">9</div>
+              <span class="bragg-factor-name">Investment Accounts</span>
+              <span class="bragg-factor-weight moderate">Moderate</span>
+            </div>
+            <div class="bragg-factor-desc">Location of brokerage and investment accounts.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number moderate">10</div>
+              <span class="bragg-factor-name">Professional Licenses</span>
+              <span class="bragg-factor-weight moderate">Moderate</span>
+            </div>
+            <div class="bragg-factor-desc">States where professional licenses are held (bar, CPA, medical, etc.).</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number least">11</div>
+              <span class="bragg-factor-name">Motor Vehicle Registration</span>
+              <span class="bragg-factor-weight least">Least</span>
+            </div>
+            <div class="bragg-factor-desc">Where vehicles are registered. Easy to change but still documented.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number least">12</div>
+              <span class="bragg-factor-name">Driver's License</span>
+              <span class="bragg-factor-weight least">Least</span>
+            </div>
+            <div class="bragg-factor-desc">State of driver's license. Formality but must be consistent.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number least">13</div>
+              <span class="bragg-factor-name">Voter Registration</span>
+              <span class="bragg-factor-weight least">Least</span>
+            </div>
+            <div class="bragg-factor-desc">Where registered to vote. Formality but signals intent.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number corroborative">14</div>
+              <span class="bragg-factor-name">Club Memberships</span>
+              <span class="bragg-factor-weight corroborative">Corroborative</span>
+            </div>
+            <div class="bragg-factor-desc">Country clubs, gyms, social organizations. Shows community ties.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number corroborative">15</div>
+              <span class="bragg-factor-name">Religious Organizations</span>
+              <span class="bragg-factor-weight corroborative">Corroborative</span>
+            </div>
+            <div class="bragg-factor-desc">Church, temple, mosque memberships and participation.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number corroborative">16</div>
+              <span class="bragg-factor-name">Professional Services</span>
+              <span class="bragg-factor-weight corroborative">Corroborative</span>
+            </div>
+            <div class="bragg-factor-desc">Location of doctors, dentists, accountants, attorneys.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number corroborative">17</div>
+              <span class="bragg-factor-name">Mailing Address</span>
+              <span class="bragg-factor-weight corroborative">Corroborative</span>
+            </div>
+            <div class="bragg-factor-desc">Where mail is received. USPS change of address documentation.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number corroborative">18</div>
+              <span class="bragg-factor-name">Safe Deposit Boxes</span>
+              <span class="bragg-factor-weight corroborative">Corroborative</span>
+            </div>
+            <div class="bragg-factor-desc">Location of safe deposit boxes and valuables storage.</div>
+          </div>
+          <div class="bragg-factor">
+            <div class="bragg-factor-header">
+              <div class="bragg-factor-number corroborative">19</div>
+              <span class="bragg-factor-name">Personal Property</span>
+              <span class="bragg-factor-weight corroborative">Corroborative</span>
+            </div>
+            <div class="bragg-factor-desc">Location of furniture, art, valuables, and heirlooms.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA SECTION -->
       <div class="capabilities-grid">
-
         <div class="capability-card" onclick="showPage('workflows')">
           <div class="capability-header">
             <div class="capability-icon">&#128203;</div>
             <span class="capability-status active">Active</span>
           </div>
-          <h3 class="capability-title">Residency Workflows</h3>
-          <p class="capability-description">Pre-audit defense for CA residency changes. Track every action with confidence declarations and tamper-evident timestamps.</p>
-          <div class="capability-features">
-            <span class="capability-feature">FTB Audit Ready</span>
-            <span class="capability-feature">Evidence Upload</span>
-            <span class="capability-feature">Hash Chain</span>
-          </div>
+          <h3 class="capability-title">Start a Workflow</h3>
+          <p class="capability-description">Create a client workflow to track all 19 factors with evidence collection and hash-chained audit trail.</p>
           <div class="capability-action">
             <button class="capability-action-btn">View Workflows</button>
           </div>
         </div>
-
         <div class="capability-card" onclick="showPage('ledger')">
           <div class="capability-header">
             <div class="capability-icon">&#128274;</div>
             <span class="capability-status active">Active</span>
           </div>
-          <h3 class="capability-title">Tamper-Evident Ledger</h3>
-          <p class="capability-description">SHA-256 hash-chained audit trail. Every entry links cryptographically to the previous. Tampering breaks the chain.</p>
-          <div class="capability-features">
-            <span class="capability-feature">Hash Chain</span>
-            <span class="capability-feature">PostgreSQL</span>
-            <span class="capability-feature">Immutable</span>
-          </div>
+          <h3 class="capability-title">Audit Ledger</h3>
+          <p class="capability-description">View the tamper-evident log of all entries. Every action is hash-chained for integrity verification.</p>
           <div class="capability-action">
             <button class="capability-action-btn">View Ledger</button>
           </div>
         </div>
-
-        <div class="capability-card" onclick="showModal('newEntry')">
-          <div class="capability-header">
-            <div class="capability-icon">&#127919;</div>
-            <span class="capability-status active">Active</span>
-          </div>
-          <h3 class="capability-title">Confidence Declaration</h3>
-          <p class="capability-description">Rumsfeld Protocol - declare confidence BEFORE logging content. Prevents retroactive softening of claims.</p>
-          <div class="capability-features">
-            <span class="capability-feature">KNOWN_KNOWN</span>
-            <span class="capability-feature">KNOWN_UNKNOWN</span>
-            <span class="capability-feature">Pre-commit</span>
-          </div>
-          <div class="capability-action">
-            <button class="capability-action-btn">Declare</button>
-          </div>
-        </div>
-
-        <div class="capability-card">
-          <div class="capability-header">
-            <div class="capability-icon">&#128220;</div>
-            <span class="capability-status active">Active</span>
-          </div>
-          <h3 class="capability-title">Regulatory Mapping</h3>
-          <p class="capability-description">Auto-tags entries to ISO 42001, EU AI Act, and NIST AI RMF. Shows compliance coverage and gaps.</p>
-          <div class="capability-features">
-            <span class="capability-feature">ISO 42001</span>
-            <span class="capability-feature">EU AI Act</span>
-            <span class="capability-feature">NIST AI RMF</span>
-          </div>
-          <div class="capability-action">
-            <button class="capability-action-btn">View Compliance</button>
-          </div>
-        </div>
-
       </div>
     </div>
 
