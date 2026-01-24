@@ -2432,6 +2432,301 @@
     .weight-legend-dot.moderate { background: var(--watch); }
     .weight-legend-dot.least { background: var(--info); }
     .weight-legend-dot.corroborative { background: var(--accent); }
+
+    /* ===== ROADMAP TIMELINE ===== */
+    .roadmap-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .roadmap-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+    }
+
+    .roadmap-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .roadmap-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .roadmap-progress-bar {
+      width: 200px;
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .roadmap-progress-fill {
+      height: 100%;
+      background: var(--safe);
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .roadmap-progress-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .roadmap-phases {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .roadmap-phase {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .roadmap-phase-header {
+      padding: 16px 20px;
+      background: var(--bg-hover);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .roadmap-phase-header:hover {
+      background: var(--bg-active);
+    }
+
+    .roadmap-phase-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .roadmap-phase-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .roadmap-phase-icon.before { background: rgba(99, 102, 241, 0.15); }
+    .roadmap-phase-icon.move { background: rgba(245, 158, 11, 0.15); }
+    .roadmap-phase-icon.after { background: rgba(16, 185, 129, 0.15); }
+    .roadmap-phase-icon.ongoing { background: rgba(59, 130, 246, 0.15); }
+    .roadmap-phase-icon.annual { background: rgba(168, 85, 247, 0.15); }
+
+    .roadmap-phase-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .roadmap-phase-timing {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .roadmap-phase-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .roadmap-phase-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .roadmap-phase-toggle {
+      font-size: 18px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .roadmap-phase.expanded .roadmap-phase-toggle {
+      transform: rotate(180deg);
+    }
+
+    .roadmap-phase-body {
+      display: none;
+      padding: 0;
+    }
+
+    .roadmap-phase.expanded .roadmap-phase-body {
+      display: block;
+    }
+
+    .roadmap-task {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 32px 1fr 120px 100px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .roadmap-task:last-child {
+      border-bottom: none;
+    }
+
+    .roadmap-task-check {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 2px;
+    }
+
+    .roadmap-task-check:hover {
+      border-color: var(--accent);
+    }
+
+    .roadmap-task-check.complete {
+      background: var(--safe);
+      border-color: var(--safe);
+      color: white;
+    }
+
+    .roadmap-task-check.in-progress {
+      background: var(--watch);
+      border-color: var(--watch);
+      color: white;
+    }
+
+    .roadmap-task-content {
+      min-width: 0;
+    }
+
+    .roadmap-task-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .roadmap-task-why {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .roadmap-task-evidence {
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-hover);
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .roadmap-task-evidence strong {
+      color: var(--text-secondary);
+    }
+
+    .roadmap-task-weight {
+      text-align: right;
+    }
+
+    .roadmap-task-weight-badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .roadmap-task-status {
+      text-align: right;
+    }
+
+    .roadmap-task-status select {
+      padding: 6px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .roadmap-legal-note {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: var(--info);
+    }
+
+    .roadmap-decision-box {
+      background: var(--bg-hover);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .roadmap-decision-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .roadmap-decision-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .roadmap-decision-option {
+      padding: 12px;
+      background: var(--bg-dark);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .roadmap-decision-option:hover {
+      border-color: var(--border-hover);
+    }
+
+    .roadmap-decision-option.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .roadmap-decision-option-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .roadmap-decision-option-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -2836,7 +3131,8 @@
 
       <!-- WORKFLOW TABS -->
       <div class="workflow-tabs" id="workflowTabs">
-        <button class="workflow-tab active" onclick="showWorkflowTab('dayCounter')">Day Counter</button>
+        <button class="workflow-tab active" onclick="showWorkflowTab('roadmap')">Roadmap</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('dayCounter')">Day Counter</button>
         <button class="workflow-tab" onclick="showWorkflowTab('safeHarbor')">Safe Harbor</button>
         <button class="workflow-tab" onclick="showWorkflowTab('addresses')">Addresses</button>
         <button class="workflow-tab" onclick="showWorkflowTab('evidence')">Evidence</button>
@@ -2845,8 +3141,467 @@
         <button class="workflow-tab" onclick="showWorkflowTab('checklist')">FTB Checklist</button>
       </div>
 
+      <!-- TAB: ROADMAP -->
+      <div class="workflow-tab-content active" id="tab-roadmap">
+        <div class="roadmap-section">
+          <div class="roadmap-header">
+            <div class="roadmap-title">
+              <span>&#128203;</span> Residency Change Roadmap
+            </div>
+            <div class="roadmap-progress">
+              <div class="roadmap-progress-bar">
+                <div class="roadmap-progress-fill" id="roadmapProgressFill" style="width: 0%"></div>
+              </div>
+              <span class="roadmap-progress-text" id="roadmapProgressText">0 of 20 complete</span>
+            </div>
+          </div>
+
+          <div class="roadmap-legal-note">
+            <strong>Legal Framework:</strong> To change domicile, you must satisfy three requirements: (1) physical move to the new location, (2) abandonment of the old domicile, and (3) intent to remain permanently or indefinitely.
+          </div>
+
+          <!-- Decision Point -->
+          <div class="roadmap-decision-box">
+            <div class="roadmap-decision-title">
+              <span>&#9888;</span> Decision Point: Safe Harbor vs. Domicile Change
+            </div>
+            <div class="roadmap-decision-options">
+              <div class="roadmap-decision-option" id="optionSafeHarbor" onclick="selectRoadmapPath('safeHarbor')">
+                <div class="roadmap-decision-option-title">Safe Harbor (R&TC 17014(d))</div>
+                <div class="roadmap-decision-option-desc">Employment contract >18 months outside CA, <$200K intangible income. Treated as nonresident even if CA domiciliary.</div>
+              </div>
+              <div class="roadmap-decision-option" id="optionDomicile" onclick="selectRoadmapPath('domicile')">
+                <div class="roadmap-decision-option-title">Full Domicile Change</div>
+                <div class="roadmap-decision-option-desc">Permanent severance from CA. Must satisfy all three legal requirements for domicile change.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="roadmap-phases" id="roadmapPhases">
+            <!-- Phase 1: Before the Move -->
+            <div class="roadmap-phase expanded" data-phase="before">
+              <div class="roadmap-phase-header" onclick="toggleRoadmapPhase(this)">
+                <div class="roadmap-phase-title">
+                  <div class="roadmap-phase-icon before">&#128197;</div>
+                  <div>
+                    <div class="roadmap-phase-name">Before the Move</div>
+                    <div class="roadmap-phase-timing">60-90 days prior</div>
+                  </div>
+                </div>
+                <div class="roadmap-phase-stats">
+                  <span class="roadmap-phase-count" id="phase-before-count">0/3</span>
+                  <span class="roadmap-phase-toggle">&#9660;</span>
+                </div>
+              </div>
+              <div class="roadmap-phase-body">
+                <div class="roadmap-task" data-task="purchase_home">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'purchase_home')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Purchase or Lease New Home</div>
+                    <div class="roadmap-task-why">Establishing a permanent abode is critical for the "closest connection" test.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> HUD-1 closing statement or signed long-term lease</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('purchase_home', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="list_ca_home">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'list_ca_home')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">List California Home for Sale/Rent</div>
+                    <div class="roadmap-task-why">Proves "abandonment" of prior domicile. Retaining available CA home suggests no intent to leave.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Listing agreement or rental management contract</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('list_ca_home', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="schedule_movers">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'schedule_movers')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Schedule Movers for Household Goods</div>
+                    <div class="roadmap-task-why">Movement of household goods is a specific factor in Appeal of Bragg.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Moving company quotes and contracts, bill of lading</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight corroborative">Corroborative</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('schedule_movers', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 2: Move Week -->
+            <div class="roadmap-phase" data-phase="move">
+              <div class="roadmap-phase-header" onclick="toggleRoadmapPhase(this)">
+                <div class="roadmap-phase-title">
+                  <div class="roadmap-phase-icon move">&#128666;</div>
+                  <div>
+                    <div class="roadmap-phase-name">Move Week</div>
+                    <div class="roadmap-phase-timing">At time of physical move</div>
+                  </div>
+                </div>
+                <div class="roadmap-phase-stats">
+                  <span class="roadmap-phase-count" id="phase-move-count">0/3</span>
+                  <span class="roadmap-phase-toggle">&#9660;</span>
+                </div>
+              </div>
+              <div class="roadmap-phase-body">
+                <div class="roadmap-task" data-task="physical_move">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'physical_move')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Physically Enter New State</div>
+                    <div class="roadmap-task-why">You cannot change domicile without physically moving. This is the legal trigger.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> One-way ticket, gas receipts, first credit card charge in new state</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('physical_move', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="move_family">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'move_family')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Move Family and Belongings</div>
+                    <div class="roadmap-task-why">Location of spouse and children is HIGHEST WEIGHT. Leaving family behind suggests temporary move.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Family travel records, bill of lading from movers</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('move_family', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="surrender_keys">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'surrender_keys')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Surrender Keys/Access to CA Property</div>
+                    <div class="roadmap-task-why">Demonstrates abandonment of CA abode. Available access suggests continued residence.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Key surrender receipt, closing escrow statement</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('surrender_keys', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 3: First 30 Days -->
+            <div class="roadmap-phase" data-phase="after">
+              <div class="roadmap-phase-header" onclick="toggleRoadmapPhase(this)">
+                <div class="roadmap-phase-title">
+                  <div class="roadmap-phase-icon after">&#10003;</div>
+                  <div>
+                    <div class="roadmap-phase-name">Immediately After</div>
+                    <div class="roadmap-phase-timing">First 30 days</div>
+                  </div>
+                </div>
+                <div class="roadmap-phase-stats">
+                  <span class="roadmap-phase-count" id="phase-after-count">0/5</span>
+                  <span class="roadmap-phase-toggle">&#9660;</span>
+                </div>
+              </div>
+              <div class="roadmap-phase-body">
+                <div class="roadmap-task" data-task="county_assessor">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'county_assessor')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Notify County Assessor - Remove Homeowner's Exemption</div>
+                    <div class="roadmap-task-why"><strong>CRUCIAL:</strong> Failure to remove is viewed as declaration of residency. HIGHEST WEIGHT factor.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Letter to County Assessor with certified mail receipt, response letter</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('county_assessor', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="new_bank_accounts">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'new_bank_accounts')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Open Bank Accounts in New State</div>
+                    <div class="roadmap-task-why">Financial independence from CA supports "closest connection" test.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Monthly bank statements showing new address</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight moderate">Moderate</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('new_bank_accounts', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="new_drivers_license">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'new_drivers_license')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Obtain New Driver's License, Surrender CA License</div>
+                    <div class="roadmap-task-why">Formality factor - retaining CA license suggests intent to return.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Copy of new license, CA surrender receipt</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight least">Least</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('new_drivers_license', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="vehicle_registration">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'vehicle_registration')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Register Vehicles in New State</div>
+                    <div class="roadmap-task-why">Formality factor - all vehicles should be registered in new state.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> New state vehicle registration cards</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight least">Least</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('vehicle_registration', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="voter_registration">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'voter_registration')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Register to Vote in New State</div>
+                    <div class="roadmap-task-why">Formality factor - signals intent to be part of new community.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Voter registration card from new state</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight least">Least</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('voter_registration', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 4: First 12 Months -->
+            <div class="roadmap-phase" data-phase="ongoing">
+              <div class="roadmap-phase-header" onclick="toggleRoadmapPhase(this)">
+                <div class="roadmap-phase-title">
+                  <div class="roadmap-phase-icon ongoing">&#128200;</div>
+                  <div>
+                    <div class="roadmap-phase-name">Ongoing</div>
+                    <div class="roadmap-phase-timing">First 12 months</div>
+                  </div>
+                </div>
+                <div class="roadmap-phase-stats">
+                  <span class="roadmap-phase-count" id="phase-ongoing-count">0/4</span>
+                  <span class="roadmap-phase-toggle">&#9660;</span>
+                </div>
+              </div>
+              <div class="roadmap-phase-body">
+                <div class="roadmap-task" data-task="day_counting">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'day_counting')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Day Counting - Stay Under 183 CA Days</div>
+                    <div class="roadmap-task-why">Physical presence is primary factor. >9 months in CA creates statutory presumption.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Contemporaneous travel log, flight records, credit card statements</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('day_counting', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="medical_ties">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'medical_ties')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Establish Medical/Professional Ties</div>
+                    <div class="roadmap-task-why">Location of doctors, dentists, accountants is a standard residency factor.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> EOB statements, billing records showing service in new state</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight corroborative">Corroborative</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('medical_ties', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="social_orgs">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'social_orgs')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Join Social Organizations, Resign CA Clubs</div>
+                    <div class="roadmap-task-why">Demonstrates social integration into new community and severance from CA.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> New membership agreements, CA resignation letters, dues statements</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight corroborative">Corroborative</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('social_orgs', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="religious_orgs">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'religious_orgs')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Join Religious Organizations</div>
+                    <div class="roadmap-task-why">Church/temple membership shows community roots in new state.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Membership records, donation receipts</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight corroborative">Corroborative</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('religious_orgs', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Phase 5: Annual Maintenance -->
+            <div class="roadmap-phase" data-phase="annual">
+              <div class="roadmap-phase-header" onclick="toggleRoadmapPhase(this)">
+                <div class="roadmap-phase-title">
+                  <div class="roadmap-phase-icon annual">&#128197;</div>
+                  <div>
+                    <div class="roadmap-phase-name">Annual Maintenance</div>
+                    <div class="roadmap-phase-timing">Each tax year</div>
+                  </div>
+                </div>
+                <div class="roadmap-phase-stats">
+                  <span class="roadmap-phase-count" id="phase-annual-count">0/3</span>
+                  <span class="roadmap-phase-toggle">&#9660;</span>
+                </div>
+              </div>
+              <div class="roadmap-phase-body">
+                <div class="roadmap-task" data-task="file_540nr">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'file_540nr')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">File Form 540NR (Nonresident Return)</div>
+                    <div class="roadmap-task-why">Filing Form 540 (resident) is an admission of residency. Must file 540NR if CA-source income.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Copies of filed federal and CA state returns</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('file_540nr', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="monitor_ca_income">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'monitor_ca_income')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Monitor CA-Source Income</div>
+                    <div class="roadmap-task-why">Nonresidents taxed on CA-source income. Failure to report triggers audit.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Schedule K-1s, W-2s, 1099s showing CA-source amounts</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight moderate">Moderate</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('monitor_ca_income', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="manage_ca_property">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'manage_ca_property')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Manage CA Property Usage</div>
+                    <div class="roadmap-task-why">If retained, must be rented or limited vacation use. Available home suggests no change.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Lease agreements with tenants, rental income documentation</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('manage_ca_property', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- TAB: DAY COUNTER -->
-      <div class="workflow-tab-content active" id="tab-dayCounter">
+      <div class="workflow-tab-content" id="tab-dayCounter">
         <div class="day-counter-section">
           <div class="day-counter-header">
             <div class="day-counter-title">
@@ -3533,13 +4288,13 @@
 
       renderChecklist(workflow);
 
-      // Reset to first tab
+      // Reset to first tab (Roadmap is default)
       document.querySelectorAll('.workflow-tab').forEach(t => t.classList.remove('active'));
       document.querySelector('.workflow-tab').classList.add('active');
       document.querySelectorAll('.workflow-tab-content').forEach(c => c.classList.remove('active'));
-      document.getElementById('tab-dayCounter').classList.add('active');
+      document.getElementById('tab-roadmap').classList.add('active');
 
-      renderDayCounter();
+      renderRoadmap();
 
       // Set default date to today
       document.getElementById('dayEntryDate').value = new Date().toISOString().split('T')[0];
@@ -4231,6 +4986,7 @@
       document.getElementById('tab-' + tabId).classList.add('active');
 
       // Render content for the tab
+      if (tabId === 'roadmap') renderRoadmap();
       if (tabId === 'dayCounter') renderDayCounter();
       if (tabId === 'safeHarbor') renderSafeHarbor();
       if (tabId === 'addresses') renderAddresses();
@@ -4241,6 +4997,190 @@
         const workflow = workflows.find(w => w.id === currentWorkflowId);
         if (workflow) renderChecklist(workflow);
       }
+    }
+
+    // ===== ROADMAP =====
+    const ROADMAP_TASKS = {
+      before: ['purchase_home', 'list_ca_home', 'schedule_movers'],
+      move: ['physical_move', 'move_family', 'surrender_keys'],
+      after: ['county_assessor', 'new_bank_accounts', 'new_drivers_license', 'vehicle_registration', 'voter_registration'],
+      ongoing: ['day_counting', 'medical_ties', 'social_orgs', 'religious_orgs'],
+      annual: ['file_540nr', 'monitor_ca_income', 'manage_ca_property']
+    };
+
+    function getRoadmapData(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.roadmap || { tasks: {}, path: null };
+    }
+
+    function saveRoadmapData(workflowId, roadmap) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (workflow) {
+        workflow.roadmap = roadmap;
+        saveWorkflows();
+      }
+    }
+
+    function selectRoadmapPath(path) {
+      if (!currentWorkflowId) return;
+
+      const roadmap = getRoadmapData(currentWorkflowId);
+      roadmap.path = path;
+      saveRoadmapData(currentWorkflowId, roadmap);
+
+      // Update UI
+      document.getElementById('optionSafeHarbor').classList.toggle('selected', path === 'safeHarbor');
+      document.getElementById('optionDomicile').classList.toggle('selected', path === 'domicile');
+
+      // Log to audit ledger
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'ROADMAP_PATH',
+          content: {
+            message: workflow.name + ' | Selected path: ' + (path === 'safeHarbor' ? 'Safe Harbor' : 'Full Domicile Change'),
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            path
+          }
+        })
+      });
+
+      showToast('Path selected: ' + (path === 'safeHarbor' ? 'Safe Harbor' : 'Full Domicile Change'), 'success');
+    }
+
+    function toggleRoadmapPhase(header) {
+      const phase = header.closest('.roadmap-phase');
+      phase.classList.toggle('expanded');
+    }
+
+    function toggleRoadmapTask(checkEl, taskId) {
+      if (!currentWorkflowId) return;
+
+      const roadmap = getRoadmapData(currentWorkflowId);
+      if (!roadmap.tasks) roadmap.tasks = {};
+
+      const currentStatus = roadmap.tasks[taskId]?.status || 'not_started';
+      let newStatus;
+
+      if (currentStatus === 'not_started') {
+        newStatus = 'in_progress';
+      } else if (currentStatus === 'in_progress') {
+        newStatus = 'complete';
+      } else {
+        newStatus = 'not_started';
+      }
+
+      roadmap.tasks[taskId] = { status: newStatus, updatedAt: new Date().toISOString() };
+      saveRoadmapData(currentWorkflowId, roadmap);
+
+      // Update checkbox visual
+      checkEl.className = 'roadmap-task-check ' + (newStatus === 'complete' ? 'complete' : newStatus === 'in_progress' ? 'in-progress' : '');
+      checkEl.innerHTML = newStatus === 'complete' ? '&#10003;' : newStatus === 'in_progress' ? '&#8226;' : '';
+
+      // Update dropdown
+      const row = checkEl.closest('.roadmap-task');
+      const select = row.querySelector('select');
+      if (select) select.value = newStatus;
+
+      // Log to audit ledger
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      const taskTitle = row.querySelector('.roadmap-task-title')?.textContent || taskId;
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'ROADMAP_TASK',
+          content: {
+            message: workflow.name + ' | ' + taskTitle + ' → ' + newStatus.replace('_', ' '),
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            taskId,
+            status: newStatus
+          }
+        })
+      });
+
+      renderRoadmapProgress();
+    }
+
+    function updateRoadmapTaskStatus(taskId, status) {
+      if (!currentWorkflowId) return;
+
+      const roadmap = getRoadmapData(currentWorkflowId);
+      if (!roadmap.tasks) roadmap.tasks = {};
+
+      roadmap.tasks[taskId] = { status, updatedAt: new Date().toISOString() };
+      saveRoadmapData(currentWorkflowId, roadmap);
+
+      // Update checkbox visual
+      const taskRow = document.querySelector(`.roadmap-task[data-task="${taskId}"]`);
+      if (taskRow) {
+        const checkEl = taskRow.querySelector('.roadmap-task-check');
+        checkEl.className = 'roadmap-task-check ' + (status === 'complete' ? 'complete' : status === 'in_progress' ? 'in-progress' : '');
+        checkEl.innerHTML = status === 'complete' ? '&#10003;' : status === 'in_progress' ? '&#8226;' : '';
+      }
+
+      renderRoadmapProgress();
+    }
+
+    function renderRoadmapProgress() {
+      if (!currentWorkflowId) return;
+
+      const roadmap = getRoadmapData(currentWorkflowId);
+      const tasks = roadmap.tasks || {};
+
+      let totalTasks = 0;
+      let completedTasks = 0;
+
+      // Count by phase
+      for (const [phase, taskIds] of Object.entries(ROADMAP_TASKS)) {
+        let phaseComplete = 0;
+        for (const taskId of taskIds) {
+          totalTasks++;
+          if (tasks[taskId]?.status === 'complete') {
+            completedTasks++;
+            phaseComplete++;
+          }
+        }
+        const countEl = document.getElementById(`phase-${phase}-count`);
+        if (countEl) countEl.textContent = `${phaseComplete}/${taskIds.length}`;
+      }
+
+      // Update overall progress
+      const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      document.getElementById('roadmapProgressFill').style.width = percentage + '%';
+      document.getElementById('roadmapProgressText').textContent = `${completedTasks} of ${totalTasks} complete`;
+    }
+
+    function renderRoadmap() {
+      if (!currentWorkflowId) return;
+
+      const roadmap = getRoadmapData(currentWorkflowId);
+      const tasks = roadmap.tasks || {};
+
+      // Update path selection
+      document.getElementById('optionSafeHarbor').classList.toggle('selected', roadmap.path === 'safeHarbor');
+      document.getElementById('optionDomicile').classList.toggle('selected', roadmap.path === 'domicile');
+
+      // Update all task checkboxes and selects
+      document.querySelectorAll('.roadmap-task').forEach(row => {
+        const taskId = row.dataset.task;
+        const status = tasks[taskId]?.status || 'not_started';
+
+        const checkEl = row.querySelector('.roadmap-task-check');
+        checkEl.className = 'roadmap-task-check ' + (status === 'complete' ? 'complete' : status === 'in_progress' ? 'in-progress' : '');
+        checkEl.innerHTML = status === 'complete' ? '&#10003;' : status === 'in_progress' ? '&#8226;' : '';
+
+        const select = row.querySelector('select');
+        if (select) select.value = status;
+      });
+
+      renderRoadmapProgress();
     }
 
     // ===== SAFE HARBOR =====
