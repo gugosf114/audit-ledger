@@ -2727,6 +2727,1852 @@
       font-size: 11px;
       color: var(--text-muted);
     }
+
+    /* ===== TRAP WARNINGS ===== */
+    .trap-warnings-panel {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .trap-warnings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .trap-warnings-header:hover {
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .trap-warnings-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--action);
+    }
+
+    .trap-warnings-toggle {
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .trap-warnings-panel.expanded .trap-warnings-toggle {
+      transform: rotate(180deg);
+    }
+
+    .trap-warnings-body {
+      display: none;
+      padding: 0 16px 16px;
+    }
+
+    .trap-warnings-panel.expanded .trap-warnings-body {
+      display: block;
+    }
+
+    .trap-warning-item {
+      background: var(--bg-dark);
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .trap-warning-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .trap-warning-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--action);
+      margin-bottom: 4px;
+    }
+
+    .trap-warning-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .trap-warning-case {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .trap-warning-evidence {
+      font-size: 11px;
+      color: var(--safe);
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid var(--border);
+    }
+
+    .rsu-allocation-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .rsu-allocation-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--watch);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rsu-allocation-formula {
+      background: var(--bg-dark);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .rsu-allocation-note {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .rsu-allocation-source {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-style: italic;
+    }
+
+    /* ===== DETECTOR ALERTS ===== */
+    .detector-alert {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .detector-alert.active {
+      display: block;
+    }
+
+    .detector-alert.warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .detector-alert.critical {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .detector-alert-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--action);
+      margin-bottom: 6px;
+    }
+
+    .detector-alert.warning .detector-alert-header {
+      color: var(--watch);
+    }
+
+    .detector-alert-body {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .detector-alert-case {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 6px;
+    }
+
+    /* ===== CRITICAL PERIOD ANALYSIS ===== */
+    .critical-period-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .critical-period-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .critical-period-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .critical-period-stat {
+      background: var(--bg-dark);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .critical-period-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .critical-period-value.pass { color: var(--safe); }
+    .critical-period-value.fail { color: var(--action); }
+
+    .critical-period-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== NEAR AND DEAR INVENTORY ===== */
+    .inventory-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .inventory-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .inventory-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .inventory-item {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+    }
+
+    .inventory-item-name {
+      font-size: 13px;
+    }
+
+    .inventory-item-select {
+      padding: 6px 10px;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-size: 12px;
+    }
+
+    /* ===== HOUSING COMPARISON ===== */
+    .housing-comparison-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .housing-comparison-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .housing-comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .housing-card {
+      background: var(--bg-dark);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .housing-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .housing-card-field {
+      margin-bottom: 8px;
+    }
+
+    .housing-card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .housing-card-input {
+      width: 100%;
+      padding: 6px 10px;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-size: 12px;
+    }
+
+    /* ===== FAMILY LOCATION TRACKER ===== */
+    .family-tracker-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .family-tracker-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .family-tracker-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .family-tracker-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .family-tracker-row {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+    }
+
+    .family-tracker-label {
+      font-size: 13px;
+    }
+
+    /* ===== RSU CALCULATOR ===== */
+    .rsu-calculator-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .rsu-calculator-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rsu-calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .rsu-calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rsu-calc-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .rsu-calc-input {
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .rsu-result-box {
+      background: var(--bg-dark);
+      border-radius: 8px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+
+    .rsu-result-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rsu-result-value {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .rsu-result-value.highlight { color: var(--watch); }
+
+    .rsu-result-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ===== CONTRACT TYPE WARNING ===== */
+    .contract-type-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .contract-type-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .contract-type-options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .contract-type-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .contract-type-option:hover {
+      border-color: var(--border-hover);
+    }
+
+    .contract-type-option.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .contract-type-radio {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contract-type-option.selected .contract-type-radio {
+      border-color: var(--accent);
+    }
+
+    .contract-type-option.selected .contract-type-radio::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .contract-type-label {
+      font-size: 13px;
+    }
+
+    /* ===== WORKFLOW TYPE SELECTOR ===== */
+    .workflow-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .workflow-type-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: var(--bg-dark);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .workflow-type-option:hover {
+      border-color: var(--border-hover);
+    }
+
+    .workflow-type-option.selected {
+      border-color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .workflow-type-icon {
+      font-size: 28px;
+    }
+
+    .workflow-type-info {
+      flex: 1;
+    }
+
+    .workflow-type-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .workflow-type-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ===== CALCOMPETES SPECIFIC ===== */
+    .cc-eligibility-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .cc-eligibility-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cc-eligibility-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .cc-eligibility-item {
+      display: grid;
+      grid-template-columns: 1fr 100px;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+    }
+
+    .cc-eligibility-question {
+      font-size: 13px;
+    }
+
+    .cc-eligibility-answer {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cc-eligibility-btn {
+      flex: 1;
+      padding: 6px 12px;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cc-eligibility-btn:hover {
+      border-color: var(--border-hover);
+    }
+
+    .cc-eligibility-btn.yes.selected {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--safe);
+      color: var(--safe);
+    }
+
+    .cc-eligibility-btn.no.selected {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--action);
+      color: var(--action);
+    }
+
+    .cc-result-banner {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .cc-result-banner.pass {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--safe);
+    }
+
+    .cc-result-banner.fail {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: var(--action);
+    }
+
+    .cc-result-banner.warning {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: var(--watch);
+    }
+
+    /* Cost-Benefit Ratio Calculator */
+    .cc-ratio-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .cc-ratio-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .cc-ratio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .cc-ratio-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cc-ratio-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cc-ratio-input {
+      padding: 8px 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    .cc-ratio-result {
+      background: var(--bg-dark);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .cc-ratio-value {
+      font-size: 36px;
+      font-weight: 700;
+    }
+
+    .cc-ratio-value.good { color: var(--safe); }
+    .cc-ratio-value.ok { color: var(--watch); }
+    .cc-ratio-value.bad { color: var(--action); }
+
+    .cc-ratio-label-big {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .cc-ratio-benchmark {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    /* AFTE Calculator */
+    .cc-afte-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .cc-afte-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .cc-afte-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .cc-afte-tab {
+      padding: 8px 16px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cc-afte-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .cc-afte-result {
+      background: var(--bg-dark);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .cc-afte-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    /* Phase II Factors */
+    .cc-phase2-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .cc-phase2-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+    }
+
+    .cc-phase2-num {
+      width: 24px;
+      height: 24px;
+      background: var(--bg-hover);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .cc-phase2-name {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .cc-phase2-status {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--bg-hover);
+      color: var(--text-muted);
+    }
+
+    .cc-phase2-status.strong {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--safe);
+    }
+
+    .cc-phase2-status.weak {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--watch);
+    }
+
+    /* Milestone Tracker */
+    .cc-milestone-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cc-milestone-table th,
+    .cc-milestone-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .cc-milestone-table th {
+      background: var(--bg-dark);
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 10px;
+    }
+
+    .cc-milestone-status {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .cc-milestone-status.on-track {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--safe);
+    }
+
+    .cc-milestone-status.at-risk {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--watch);
+    }
+
+    .cc-milestone-status.breach {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--action);
+    }
+
+    /* ===== CALCOMPETES EXTENDED STYLES ===== */
+
+    /* Overview Section */
+    .cc-overview-section {
+      padding: 20px;
+    }
+
+    .cc-overview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .cc-overview-title {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cc-status-badge {
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .cc-status-badge.pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--watch);
+    }
+
+    .cc-status-badge.approved {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--safe);
+    }
+
+    .cc-status-badge.active {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--accent);
+    }
+
+    .cc-legal-note {
+      padding: 12px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .cc-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .cc-stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .cc-stat-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .cc-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* Timeline */
+    .cc-timeline-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .cc-timeline-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .cc-timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      padding: 0 10px;
+    }
+
+    .cc-timeline::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--border);
+    }
+
+    .cc-timeline-year {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cc-timeline-marker {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      border: 2px solid var(--border);
+    }
+
+    .cc-timeline-marker.pending {
+      border-color: var(--text-muted);
+    }
+
+    .cc-timeline-marker.complete {
+      background: var(--safe);
+      border-color: var(--safe);
+    }
+
+    .cc-timeline-marker.current {
+      background: var(--accent);
+      border-color: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    .cc-timeline-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .cc-timeline-year.maintenance .cc-timeline-marker {
+      border-style: dashed;
+    }
+
+    .cc-timeline-legend {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-top: 16px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cc-legend-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .cc-legend-dot.performance {
+      background: var(--accent);
+    }
+
+    .cc-legend-dot.maintenance {
+      border: 2px dashed var(--text-muted);
+    }
+
+    /* Application Windows */
+    .cc-windows-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .cc-windows-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .cc-windows-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .cc-window-card {
+      background: var(--bg-dark);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .cc-window-dates {
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .cc-window-status {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .cc-window-status.closed {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--action);
+    }
+
+    .cc-window-status.upcoming {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--safe);
+    }
+
+    .cc-window-status.future {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--accent);
+    }
+
+    /* Eligibility Section */
+    .cc-eligibility-section,
+    .cc-ratio-section,
+    .cc-afte-section,
+    .cc-phase2-section,
+    .cc-milestones-section,
+    .cc-calendar-section,
+    .cc-evidence-section {
+      padding: 20px;
+    }
+
+    .cc-section-header {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .cc-eligibility-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .cc-eligibility-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cc-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cc-option:hover {
+      background: var(--bg-hover);
+    }
+
+    .cc-option input[type="radio"] {
+      margin-top: 2px;
+    }
+
+    .cc-option-label {
+      font-size: 13px;
+      font-weight: 600;
+      display: block;
+    }
+
+    .cc-option-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .cc-eligibility-evidence {
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+    }
+
+    .cc-eligibility-box.red-flag {
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .cc-grant-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cc-grant-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .cc-grant-result {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+    }
+
+    .cc-grant-type {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .cc-grant-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .cc-disqualifier-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cc-disqualifier-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .cc-disqualifier-item input:checked + span {
+      color: var(--action);
+      text-decoration: line-through;
+    }
+
+    .cc-disqualifier-alert {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 6px;
+      color: var(--action);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Cost-Benefit Ratio Section */
+    .cc-ratio-formula-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cc-ratio-formula {
+      font-size: 14px;
+      font-weight: 600;
+      font-family: monospace;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .cc-ratio-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .cc-ratio-inputs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cc-ratio-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cc-ratio-result-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .cc-ratio-result {
+      margin-bottom: 20px;
+    }
+
+    .cc-ratio-value {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .cc-ratio-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .cc-gauge-bar {
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .cc-gauge-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: all 0.5s ease;
+    }
+
+    .cc-gauge-marker {
+      position: absolute;
+      top: -4px;
+      width: 2px;
+      height: 16px;
+    }
+
+    .cc-gauge-marker.safe { background: var(--safe); }
+    .cc-gauge-marker.watch { background: var(--watch); }
+    .cc-gauge-marker.danger { background: var(--action); }
+
+    .cc-gauge-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .cc-ratio-assessment {
+      margin-top: 16px;
+      padding: 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .cc-ratio-assessment.safe {
+      color: var(--safe);
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .cc-ratio-assessment.watch {
+      color: var(--watch);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
+    .cc-ratio-assessment.danger {
+      color: var(--action);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .cc-ratio-bypass {
+      margin-top: 16px;
+      padding: 12px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 6px;
+      color: var(--safe);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    /* AFTE Section */
+    .cc-afte-formula-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cc-afte-formulas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .cc-afte-formula {
+      font-size: 13px;
+      font-family: monospace;
+    }
+
+    .cc-afte-note {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .cc-afte-entry {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cc-afte-entry-header {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .cc-afte-entry-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .cc-afte-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cc-afte-input-group label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cc-afte-table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .cc-afte-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cc-afte-table th,
+    .cc-afte-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .cc-afte-table th {
+      background: var(--bg-dark);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .cc-afte-empty td {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 24px;
+    }
+
+    .cc-afte-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .cc-afte-summary-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .cc-afte-summary-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .cc-afte-summary-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    /* Phase II Section */
+    .cc-phase2-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .cc-phase2-factors {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cc-phase2-factor {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .cc-phase2-factor-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .cc-phase2-factor-header:hover {
+      background: var(--bg-hover);
+    }
+
+    .cc-phase2-factor-num {
+      width: 28px;
+      height: 28px;
+      background: var(--bg-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .cc-phase2-factor-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .cc-phase2-factor-status {
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .cc-phase2-factor-status.not-started {
+      background: var(--bg-dark);
+      color: var(--text-muted);
+    }
+
+    .cc-phase2-factor-status.documented {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--safe);
+    }
+
+    .cc-phase2-factor-status.weak {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--watch);
+    }
+
+    .cc-phase2-factor-body {
+      padding: 0 16px 16px;
+      display: none;
+    }
+
+    .cc-phase2-factor.expanded .cc-phase2-factor-body {
+      display: block;
+    }
+
+    .cc-phase2-factor-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      resize: vertical;
+    }
+
+    /* Milestones Section */
+    .cc-milestones-note {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .cc-milestone-entry {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cc-milestone-entry-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .cc-milestone-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cc-milestone-input-group label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cc-milestone-table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .cc-milestone-empty td {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 24px;
+    }
+
+    .cc-recapture-warning {
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 6px;
+      color: var(--action);
+      font-size: 13px;
+    }
+
+    /* Calendar Section */
+    .cc-calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .cc-calendar-year {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .cc-calendar-year-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cc-calendar-year-type {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--bg-dark);
+      color: var(--text-muted);
+    }
+
+    .cc-calendar-year-type.performance {
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--accent);
+    }
+
+    .cc-calendar-year-type.maintenance {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--watch);
+    }
+
+    .cc-calendar-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cc-calendar-task {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .cc-calendar-task-check {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .cc-calendar-task-check.complete {
+      background: var(--safe);
+      border-color: var(--safe);
+    }
+
+    .cc-deadlines-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .cc-deadlines-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .cc-deadline-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .cc-deadline-item:last-child {
+      border-bottom: none;
+    }
+
+    .cc-deadline-when {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .cc-deadline-what {
+      font-weight: 500;
+    }
+
+    /* Evidence Section */
+    .cc-evidence-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cc-evidence-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .cc-evidence-category-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .cc-evidence-category-header:hover {
+      background: var(--bg-hover);
+    }
+
+    .cc-evidence-count {
+      margin-left: auto;
+      padding: 2px 10px;
+      background: var(--bg-dark);
+      border-radius: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cc-evidence-category-body {
+      padding: 0 16px 16px;
+      display: none;
+    }
+
+    .cc-evidence-category.expanded .cc-evidence-category-body {
+      display: block;
+    }
+
+    .cc-evidence-items {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cc-evidence-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .cc-evidence-item input:checked + span {
+      color: var(--safe);
+    }
+
+    .cc-ftb-alert {
+      margin-top: 20px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .cc-ftb-alert-header {
+      padding: 12px 16px;
+      background: rgba(239, 68, 68, 0.15);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--action);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cc-ftb-alert-body {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
   </style>
 </head>
 <body>
@@ -3129,7 +4975,7 @@
         </div>
       </div>
 
-      <!-- WORKFLOW TABS -->
+      <!-- WORKFLOW TABS - RESIDENCY -->
       <div class="workflow-tabs" id="workflowTabs">
         <button class="workflow-tab active" onclick="showWorkflowTab('roadmap')">Roadmap</button>
         <button class="workflow-tab" onclick="showWorkflowTab('dayCounter')">Day Counter</button>
@@ -3139,6 +4985,18 @@
         <button class="workflow-tab" onclick="showWorkflowTab('realization')">Realization Events</button>
         <button class="workflow-tab" onclick="showWorkflowTab('requests')">3rd Party Requests</button>
         <button class="workflow-tab" onclick="showWorkflowTab('checklist')">FTB Checklist</button>
+      </div>
+
+      <!-- WORKFLOW TABS - CALCOMPETES -->
+      <div class="workflow-tabs" id="workflowTabsCalCompetes" style="display: none;">
+        <button class="workflow-tab active" onclick="showWorkflowTab('ccOverview')">Overview</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccEligibility')">Eligibility</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccRatio')">Cost-Benefit</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccAfte')">AFTE</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccPhase2')">Phase II Factors</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccMilestones')">Milestones</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccCalendar')">Compliance</button>
+        <button class="workflow-tab" onclick="showWorkflowTab('ccEvidence')">Evidence</button>
       </div>
 
       <!-- TAB: ROADMAP -->
@@ -3152,12 +5010,54 @@
               <div class="roadmap-progress-bar">
                 <div class="roadmap-progress-fill" id="roadmapProgressFill" style="width: 0%"></div>
               </div>
-              <span class="roadmap-progress-text" id="roadmapProgressText">0 of 20 complete</span>
+              <span class="roadmap-progress-text" id="roadmapProgressText">0 of 21 complete</span>
             </div>
           </div>
 
           <div class="roadmap-legal-note">
             <strong>Legal Framework:</strong> To change domicile, you must satisfy three requirements: (1) physical move to the new location, (2) abandonment of the old domicile, and (3) intent to remain permanently or indefinitely.
+          </div>
+
+          <!-- Trap Warnings from OTA Case Law -->
+          <div class="trap-warnings-panel" id="trapWarningsPanel">
+            <div class="trap-warnings-header" onclick="toggleTrapWarnings()">
+              <div class="trap-warnings-title">
+                <span>&#9888;</span> 5 Common Traps from OTA Case Law
+              </div>
+              <span class="trap-warnings-toggle">&#9660;</span>
+            </div>
+            <div class="trap-warnings-body">
+              <div class="trap-warning-item">
+                <div class="trap-warning-name">1. Transition Period Trap</div>
+                <div class="trap-warning-desc">You are a CA resident until the moment you physically arrive in the new state. Being "in the process of moving" does not change your residency status. Income realized during the move is CA-taxable.</div>
+                <div class="trap-warning-case">Source: Appeal of Noble, Appeal of Bracamonte</div>
+                <div class="trap-warning-evidence">&#10003; Evidence needed: Physical presence logs on income realization dates, transaction timing after physical move complete</div>
+              </div>
+              <div class="trap-warning-item">
+                <div class="trap-warning-name">2. Impermanence/Stopgap Trap</div>
+                <div class="trap-warning-desc">"Trading down" from a large owned CA home to a rented apartment in the new state signals lack of intent. The "linens vs. mementos" test: moving only essentials while leaving valuables in CA defeats domicile change.</div>
+                <div class="trap-warning-case">Source: Appeal of Bracamonte (OTA)</div>
+                <div class="trap-warning-evidence">&#10003; Evidence needed: Moving manifest showing heirlooms/mementos moved, comparable housing in new state, immediate CA home listing</div>
+              </div>
+              <div class="trap-warning-item">
+                <div class="trap-warning-name">3. Marital Abode Trap</div>
+                <div class="trap-warning-desc">If one spouse leaves for a fixed term (even if renewable) and the other stays in the "marital abode," domicile usually remains CA. Employer-provided housing counts as "job convenience," not establishing new ties. Also applies to fiancées.</div>
+                <div class="trap-warning-case">Source: Appeal of Mazer, Appeal of Beckwith</div>
+                <div class="trap-warning-evidence">&#10003; Evidence needed: Spousal relocation proof, personal (not employer-paid) lease in your name, independent ties in new state</div>
+              </div>
+              <div class="trap-warning-item">
+                <div class="trap-warning-name">4. RSU Trailing Tax Trap</div>
+                <div class="trap-warning-desc">CA taxes the labor performed in-state, even if RSUs vest after you leave. The income must be allocated using a formula based on CA workdays during the vesting period. Without workday records, FTB assumes all days were CA days.</div>
+                <div class="trap-warning-case">Source: FTB Chief Counsel Rulings 2013-02, 2014-01</div>
+                <div class="trap-warning-evidence">&#10003; Evidence needed: Detailed workday calendars (grant to vest), grant/vest date documentation, location records for each workday</div>
+              </div>
+              <div class="trap-warning-item">
+                <div class="trap-warning-name">5. FTB Enforcement Trap</div>
+                <div class="trap-warning-desc">FTB mines federal returns. Deducting CA mortgage interest triggers algorithms. FEP notices sent to old CA address become final if missed. FTB uses "mortgage multiple" to guess income and send bills.</div>
+                <div class="trap-warning-case">Source: Greenberg Traurig Alert</div>
+                <div class="trap-warning-evidence">&#10003; Evidence needed: FTB address change confirmation, occupational license updates to nonresident status</div>
+              </div>
+            </div>
           </div>
 
           <!-- Decision Point -->
@@ -3189,7 +5089,7 @@
                   </div>
                 </div>
                 <div class="roadmap-phase-stats">
-                  <span class="roadmap-phase-count" id="phase-before-count">0/3</span>
+                  <span class="roadmap-phase-count" id="phase-before-count">0/4</span>
                   <span class="roadmap-phase-toggle">&#9660;</span>
                 </div>
               </div>
@@ -3233,15 +5133,33 @@
                 <div class="roadmap-task" data-task="schedule_movers">
                   <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'schedule_movers')"></div>
                   <div class="roadmap-task-content">
-                    <div class="roadmap-task-title">Schedule Movers for Household Goods</div>
-                    <div class="roadmap-task-why">Movement of household goods is a specific factor in Appeal of Bragg.</div>
-                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Moving company quotes and contracts, bill of lading</div>
+                    <div class="roadmap-task-title">Schedule Movers - Include Mementos/Heirlooms</div>
+                    <div class="roadmap-task-why"><strong>CRITICAL (Bracamonte):</strong> Moving only "linens, towels, dishes" while leaving "precious mementos" in CA defeats domicile change. The OTA uses the "linens vs. mementos" test.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Bill of lading with itemized inventory showing heirlooms, art, photo albums moved to new state</div>
                   </div>
                   <div class="roadmap-task-weight">
-                    <span class="roadmap-task-weight-badge bragg-factor-weight corroborative">Corroborative</span>
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
                   </div>
                   <div class="roadmap-task-status">
                     <select onchange="updateRoadmapTaskStatus('schedule_movers', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="defer_income_events">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'defer_income_events')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Defer Major Income Events Until After Move Complete</div>
+                    <div class="roadmap-task-why"><strong>CRITICAL (Noble):</strong> Income realized during "transition" is CA-taxable. Stock sales, RSU vests, and bonuses should occur AFTER physical move and furniture are complete.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Transaction records showing realization dates after physical move date</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('defer_income_events', this.value)">
                       <option value="not_started">Not Started</option>
                       <option value="in_progress">In Progress</option>
                       <option value="complete">Complete</option>
@@ -3262,7 +5180,7 @@
                   </div>
                 </div>
                 <div class="roadmap-phase-stats">
-                  <span class="roadmap-phase-count" id="phase-move-count">0/3</span>
+                  <span class="roadmap-phase-count" id="phase-move-count">0/4</span>
                   <span class="roadmap-phase-toggle">&#9660;</span>
                 </div>
               </div>
@@ -3288,15 +5206,33 @@
                 <div class="roadmap-task" data-task="move_family">
                   <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'move_family')"></div>
                   <div class="roadmap-task-content">
-                    <div class="roadmap-task-title">Move Family and Belongings</div>
-                    <div class="roadmap-task-why">Location of spouse and children is HIGHEST WEIGHT. Leaving family behind suggests temporary move.</div>
-                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Family travel records, bill of lading from movers</div>
+                    <div class="roadmap-task-title">Move Spouse/Partner and Children</div>
+                    <div class="roadmap-task-why"><strong>CRITICAL (Mazer, Beckwith):</strong> Spouse staying in "marital abode" = domicile stays CA. Extended to fiancées. If partner stays behind, you likely remain a CA resident regardless of where you go.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Family travel records, partner's new state ID, children's school enrollment in new state</div>
                   </div>
                   <div class="roadmap-task-weight">
                     <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
                   </div>
                   <div class="roadmap-task-status">
                     <select onchange="updateRoadmapTaskStatus('move_family', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="personal_lease">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'personal_lease')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Sign Lease/Mortgage in Your Name (Not Employer)</div>
+                    <div class="roadmap-task-why"><strong>CRITICAL (Mazer):</strong> Employer-provided housing is "job convenience," not establishing domicile. Housing must be in your name, paid from personal funds.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> Lease agreement or mortgage in your name, bank statements showing personal payment</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('personal_lease', this.value)">
                       <option value="not_started">Not Started</option>
                       <option value="in_progress">In Progress</option>
                       <option value="complete">Complete</option>
@@ -3335,7 +5271,7 @@
                   </div>
                 </div>
                 <div class="roadmap-phase-stats">
-                  <span class="roadmap-phase-count" id="phase-after-count">0/5</span>
+                  <span class="roadmap-phase-count" id="phase-after-count">0/6</span>
                   <span class="roadmap-phase-toggle">&#9660;</span>
                 </div>
               </div>
@@ -3397,15 +5333,33 @@
                 <div class="roadmap-task" data-task="vehicle_registration">
                   <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'vehicle_registration')"></div>
                   <div class="roadmap-task-content">
-                    <div class="roadmap-task-title">Register Vehicles in New State</div>
-                    <div class="roadmap-task-why">Formality factor - all vehicles should be registered in new state.</div>
-                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> New state vehicle registration cards</div>
+                    <div class="roadmap-task-title">Register ALL Vehicles in New State Immediately</div>
+                    <div class="roadmap-task-why"><strong>WARNING (Bracamonte):</strong> Purchasing a vehicle during transition and registering it in CA (not new state) was cited as evidence against domicile change. Any new purchases must be registered in new state.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> New state vehicle registration cards for ALL vehicles including new purchases</div>
                   </div>
                   <div class="roadmap-task-weight">
-                    <span class="roadmap-task-weight-badge bragg-factor-weight least">Least</span>
+                    <span class="roadmap-task-weight-badge bragg-factor-weight moderate">Moderate</span>
                   </div>
                   <div class="roadmap-task-status">
                     <select onchange="updateRoadmapTaskStatus('vehicle_registration', this.value)">
+                      <option value="not_started">Not Started</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="complete">Complete</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="roadmap-task" data-task="ftb_address_update">
+                  <div class="roadmap-task-check" onclick="toggleRoadmapTask(this, 'ftb_address_update')"></div>
+                  <div class="roadmap-task-content">
+                    <div class="roadmap-task-title">Update Address with FTB</div>
+                    <div class="roadmap-task-why"><strong>CRITICAL (GT Alert):</strong> FTB sends Filing Enforcement notices to last known address. Missing a notice can result in final assessment. Update address formally with confirmation.</div>
+                    <div class="roadmap-task-evidence"><strong>Evidence:</strong> FTB address change confirmation letter, Form 3533 if applicable</div>
+                  </div>
+                  <div class="roadmap-task-weight">
+                    <span class="roadmap-task-weight-badge bragg-factor-weight highest">Highest</span>
+                  </div>
+                  <div class="roadmap-task-status">
+                    <select onchange="updateRoadmapTaskStatus('ftb_address_update', this.value)">
                       <option value="not_started">Not Started</option>
                       <option value="in_progress">In Progress</option>
                       <option value="complete">Complete</option>
@@ -3651,6 +5605,39 @@
             <span id="dayAlertText">Safe Zone: You have plenty of room before approaching the 183-day threshold.</span>
           </div>
 
+          <!-- Critical Period Analysis (Bracamonte Detector) -->
+          <div class="critical-period-box" id="criticalPeriodBox">
+            <div class="critical-period-title">
+              <span>&#128200;</span> Critical Period Analysis
+            </div>
+            <div class="detector-alert" id="criticalPeriodAlert">
+              <div class="detector-alert-header">
+                <span>&#128308;</span> PHYSICAL PRESENCE FAIL
+              </div>
+              <div class="detector-alert-body" id="criticalPeriodAlertText">
+                You spent more time in CA than your new state during the critical period between lease signing and income realization.
+              </div>
+              <div class="detector-alert-case">Bracamonte lost on this exact issue - 90 days CA vs 28 days NV.</div>
+            </div>
+            <div class="critical-period-grid">
+              <div class="critical-period-stat">
+                <div class="critical-period-value" id="criticalCADays">--</div>
+                <div class="critical-period-label">CA Days (Critical Period)</div>
+              </div>
+              <div class="critical-period-stat">
+                <div class="critical-period-value" id="criticalNewStateDays">--</div>
+                <div class="critical-period-label">New State Days</div>
+              </div>
+              <div class="critical-period-stat">
+                <div class="critical-period-value" id="criticalPeriodResult">--</div>
+                <div class="critical-period-label">Result</div>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted);">
+              Critical period: From new state lease/purchase date to first major realization event. Add addresses and realization events to calculate.
+            </div>
+          </div>
+
           <div class="day-entry-form" id="dayEntryForm">
             <div class="day-entry-group">
               <label class="day-entry-label">Date</label>
@@ -3819,6 +5806,38 @@
               </div>
             </div>
           </div>
+
+          <!-- Contract Type Warning (Mazer Detector) -->
+          <div class="contract-type-box" id="contractTypeBox">
+            <div class="contract-type-title">Employment Contract Type (Mazer Detector)</div>
+            <div class="detector-alert warning" id="contractTypeAlert">
+              <div class="detector-alert-header">
+                <span>&#9888;</span> DEFINITE END DATE
+              </div>
+              <div class="detector-alert-body">
+                Fixed-term contracts (even if renewable) suggest temporary absence, not permanent relocation. 2-year benchmark: absence under 2 years with defined end = likely temporary.
+              </div>
+              <div class="detector-alert-case">Mazer rule: "May be renewable" wasn't enough to prove indefinite intent.</div>
+            </div>
+            <div class="contract-type-options" id="contractTypeOptions">
+              <div class="contract-type-option" onclick="selectContractType('fixed')">
+                <div class="contract-type-radio"></div>
+                <div class="contract-type-label">Fixed term (1 year, 2 years, etc.)</div>
+              </div>
+              <div class="contract-type-option" onclick="selectContractType('renewable')">
+                <div class="contract-type-radio"></div>
+                <div class="contract-type-label">"May be renewable"</div>
+              </div>
+              <div class="contract-type-option" onclick="selectContractType('atwill')">
+                <div class="contract-type-radio"></div>
+                <div class="contract-type-label">At-will / Indefinite</div>
+              </div>
+              <div class="contract-type-option" onclick="selectContractType('permanent')">
+                <div class="contract-type-radio"></div>
+                <div class="contract-type-label">Permanent relocation</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -3833,6 +5852,109 @@
 
           <div class="timeline-info-box">
             Document all residences with dates. FTB examines where you maintain your primary home and the comparison between CA and non-CA residences.
+          </div>
+
+          <!-- Housing Comparison Detector -->
+          <div class="housing-comparison-box" id="housingComparisonBox">
+            <div class="housing-comparison-title">Housing Comparison (Bracamonte Detector)</div>
+            <div class="detector-alert warning" id="housingComparisonAlert">
+              <div class="detector-alert-header">
+                <span>&#9888;</span> IMPERMANENCE SIGNAL
+              </div>
+              <div class="detector-alert-body">
+                Owned CA home vs rented new state apartment suggests stopgap housing. Purchase comparable home before liquidity event.
+              </div>
+              <div class="detector-alert-case">Bracamonte rule: "Trading down" from large owned home to rental = no intent to remain.</div>
+            </div>
+            <div class="housing-comparison-grid">
+              <div class="housing-card">
+                <div class="housing-card-title">CA Residence</div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Type</div>
+                  <select class="housing-card-input" id="caHousingType" onchange="checkHousingComparison()">
+                    <option value="">Select...</option>
+                    <option value="owned">Owned</option>
+                    <option value="rented">Rented</option>
+                  </select>
+                </div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Est. Value ($)</div>
+                  <input type="number" class="housing-card-input" id="caHousingValue" placeholder="0" onchange="checkHousingComparison()">
+                </div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Square Feet</div>
+                  <input type="number" class="housing-card-input" id="caHousingSqft" placeholder="0" onchange="checkHousingComparison()">
+                </div>
+              </div>
+              <div class="housing-card">
+                <div class="housing-card-title">New State Residence</div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Type</div>
+                  <select class="housing-card-input" id="newHousingType" onchange="checkHousingComparison()">
+                    <option value="">Select...</option>
+                    <option value="owned">Owned</option>
+                    <option value="rented">Rented</option>
+                  </select>
+                </div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Est. Value ($)</div>
+                  <input type="number" class="housing-card-input" id="newHousingValue" placeholder="0" onchange="checkHousingComparison()">
+                </div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Square Feet</div>
+                  <input type="number" class="housing-card-input" id="newHousingSqft" placeholder="0" onchange="checkHousingComparison()">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Employer Housing Flag (Mazer Detector) -->
+          <div class="housing-comparison-box" id="employerHousingBox">
+            <div class="housing-comparison-title">New State Housing Ownership (Mazer Detector)</div>
+            <div class="detector-alert warning" id="employerHousingAlert">
+              <div class="detector-alert-header">
+                <span>&#9888;</span> JOB CONVENIENCE
+              </div>
+              <div class="detector-alert-body">
+                Employer-provided housing given little weight in establishing domicile. Sign lease in your own name, pay with personal funds.
+              </div>
+              <div class="detector-alert-case">Mazer rule: Employer-paid apartment = "job convenience," not putting down roots.</div>
+            </div>
+            <div class="housing-comparison-grid">
+              <div class="housing-card">
+                <div class="housing-card-title">Lease/Mortgage Details</div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Who pays rent/mortgage?</div>
+                  <select class="housing-card-input" id="housingPaidBy" onchange="checkEmployerHousing()">
+                    <option value="">Select...</option>
+                    <option value="self">Self (Personal funds)</option>
+                    <option value="employer">Employer</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Whose name on lease?</div>
+                  <select class="housing-card-input" id="leaseNamedParty" onchange="checkEmployerHousing()">
+                    <option value="">Select...</option>
+                    <option value="self">Self</option>
+                    <option value="employer">Employer</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="housing-card">
+                <div class="housing-card-title">Vehicle in New State</div>
+                <div class="housing-card-field">
+                  <div class="housing-card-label">Vehicle ownership?</div>
+                  <select class="housing-card-input" id="vehicleOwnership" onchange="checkEmployerHousing()">
+                    <option value="">Select...</option>
+                    <option value="self">Self-owned</option>
+                    <option value="employer">Employer-provided</option>
+                    <option value="rental">Rental</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="address-form">
@@ -3902,6 +6024,81 @@
             </div>
           </div>
 
+          <!-- Near and Dear Inventory (Bracamonte Detector) -->
+          <div class="inventory-section" id="nearAndDearInventory">
+            <div class="inventory-title">
+              <span>&#127968;</span> "Near and Dear" Inventory (Bracamonte Detector)
+            </div>
+            <div class="detector-alert warning" id="nearAndDearAlert">
+              <div class="detector-alert-header">
+                <span>&#9888;</span> NEAR AND DEAR WARNING
+              </div>
+              <div class="detector-alert-body" id="nearAndDearAlertText">
+                Items remaining in CA after move date suggest you haven't truly moved.
+              </div>
+              <div class="detector-alert-case">Bracamonte left "precious mementos and valuable items" in CA - court cited this as evidence of no domicile change.</div>
+            </div>
+            <div class="inventory-grid">
+              <div class="inventory-item">
+                <div class="inventory-item-name">Furniture - Primary residence set</div>
+                <select class="inventory-item-select" id="invFurniture" onchange="checkNearAndDear()">
+                  <option value="">Select...</option>
+                  <option value="CA">In CA</option>
+                  <option value="NEW">In New State</option>
+                  <option value="TRANSIT">In Transit</option>
+                </select>
+              </div>
+              <div class="inventory-item">
+                <div class="inventory-item-name">Artwork</div>
+                <select class="inventory-item-select" id="invArtwork" onchange="checkNearAndDear()">
+                  <option value="">Select...</option>
+                  <option value="CA">In CA</option>
+                  <option value="NEW">In New State</option>
+                  <option value="TRANSIT">In Transit</option>
+                </select>
+              </div>
+              <div class="inventory-item">
+                <div class="inventory-item-name">Family photos / Heirlooms</div>
+                <select class="inventory-item-select" id="invHeirlooms" onchange="checkNearAndDear()">
+                  <option value="">Select...</option>
+                  <option value="CA">In CA</option>
+                  <option value="NEW">In New State</option>
+                  <option value="TRANSIT">In Transit</option>
+                </select>
+              </div>
+              <div class="inventory-item">
+                <div class="inventory-item-name">"Favorite chair" / Sentimental items</div>
+                <select class="inventory-item-select" id="invSentimental" onchange="checkNearAndDear()">
+                  <option value="">Select...</option>
+                  <option value="CA">In CA</option>
+                  <option value="NEW">In New State</option>
+                  <option value="TRANSIT">In Transit</option>
+                </select>
+              </div>
+              <div class="inventory-item">
+                <div class="inventory-item-name">Important documents (originals)</div>
+                <select class="inventory-item-select" id="invDocuments" onchange="checkNearAndDear()">
+                  <option value="">Select...</option>
+                  <option value="CA">In CA</option>
+                  <option value="NEW">In New State</option>
+                  <option value="TRANSIT">In Transit</option>
+                </select>
+              </div>
+              <div class="inventory-item">
+                <div class="inventory-item-name">Vehicles</div>
+                <select class="inventory-item-select" id="invVehicles" onchange="checkNearAndDear()">
+                  <option value="">Select...</option>
+                  <option value="CA">In CA</option>
+                  <option value="NEW">In New State</option>
+                  <option value="TRANSIT">In Transit</option>
+                </select>
+              </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 12px;">
+              <strong>Evidence needed:</strong> Moving company bill of lading, itemized inventory list showing heirlooms/mementos moved to new state
+            </div>
+          </div>
+
           <div class="evidence-upload-zone" onclick="document.getElementById('evidenceFileInput').click()">
             <div class="evidence-upload-icon">&#128228;</div>
             <div class="evidence-upload-text">Drop files here or click to upload</div>
@@ -3927,6 +6124,88 @@
 
           <div class="timeline-info-box">
             <strong>Why this matters:</strong> Stock sales, RSU vests, and other realization events may be partially sourced to CA based on where you worked during the vesting period. Document all significant events with dates and amounts.
+          </div>
+
+          <!-- RSU Allocation Formula -->
+          <div class="rsu-allocation-box">
+            <div class="rsu-allocation-title">
+              <span>&#9888;</span> RSU "Trailing Tax" Allocation Formula
+            </div>
+            <div class="rsu-allocation-formula">
+              CA Tax = Total Gain × (CA Workdays ÷ Total Workdays)<br>
+              <span style="color: var(--text-muted);">Period: Grant Date → Vest Date</span>
+            </div>
+            <div class="rsu-allocation-note">
+              <strong>Critical:</strong> If RSUs are granted while a CA resident but vest after becoming a nonresident, CA still taxes the portion attributable to CA labor. Without detailed workday calendars, FTB will assume ALL workdays were CA days.
+            </div>
+            <div class="rsu-allocation-source">
+              Source: FTB Chief Counsel Rulings 2013-02, 2014-01
+            </div>
+          </div>
+
+          <!-- Transition Period Detector (Noble/Bracamonte) -->
+          <div class="detector-alert warning" id="transitionPeriodAlert">
+            <div class="detector-alert-header">
+              <span>&#9888;</span> TRANSITION TRAP DETECTED
+            </div>
+            <div class="detector-alert-body" id="transitionAlertText">
+              Income realized during move period. You are a CA resident until physical arrival + belongings moved. Consider delaying liquidity event or accelerating physical move.
+            </div>
+            <div class="detector-alert-case">Noble/Bracamonte rule: There is no "transition" status. You're CA resident until you physically arrive in new state.</div>
+          </div>
+
+          <!-- RSU Allocation Calculator -->
+          <div class="rsu-calculator-box" id="rsuCalculatorBox">
+            <div class="rsu-calculator-title">
+              <span>&#129518;</span> RSU/Equity Allocation Calculator
+            </div>
+            <div class="rsu-calculator-grid">
+              <div class="rsu-calc-field">
+                <label class="rsu-calc-label">Grant Date</label>
+                <input type="date" class="rsu-calc-input" id="rsuGrantDate" onchange="calculateRSUAllocation()">
+              </div>
+              <div class="rsu-calc-field">
+                <label class="rsu-calc-label">Vest Date</label>
+                <input type="date" class="rsu-calc-input" id="rsuVestDate" onchange="calculateRSUAllocation()">
+              </div>
+              <div class="rsu-calc-field">
+                <label class="rsu-calc-label">Vest Value ($)</label>
+                <input type="number" class="rsu-calc-input" id="rsuVestValue" placeholder="0" onchange="calculateRSUAllocation()">
+              </div>
+              <div class="rsu-calc-field">
+                <label class="rsu-calc-label">Total Working Days (Grant→Vest)</label>
+                <input type="number" class="rsu-calc-input" id="rsuTotalDays" placeholder="Auto or manual" onchange="calculateRSUAllocation()">
+              </div>
+              <div class="rsu-calc-field">
+                <label class="rsu-calc-label">CA Working Days (Grant→Vest)</label>
+                <input type="number" class="rsu-calc-input" id="rsuCADays" placeholder="Enter CA workdays" onchange="calculateRSUAllocation()">
+              </div>
+              <div class="rsu-calc-field">
+                <label class="rsu-calc-label">Non-CA Working Days</label>
+                <input type="number" class="rsu-calc-input" id="rsuNonCADays" readonly placeholder="Auto-calculated">
+              </div>
+            </div>
+            <div class="rsu-result-box">
+              <div class="rsu-result-item">
+                <div class="rsu-result-value" id="rsuAllocPct">--%</div>
+                <div class="rsu-result-label">CA Allocation %</div>
+              </div>
+              <div class="rsu-result-item">
+                <div class="rsu-result-value highlight" id="rsuCATaxable">$--</div>
+                <div class="rsu-result-label">CA Taxable Amount</div>
+              </div>
+              <div class="rsu-result-item">
+                <div class="rsu-result-value" id="rsuNonCATaxable">$--</div>
+                <div class="rsu-result-label">Non-CA Amount</div>
+              </div>
+              <div class="rsu-result-item">
+                <div class="rsu-result-value" id="rsuVestTotal">$--</div>
+                <div class="rsu-result-label">Total Vest Value</div>
+              </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 12px;">
+              <strong>Evidence needed:</strong> Grant agreement with date, vest schedule, workday calendar (daily location log)
+            </div>
           </div>
 
           <div class="timeline-form">
@@ -4015,8 +6294,685 @@
 
       <!-- TAB: FTB CHECKLIST -->
       <div class="workflow-tab-content" id="tab-checklist">
+        <!-- Family Location Tracker (Mazer/Beckwith Detector) -->
+        <div class="family-tracker-box" id="familyTrackerBox">
+          <div class="family-tracker-title">
+            <span>&#128106;</span> Family Location Tracker (Highest Weight Factor)
+          </div>
+          <div class="family-tracker-subtitle">
+            Mazer rule: Spouse remaining in CA = domicile retained. Beckwith extended this to fiancées.
+          </div>
+          <div class="detector-alert critical" id="spousalLocationAlert">
+            <div class="detector-alert-header">
+              <span>&#128308;</span> MARITAL ABODE RULE TRIGGERED
+            </div>
+            <div class="detector-alert-body">
+              Spouse remaining in CA home strongly indicates CA domicile retained. This is the HIGHEST WEIGHT factor in domicile analysis.
+            </div>
+            <div class="detector-alert-case">Mazer lost on this exact issue. Leaving wife in CA = automatic CA residency.</div>
+          </div>
+          <div class="family-tracker-grid">
+            <div class="family-tracker-row">
+              <div class="family-tracker-label">Spouse/Partner location</div>
+              <select class="inventory-item-select" id="spouseLocation" onchange="checkFamilyLocation()">
+                <option value="">Select...</option>
+                <option value="CA">California</option>
+                <option value="NEW">New State (with you)</option>
+                <option value="OTHER">Other Location</option>
+                <option value="NA">N/A - No spouse/partner</option>
+              </select>
+            </div>
+            <div class="family-tracker-row">
+              <div class="family-tracker-label">Minor children location</div>
+              <select class="inventory-item-select" id="childrenLocation" onchange="checkFamilyLocation()">
+                <option value="">Select...</option>
+                <option value="CA">California</option>
+                <option value="NEW">New State (with you)</option>
+                <option value="SPLIT">Split custody</option>
+                <option value="NA">N/A - No minor children</option>
+              </select>
+            </div>
+            <div class="family-tracker-row">
+              <div class="family-tracker-label">Adult dependents location</div>
+              <select class="inventory-item-select" id="dependentsLocation" onchange="checkFamilyLocation()">
+                <option value="">Select...</option>
+                <option value="CA">California</option>
+                <option value="NEW">New State</option>
+                <option value="NA">N/A - No adult dependents</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
         <div id="checklistContainer">
           <!-- Checklist categories will be rendered here -->
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- CALCOMPETES WORKFLOW TABS                  -->
+      <!-- ========================================== -->
+
+      <!-- TAB: CC OVERVIEW -->
+      <div class="workflow-tab-content" id="tab-ccOverview">
+        <div class="cc-overview-section">
+          <div class="cc-overview-header">
+            <div class="cc-overview-title">
+              <span>&#128176;</span> California Competes Tax Credit
+            </div>
+            <div class="cc-overview-status" id="ccOverviewStatus">
+              <span class="cc-status-badge pending">Application Pending</span>
+            </div>
+          </div>
+
+          <div class="cc-legal-note">
+            <strong>Program Structure:</strong> GO-Biz administers, FTB reviews. 5-year performance + 3-year maintenance = 8-year lifecycle. Risk: Recapture if milestones not maintained.
+          </div>
+
+          <!-- Quick Stats Grid -->
+          <div class="cc-stats-grid">
+            <div class="cc-stat-card">
+              <div class="cc-stat-label">Credit Requested</div>
+              <div class="cc-stat-value" id="ccStatCredit">$0</div>
+            </div>
+            <div class="cc-stat-card">
+              <div class="cc-stat-label">Cost-Benefit Ratio</div>
+              <div class="cc-stat-value" id="ccStatRatio">-</div>
+            </div>
+            <div class="cc-stat-card">
+              <div class="cc-stat-label">New FTEs Committed</div>
+              <div class="cc-stat-value" id="ccStatFtes">0</div>
+            </div>
+            <div class="cc-stat-card">
+              <div class="cc-stat-label">Investment Committed</div>
+              <div class="cc-stat-value" id="ccStatInvestment">$0</div>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="cc-timeline-box">
+            <div class="cc-timeline-title">8-Year Compliance Timeline</div>
+            <div class="cc-timeline">
+              <div class="cc-timeline-year" data-year="app">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Application</div>
+              </div>
+              <div class="cc-timeline-year" data-year="1">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Year 1</div>
+              </div>
+              <div class="cc-timeline-year" data-year="2">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Year 2</div>
+              </div>
+              <div class="cc-timeline-year" data-year="3">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Year 3</div>
+              </div>
+              <div class="cc-timeline-year" data-year="4">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Year 4</div>
+              </div>
+              <div class="cc-timeline-year" data-year="5">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Year 5</div>
+              </div>
+              <div class="cc-timeline-year maintenance" data-year="6">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Maint 1</div>
+              </div>
+              <div class="cc-timeline-year maintenance" data-year="7">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Maint 2</div>
+              </div>
+              <div class="cc-timeline-year maintenance" data-year="8">
+                <div class="cc-timeline-marker pending"></div>
+                <div class="cc-timeline-label">Maint 3</div>
+              </div>
+            </div>
+            <div class="cc-timeline-legend">
+              <span><span class="cc-legend-dot performance"></span> Performance Period (Years 1-5)</span>
+              <span><span class="cc-legend-dot maintenance"></span> Maintenance Period (Years 6-8)</span>
+            </div>
+          </div>
+
+          <!-- Application Windows -->
+          <div class="cc-windows-box">
+            <div class="cc-windows-title">FY 2025-26 Application Windows</div>
+            <div class="cc-windows-grid">
+              <div class="cc-window-card" data-window="july">
+                <div class="cc-window-dates">July 21 – Aug 11, 2025</div>
+                <div class="cc-window-status closed">Closed</div>
+              </div>
+              <div class="cc-window-card" data-window="jan">
+                <div class="cc-window-dates">Jan 5 – Jan 26, 2026</div>
+                <div class="cc-window-status upcoming">Upcoming</div>
+              </div>
+              <div class="cc-window-card" data-window="mar">
+                <div class="cc-window-dates">Mar 2 – Mar 16, 2026</div>
+                <div class="cc-window-status future">Future</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC ELIGIBILITY -->
+      <div class="workflow-tab-content" id="tab-ccEligibility">
+        <div class="cc-eligibility-section">
+          <div class="cc-section-header">
+            <span>&#9989;</span> Eligibility Screener
+          </div>
+
+          <!-- But For Test -->
+          <div class="cc-eligibility-box">
+            <div class="cc-eligibility-title">
+              <span>&#9888;</span> "But For" Test (Flight Risk)
+            </div>
+            <div class="cc-eligibility-desc">
+              Would this project occur in another state without the credit? If YES, you can bypass the ratio competition and advance directly to Phase II.
+            </div>
+            <div class="cc-eligibility-options">
+              <label class="cc-option">
+                <input type="radio" name="butForTest" value="yes" onchange="updateButForTest(this.value)">
+                <span class="cc-option-label">Yes - Flight Risk</span>
+                <span class="cc-option-desc">We have competing offers from other states</span>
+              </label>
+              <label class="cc-option">
+                <input type="radio" name="butForTest" value="no" onchange="updateButForTest(this.value)">
+                <span class="cc-option-label">No - CA Only</span>
+                <span class="cc-option-desc">Project will only occur in California</span>
+              </label>
+            </div>
+            <div class="cc-eligibility-evidence" id="butForEvidence" style="display: none;">
+              <label class="form-label">Evidence of Alternative Location</label>
+              <textarea class="form-input form-textarea" id="butForEvidenceText" placeholder="Describe competing offers (state, incentives offered, timeline)..."></textarea>
+            </div>
+          </div>
+
+          <!-- High Need Location -->
+          <div class="cc-eligibility-box">
+            <div class="cc-eligibility-title">
+              <span>&#127919;</span> High Need Location Test
+            </div>
+            <div class="cc-eligibility-desc">
+              ≥75% of new FTEs work ≥75% of time in High Poverty or High Unemployment area. If YES, bypass ratio competition.
+            </div>
+            <div class="cc-eligibility-options">
+              <label class="cc-option">
+                <input type="radio" name="highNeedTest" value="yes" onchange="updateHighNeedTest(this.value)">
+                <span class="cc-option-label">Yes - High Need Location</span>
+                <span class="cc-option-desc">Meets 75%/75% threshold</span>
+              </label>
+              <label class="cc-option">
+                <input type="radio" name="highNeedTest" value="no" onchange="updateHighNeedTest(this.value)">
+                <span class="cc-option-label">No - Standard Location</span>
+                <span class="cc-option-desc">Does not meet threshold</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Grant Thresholds -->
+          <div class="cc-eligibility-box">
+            <div class="cc-eligibility-title">
+              <span>&#128181;</span> Grant vs. Credit
+            </div>
+            <div class="cc-eligibility-desc">
+              Grant requires ONE of: ≥500 new FTEs, ≥$10M infrastructure investment, OR High Need location.
+            </div>
+            <div class="cc-grant-checklist">
+              <label class="cc-grant-item">
+                <input type="checkbox" id="grantCheck500Jobs" onchange="updateGrantEligibility()">
+                <span>≥500 new full-time jobs</span>
+              </label>
+              <label class="cc-grant-item">
+                <input type="checkbox" id="grantCheck10M" onchange="updateGrantEligibility()">
+                <span>≥$10M infrastructure investment</span>
+              </label>
+              <label class="cc-grant-item">
+                <input type="checkbox" id="grantCheckHighNeed" onchange="updateGrantEligibility()">
+                <span>Located in High Unemployment/Poverty area</span>
+              </label>
+            </div>
+            <div class="cc-grant-result" id="grantResult">
+              <span class="cc-grant-type">Credit</span>
+              <span class="cc-grant-note">Grant eligibility not met</span>
+            </div>
+          </div>
+
+          <!-- Disqualifiers -->
+          <div class="cc-eligibility-box red-flag">
+            <div class="cc-eligibility-title">
+              <span>&#128683;</span> Disqualifiers (Red Flags)
+            </div>
+            <div class="cc-eligibility-desc">
+              Any of these will sink your application or trigger recapture.
+            </div>
+            <div class="cc-disqualifier-list">
+              <label class="cc-disqualifier-item">
+                <input type="checkbox" id="dqRelatedParty" onchange="checkDisqualifiers()">
+                <span>Related party transfers (parent→subsidiary)</span>
+              </label>
+              <label class="cc-disqualifier-item">
+                <input type="checkbox" id="dqPreAppInvestment" onchange="checkDisqualifiers()">
+                <span>Investment made BEFORE application deadline</span>
+              </label>
+              <label class="cc-disqualifier-item">
+                <input type="checkbox" id="dqPartTime" onchange="checkDisqualifiers()">
+                <span>Counting 2 part-time as 1 FTE (not allowed)</span>
+              </label>
+              <label class="cc-disqualifier-item">
+                <input type="checkbox" id="dqBaseYear" onchange="checkDisqualifiers()">
+                <span>Base year manipulation (understating to inflate "net increase")</span>
+              </label>
+              <label class="cc-disqualifier-item">
+                <input type="checkbox" id="dqWageViolation" onchange="checkDisqualifiers()">
+                <span>Including bonuses/benefits in "wages" calculation</span>
+              </label>
+              <label class="cc-disqualifier-item">
+                <input type="checkbox" id="dqLitigation" onchange="checkDisqualifiers()">
+                <span>Material litigation or labor/environmental violations (10 years)</span>
+              </label>
+            </div>
+            <div class="cc-disqualifier-alert" id="disqualifierAlert" style="display: none;">
+              <span>&#128308;</span> DISQUALIFIER DETECTED - Application at risk
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC COST-BENEFIT RATIO -->
+      <div class="workflow-tab-content" id="tab-ccRatio">
+        <div class="cc-ratio-section">
+          <div class="cc-section-header">
+            <span>&#128200;</span> Phase I: Cost-Benefit Ratio Calculator
+          </div>
+
+          <div class="cc-ratio-formula-box">
+            <div class="cc-ratio-formula">
+              Ratio = Credit Requested ÷ (Aggregate Employee Compensation + Aggregate Investment)
+            </div>
+            <div class="cc-ratio-note">
+              Lower is better. Historical cutoffs: 0.03 to 1.9. Safe zone: &lt;0.08
+            </div>
+          </div>
+
+          <div class="cc-ratio-inputs">
+            <div class="cc-ratio-input-group">
+              <label class="form-label">Credit Requested ($)</label>
+              <input type="number" class="form-input" id="ccCreditRequested" placeholder="1,000,000" onchange="calculateCostBenefitRatio()">
+            </div>
+            <div class="cc-ratio-input-group">
+              <label class="form-label">Aggregate Employee Compensation (5-yr W-2)</label>
+              <input type="number" class="form-input" id="ccAggEmployeeComp" placeholder="15,000,000" onchange="calculateCostBenefitRatio()">
+              <span class="form-hint">NET NEW employees only. Excludes: bonuses, overtime, commissions, benefits, stock options</span>
+            </div>
+            <div class="cc-ratio-input-group">
+              <label class="form-label">Aggregate Investment ($)</label>
+              <input type="number" class="form-input" id="ccAggInvestment" placeholder="5,000,000" onchange="calculateCostBenefitRatio()">
+              <span class="form-hint">Real + Personal property purchased AFTER application deadline</span>
+            </div>
+          </div>
+
+          <div class="cc-ratio-result-box">
+            <div class="cc-ratio-result">
+              <div class="cc-ratio-value" id="ccRatioValue">-</div>
+              <div class="cc-ratio-label">Cost-Benefit Ratio</div>
+            </div>
+            <div class="cc-ratio-gauge">
+              <div class="cc-gauge-bar">
+                <div class="cc-gauge-fill" id="ccGaugeFill" style="width: 0%"></div>
+                <div class="cc-gauge-marker safe" style="left: 4%"></div>
+                <div class="cc-gauge-marker watch" style="left: 40%"></div>
+                <div class="cc-gauge-marker danger" style="left: 80%"></div>
+              </div>
+              <div class="cc-gauge-labels">
+                <span>0.04 (Safe)</span>
+                <span>0.80 (Risky)</span>
+                <span>1.60+</span>
+              </div>
+            </div>
+            <div class="cc-ratio-assessment" id="ccRatioAssessment">
+              Enter values to calculate ratio
+            </div>
+          </div>
+
+          <!-- Bypass Notice -->
+          <div class="cc-ratio-bypass" id="ccRatioBypass" style="display: none;">
+            <span>&#10003;</span> Phase I bypass available (Flight Risk or High Need Location)
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC AFTE -->
+      <div class="workflow-tab-content" id="tab-ccAfte">
+        <div class="cc-afte-section">
+          <div class="cc-section-header">
+            <span>&#128101;</span> AFTE Calculator (Annual Full-Time Equivalent)
+          </div>
+
+          <div class="cc-afte-formula-box">
+            <div class="cc-afte-formulas">
+              <div class="cc-afte-formula">
+                <strong>Hourly:</strong> Total Hours ÷ 1,750 (max 1.0 per employee)
+              </div>
+              <div class="cc-afte-formula">
+                <strong>Salaried:</strong> Total Weeks ÷ 50 (max 1.0 per employee)
+              </div>
+            </div>
+            <div class="cc-afte-note">
+              Must average ≥35 hours/week to count. Cannot combine 2 PT to equal 1 FT.
+            </div>
+          </div>
+
+          <!-- Employee Entry Form -->
+          <div class="cc-afte-entry">
+            <div class="cc-afte-entry-header">Add Employee</div>
+            <div class="cc-afte-entry-grid">
+              <div class="cc-afte-input-group">
+                <label>Employee Name/ID</label>
+                <input type="text" class="form-input" id="afteEmployeeName" placeholder="John Doe">
+              </div>
+              <div class="cc-afte-input-group">
+                <label>Type</label>
+                <select class="form-input" id="afteEmployeeType" onchange="updateAfteFields()">
+                  <option value="hourly">Hourly</option>
+                  <option value="salaried">Salaried</option>
+                </select>
+              </div>
+              <div class="cc-afte-input-group" id="afteHoursGroup">
+                <label>Total Hours (Annual)</label>
+                <input type="number" class="form-input" id="afteHours" placeholder="1750">
+              </div>
+              <div class="cc-afte-input-group" id="afteWeeksGroup" style="display: none;">
+                <label>Total Weeks</label>
+                <input type="number" class="form-input" id="afteWeeks" placeholder="50">
+              </div>
+              <div class="cc-afte-input-group">
+                <label>Hire Date</label>
+                <input type="date" class="form-input" id="afteHireDate">
+              </div>
+              <div class="cc-afte-input-group">
+                <label>Annual W-2 Wage</label>
+                <input type="number" class="form-input" id="afteWage" placeholder="75000">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="addAfteEmployee()">Add Employee</button>
+          </div>
+
+          <!-- Employee Table -->
+          <div class="cc-afte-table-wrapper">
+            <table class="cc-afte-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Type</th>
+                  <th>Hours/Weeks</th>
+                  <th>AFTE</th>
+                  <th>W-2 Wage</th>
+                  <th>Hire Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="afteTableBody">
+                <tr class="cc-afte-empty">
+                  <td colspan="7">No employees added. Add employees above to calculate AFTE.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- AFTE Summary -->
+          <div class="cc-afte-summary">
+            <div class="cc-afte-summary-item">
+              <div class="cc-afte-summary-label">Total Employees</div>
+              <div class="cc-afte-summary-value" id="afteTotalEmployees">0</div>
+            </div>
+            <div class="cc-afte-summary-item">
+              <div class="cc-afte-summary-label">Total AFTE</div>
+              <div class="cc-afte-summary-value" id="afteTotalAfte">0.00</div>
+            </div>
+            <div class="cc-afte-summary-item">
+              <div class="cc-afte-summary-label">Total Compensation</div>
+              <div class="cc-afte-summary-value" id="afteTotalComp">$0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC PHASE II FACTORS -->
+      <div class="workflow-tab-content" id="tab-ccPhase2">
+        <div class="cc-phase2-section">
+          <div class="cc-section-header">
+            <span>&#128203;</span> Phase II: 14 Qualitative Factors
+          </div>
+
+          <div class="cc-phase2-note">
+            GO-Biz evaluates applications on these 14 factors. Document your narrative for each.
+          </div>
+
+          <div class="cc-phase2-factors" id="phase2FactorsContainer">
+            <!-- Rendered by JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC MILESTONES -->
+      <div class="workflow-tab-content" id="tab-ccMilestones">
+        <div class="cc-milestones-section">
+          <div class="cc-section-header">
+            <span>&#127942;</span> Exhibit A: Milestone Tracker
+          </div>
+
+          <div class="cc-milestones-note">
+            Track your committed milestones from the allocation agreement. Failure to meet milestones triggers recapture.
+          </div>
+
+          <!-- Add Milestone Form -->
+          <div class="cc-milestone-entry">
+            <div class="cc-milestone-entry-grid">
+              <div class="cc-milestone-input-group">
+                <label>Milestone Type</label>
+                <select class="form-input" id="milestoneType">
+                  <option value="jobs">Jobs (FTE)</option>
+                  <option value="investment">Investment ($)</option>
+                  <option value="wages">Compensation ($)</option>
+                </select>
+              </div>
+              <div class="cc-milestone-input-group">
+                <label>Target Year</label>
+                <select class="form-input" id="milestoneYear">
+                  <option value="1">Year 1</option>
+                  <option value="2">Year 2</option>
+                  <option value="3">Year 3</option>
+                  <option value="4">Year 4</option>
+                  <option value="5">Year 5</option>
+                  <option value="6">Maintenance 1</option>
+                  <option value="7">Maintenance 2</option>
+                  <option value="8">Maintenance 3</option>
+                </select>
+              </div>
+              <div class="cc-milestone-input-group">
+                <label>Committed Target</label>
+                <input type="number" class="form-input" id="milestoneTarget" placeholder="100">
+              </div>
+              <div class="cc-milestone-input-group">
+                <label>Actual (to date)</label>
+                <input type="number" class="form-input" id="milestoneActual" placeholder="0">
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="addMilestone()">Add Milestone</button>
+          </div>
+
+          <!-- Milestones Table -->
+          <div class="cc-milestone-table-wrapper">
+            <table class="cc-milestone-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Type</th>
+                  <th>Target</th>
+                  <th>Actual</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="milestoneTableBody">
+                <tr class="cc-milestone-empty">
+                  <td colspan="6">No milestones added. Add milestones from your allocation agreement.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Recapture Warning -->
+          <div class="cc-recapture-warning" id="recaptureWarning" style="display: none;">
+            <span>&#9888;</span> <strong>Recapture Risk:</strong> One or more milestones are behind target. Review immediately.
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC COMPLIANCE CALENDAR -->
+      <div class="workflow-tab-content" id="tab-ccCalendar">
+        <div class="cc-calendar-section">
+          <div class="cc-section-header">
+            <span>&#128197;</span> Compliance Calendar (8-Year Lifecycle)
+          </div>
+
+          <div class="cc-calendar-grid" id="ccCalendarGrid">
+            <!-- Rendered by JavaScript -->
+          </div>
+
+          <!-- Upcoming Deadlines -->
+          <div class="cc-deadlines-box">
+            <div class="cc-deadlines-title">Key Deadlines</div>
+            <div class="cc-deadline-item">
+              <div class="cc-deadline-when">Within 30 days of approval</div>
+              <div class="cc-deadline-what">Designate contact person</div>
+            </div>
+            <div class="cc-deadline-item">
+              <div class="cc-deadline-when">1st day of 4th month after Tax Year End</div>
+              <div class="cc-deadline-what">Annual Compliance Certification to GO-Biz</div>
+            </div>
+            <div class="cc-deadline-item">
+              <div class="cc-deadline-when">Tax Return Filing</div>
+              <div class="cc-deadline-what">Claim credit via Form FTB 3531</div>
+            </div>
+            <div class="cc-deadline-item">
+              <div class="cc-deadline-when">Within 30 days of FTB IDR</div>
+              <div class="cc-deadline-what">Respond to Information Document Request</div>
+            </div>
+            <div class="cc-deadline-item">
+              <div class="cc-deadline-when">Years 6-8</div>
+              <div class="cc-deadline-what">Maintenance certification (avoid recapture)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CC EVIDENCE -->
+      <div class="workflow-tab-content" id="tab-ccEvidence">
+        <div class="cc-evidence-section">
+          <div class="cc-section-header">
+            <span>&#128193;</span> Evidence Vault (FTB Documentation)
+          </div>
+
+          <div class="cc-evidence-categories">
+            <div class="cc-evidence-category">
+              <div class="cc-evidence-category-header" onclick="toggleEvidenceCategory('jobs')">
+                <span>&#128101;</span> Jobs Documentation
+                <span class="cc-evidence-count" id="evidenceCountJobs">0</span>
+              </div>
+              <div class="cc-evidence-category-body" id="evidenceCategoryJobs">
+                <div class="cc-evidence-items">
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="payroll_registers" onchange="updateEvidenceStatus('jobs', 'payroll_registers', this.checked)">
+                    <span>Payroll registers</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="i9_forms" onchange="updateEvidenceStatus('jobs', 'i9_forms', this.checked)">
+                    <span>I-9 forms</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="w2_forms" onchange="updateEvidenceStatus('jobs', 'w2_forms', this.checked)">
+                    <span>W-2 forms</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="w4_forms" onchange="updateEvidenceStatus('jobs', 'w4_forms', this.checked)">
+                    <span>W-4 forms</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="offer_letters" onchange="updateEvidenceStatus('jobs', 'offer_letters', this.checked)">
+                    <span>Offer letters</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="pay_stubs" onchange="updateEvidenceStatus('jobs', 'pay_stubs', this.checked)">
+                    <span>Pay stubs</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="afte_schedule" onchange="updateEvidenceStatus('jobs', 'afte_schedule', this.checked)">
+                    <span>AFTE Schedule (hire date, term date, hours/weeks per tax year)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="cc-evidence-category">
+              <div class="cc-evidence-category-header" onclick="toggleEvidenceCategory('investment')">
+                <span>&#128176;</span> Investment Documentation
+                <span class="cc-evidence-count" id="evidenceCountInvestment">0</span>
+              </div>
+              <div class="cc-evidence-category-body" id="evidenceCategoryInvestment">
+                <div class="cc-evidence-items">
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="invoices" onchange="updateEvidenceStatus('investment', 'invoices', this.checked)">
+                    <span>Invoices</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="cancelled_checks" onchange="updateEvidenceStatus('investment', 'cancelled_checks', this.checked)">
+                    <span>Cancelled checks</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="lease_agreements" onchange="updateEvidenceStatus('investment', 'lease_agreements', this.checked)">
+                    <span>Lease agreements</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="general_ledger" onchange="updateEvidenceStatus('investment', 'general_ledger', this.checked)">
+                    <span>General ledger</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="cc-evidence-category">
+              <div class="cc-evidence-category-header" onclick="toggleEvidenceCategory('site')">
+                <span>&#127970;</span> Site Documentation
+                <span class="cc-evidence-count" id="evidenceCountSite">0</span>
+              </div>
+              <div class="cc-evidence-category-body" id="evidenceCategorySite">
+                <div class="cc-evidence-items">
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="deed" onchange="updateEvidenceStatus('site', 'deed', this.checked)">
+                    <span>Deed</span>
+                  </label>
+                  <label class="cc-evidence-item">
+                    <input type="checkbox" data-doc="utility_bills" onchange="updateEvidenceStatus('site', 'utility_bills', this.checked)">
+                    <span>Utility bills (proof of operations)</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FTB Review Alert -->
+          <div class="cc-ftb-alert" id="ftbReviewAlert" style="display: none;">
+            <div class="cc-ftb-alert-header">
+              <span>&#128680;</span> FTB Books & Records Review Detected
+            </div>
+            <div class="cc-ftb-alert-body">
+              Respond to IDR within 30 days. This is contract compliance, not a tax audit.
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -4111,14 +7067,36 @@
 
   <!-- Modal: New Workflow -->
   <div class="modal-overlay" id="modal-newWorkflow">
-    <div class="modal">
+    <div class="modal" style="max-width: 600px;">
       <div class="modal-header">
         <h2 class="modal-title">New Client Workflow</h2>
         <button class="modal-close" onclick="closeModal('newWorkflow')">&#10005;</button>
       </div>
       <div class="modal-body">
+        <!-- Workflow Type Selector -->
         <div class="form-group">
-          <label class="form-label">Client Name *</label>
+          <label class="form-label">Workflow Type *</label>
+          <div class="workflow-type-selector">
+            <div class="workflow-type-option selected" onclick="selectWorkflowType('residency')" data-type="residency">
+              <div class="workflow-type-icon">&#127968;</div>
+              <div class="workflow-type-info">
+                <div class="workflow-type-name">Residency Change</div>
+                <div class="workflow-type-desc">FTB audit defense for individuals leaving CA</div>
+              </div>
+            </div>
+            <div class="workflow-type-option" onclick="selectWorkflowType('calcompetes')" data-type="calcompetes">
+              <div class="workflow-type-icon">&#128176;</div>
+              <div class="workflow-type-info">
+                <div class="workflow-type-name">California Competes</div>
+                <div class="workflow-type-desc">CCTC application & 8-year compliance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Common Fields -->
+        <div class="form-group">
+          <label class="form-label" id="workflowNameLabel">Client Name *</label>
           <input type="text" class="form-input" id="workflowName" placeholder="Full legal name">
         </div>
         <div class="form-row">
@@ -4131,32 +7109,81 @@
             <input type="tel" class="form-input" id="workflowPhone" placeholder="(555) 555-5555">
           </div>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">From State *</label>
-            <select class="form-input" id="workflowFromState">
-              <option value="CA" selected>California</option>
-            </select>
+
+        <!-- Residency-specific fields -->
+        <div id="residencyFields">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">From State *</label>
+              <select class="form-input" id="workflowFromState">
+                <option value="CA" selected>California</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">To State *</label>
+              <select class="form-input" id="workflowToState">
+                <option value="">Select state...</option>
+                <option value="NV">Nevada</option>
+                <option value="TX">Texas</option>
+                <option value="FL">Florida</option>
+                <option value="WA">Washington</option>
+                <option value="TN">Tennessee</option>
+                <option value="WY">Wyoming</option>
+                <option value="SD">South Dakota</option>
+                <option value="AK">Alaska</option>
+                <option value="NH">New Hampshire</option>
+              </select>
+            </div>
           </div>
           <div class="form-group">
-            <label class="form-label">To State *</label>
-            <select class="form-input" id="workflowToState">
-              <option value="">Select state...</option>
-              <option value="NV">Nevada</option>
-              <option value="TX">Texas</option>
-              <option value="FL">Florida</option>
-              <option value="WA">Washington</option>
-              <option value="TN">Tennessee</option>
-              <option value="WY">Wyoming</option>
-              <option value="SD">South Dakota</option>
-              <option value="AK">Alaska</option>
-              <option value="NH">New Hampshire</option>
-            </select>
+            <label class="form-label">Target Move Date</label>
+            <input type="date" class="form-input" id="workflowMoveDate">
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Target Move Date</label>
-          <input type="date" class="form-input" id="workflowMoveDate">
+
+        <!-- CalCompetes-specific fields -->
+        <div id="calcompetesFields" style="display: none;">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">FEIN *</label>
+              <input type="text" class="form-input" id="workflowFEIN" placeholder="XX-XXXXXXX">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tax Year End *</label>
+              <select class="form-input" id="workflowTaxYearEnd">
+                <option value="12-31">December 31 (Calendar)</option>
+                <option value="03-31">March 31</option>
+                <option value="06-30">June 30</option>
+                <option value="09-30">September 30</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Business Structure *</label>
+              <select class="form-input" id="workflowStructure">
+                <option value="">Select...</option>
+                <option value="C-Corp">C-Corporation</option>
+                <option value="S-Corp">S-Corporation</option>
+                <option value="LLC">LLC</option>
+                <option value="Partnership">Partnership</option>
+                <option value="Sole Prop">Sole Proprietorship</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Primary NAICS Code</label>
+              <input type="text" class="form-input" id="workflowNAICS" placeholder="6-digit code">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Application Window</label>
+            <select class="form-input" id="workflowAppWindow">
+              <option value="">Select...</option>
+              <option value="2025-07">July 21 - Aug 11, 2025</option>
+              <option value="2026-01">Jan 5 - Jan 26, 2026</option>
+              <option value="2026-03">Mar 2 - Mar 16, 2026</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
@@ -4279,25 +7306,93 @@
       if (!workflow) return;
 
       document.getElementById('workflowClientName').textContent = workflow.name;
-      document.getElementById('workflowFrom').textContent = workflow.fromState;
-      document.getElementById('workflowTo').textContent = workflow.toState;
-      document.getElementById('workflowMoveDate').textContent = workflow.moveDate || '-';
 
-      const progress = calculateWorkflowProgress(workflow);
-      document.getElementById('workflowProgress').textContent = progress + '%';
+      // Handle workflow type differences
+      const isCalCompetes = workflow.type === 'calcompetes';
+      const residencyTabs = document.getElementById('workflowTabs');
+      const calcompetesTabs = document.getElementById('workflowTabsCalCompetes');
+      const headerMeta = document.querySelector('.workflow-header-meta');
 
-      renderChecklist(workflow);
+      if (isCalCompetes) {
+        // Show CalCompetes tabs, hide residency tabs
+        residencyTabs.style.display = 'none';
+        calcompetesTabs.style.display = 'flex';
 
-      // Reset to first tab (Roadmap is default)
-      document.querySelectorAll('.workflow-tab').forEach(t => t.classList.remove('active'));
-      document.querySelector('.workflow-tab').classList.add('active');
-      document.querySelectorAll('.workflow-tab-content').forEach(c => c.classList.remove('active'));
-      document.getElementById('tab-roadmap').classList.add('active');
+        // Update header meta for CalCompetes
+        headerMeta.innerHTML = `
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">FEIN</span>
+            <span class="workflow-meta-value">${workflow.fein || '-'}</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Structure</span>
+            <span class="workflow-meta-value">${workflow.structure || '-'}</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Tax Year End</span>
+            <span class="workflow-meta-value">${workflow.taxYearEnd || '-'}</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Application Window</span>
+            <span class="workflow-meta-value">${workflow.appWindow || '-'}</span>
+          </div>
+        `;
 
-      renderRoadmap();
+        // Reset to first CalCompetes tab
+        calcompetesTabs.querySelectorAll('.workflow-tab').forEach(t => t.classList.remove('active'));
+        calcompetesTabs.querySelector('.workflow-tab').classList.add('active');
+        document.querySelectorAll('.workflow-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tab-ccOverview').classList.add('active');
 
-      // Set default date to today
-      document.getElementById('dayEntryDate').value = new Date().toISOString().split('T')[0];
+        // Load CalCompetes data
+        loadCalCompetesData(workflow);
+        renderPhase2Factors();
+        renderComplianceCalendar();
+
+      } else {
+        // Show residency tabs, hide CalCompetes tabs
+        residencyTabs.style.display = 'flex';
+        calcompetesTabs.style.display = 'none';
+
+        // Update header meta for residency
+        headerMeta.innerHTML = `
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">From</span>
+            <span class="workflow-meta-value" id="workflowFrom">${workflow.fromState}</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">To</span>
+            <span class="workflow-meta-value" id="workflowTo">${workflow.toState}</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Move Date</span>
+            <span class="workflow-meta-value" id="workflowMoveDate">${workflow.moveDate || '-'}</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Progress</span>
+            <span class="workflow-meta-value" id="workflowProgress">0%</span>
+          </div>
+        `;
+
+        const progress = calculateWorkflowProgress(workflow);
+        document.getElementById('workflowProgress').textContent = progress + '%';
+
+        renderChecklist(workflow);
+
+        // Reset to first tab (Roadmap is default)
+        residencyTabs.querySelectorAll('.workflow-tab').forEach(t => t.classList.remove('active'));
+        residencyTabs.querySelector('.workflow-tab').classList.add('active');
+        document.querySelectorAll('.workflow-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tab-roadmap').classList.add('active');
+
+        renderRoadmap();
+
+        // Set default date to today
+        document.getElementById('dayEntryDate').value = new Date().toISOString().split('T')[0];
+
+        // Load detector data and run all checks
+        loadDetectorData();
+      }
 
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById('page-workflow-detail').classList.add('active');
@@ -4406,35 +7501,106 @@
     }
 
     // ===== WORKFLOWS =====
+    // Track selected workflow type
+    let selectedWorkflowType = 'residency';
+
+    function selectWorkflowType(type) {
+      selectedWorkflowType = type;
+
+      // Update UI
+      document.querySelectorAll('.workflow-type-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      document.querySelector(`.workflow-type-option[data-type="${type}"]`).classList.add('selected');
+
+      // Show/hide appropriate fields
+      const residencyFields = document.getElementById('residencyFields');
+      const calcompetesFields = document.getElementById('calcompetesFields');
+      const nameLabel = document.getElementById('workflowNameLabel');
+
+      if (type === 'residency') {
+        residencyFields.style.display = 'block';
+        calcompetesFields.style.display = 'none';
+        nameLabel.textContent = 'Client Name *';
+        document.getElementById('workflowName').placeholder = 'Full legal name';
+      } else {
+        residencyFields.style.display = 'none';
+        calcompetesFields.style.display = 'block';
+        nameLabel.textContent = 'Business Name *';
+        document.getElementById('workflowName').placeholder = 'Legal business name (must match SOS records)';
+      }
+    }
+
     function createWorkflow() {
       const name = document.getElementById('workflowName').value;
       const email = document.getElementById('workflowEmail').value;
       const phone = document.getElementById('workflowPhone').value;
-      const fromState = document.getElementById('workflowFromState').value;
-      const toState = document.getElementById('workflowToState').value;
-      const moveDate = document.getElementById('workflowMoveDate').value;
 
-      if (!name || !toState) {
+      if (!name) {
         showToast('Please fill in required fields', 'error');
         return;
       }
 
-      const workflow = {
-        id: 'wf_' + Date.now(),
-        name,
-        email,
-        phone,
-        fromState,
-        toState,
-        moveDate,
-        createdAt: new Date().toISOString(),
-        checklist: initializeChecklist()
-      };
+      let workflow;
+
+      if (selectedWorkflowType === 'residency') {
+        const fromState = document.getElementById('workflowFromState').value;
+        const toState = document.getElementById('workflowToState').value;
+        const moveDate = document.getElementById('workflowMoveDate').value;
+
+        if (!toState) {
+          showToast('Please select destination state', 'error');
+          return;
+        }
+
+        workflow = {
+          id: 'wf_' + Date.now(),
+          type: 'residency',
+          name,
+          email,
+          phone,
+          fromState,
+          toState,
+          moveDate,
+          createdAt: new Date().toISOString(),
+          checklist: initializeChecklist()
+        };
+      } else {
+        // CalCompetes workflow
+        const fein = document.getElementById('workflowFEIN').value;
+        const taxYearEnd = document.getElementById('workflowTaxYearEnd').value;
+        const structure = document.getElementById('workflowStructure').value;
+        const naics = document.getElementById('workflowNAICS').value;
+        const appWindow = document.getElementById('workflowAppWindow').value;
+
+        workflow = {
+          id: 'wf_' + Date.now(),
+          type: 'calcompetes',
+          name,
+          email,
+          phone,
+          fein,
+          taxYearEnd,
+          structure,
+          naics,
+          appWindow,
+          createdAt: new Date().toISOString(),
+          checklist: initializeCalCompetesChecklist(),
+          eligibility: {},
+          costBenefit: {},
+          milestones: [],
+          phase: 'application' // application, awarded, performance, maintenance
+        };
+      }
 
       workflows.push(workflow);
       saveWorkflows();
 
       // Log to audit ledger
+      const logMessage = selectedWorkflowType === 'residency'
+        ? 'Created residency workflow for ' + name + ' (' + workflow.fromState + ' to ' + workflow.toState + ')'
+        : 'Created CalCompetes workflow for ' + name + ' (FEIN: ' + workflow.fein + ')';
+
       api('/api/audit', {
         method: 'POST',
         body: JSON.stringify({
@@ -4442,9 +7608,10 @@
           userId: DEFAULT_USER,
           entryType: 'WORKFLOW_CREATE',
           content: {
-            message: 'Created workflow for ' + name + ' (' + fromState + ' to ' + toState + ')',
+            message: logMessage,
             confidence: 'KNOWN_KNOWN',
-            workflowId: workflow.id
+            workflowId: workflow.id,
+            workflowType: selectedWorkflowType
           }
         })
       });
@@ -4458,8 +7625,562 @@
       document.getElementById('workflowPhone').value = '';
       document.getElementById('workflowMoveDate').value = '';
       document.getElementById('workflowToState').value = '';
+      document.getElementById('workflowFEIN').value = '';
+      document.getElementById('workflowNAICS').value = '';
+
+      // Reset to residency type for next time
+      selectWorkflowType('residency');
 
       showWorkflowDetail(workflow.id);
+    }
+
+    function initializeCalCompetesChecklist() {
+      return {
+        application: {
+          contact_info: { status: 'not_started', notes: '' },
+          business_info: { status: 'not_started', notes: '' },
+          business_structure: { status: 'not_started', notes: '' },
+          proposed_project: { status: 'not_started', notes: '' },
+          project_locations: { status: 'not_started', notes: '' },
+          employees: { status: 'not_started', notes: '' },
+          investment: { status: 'not_started', notes: '' },
+          ownership: { status: 'not_started', notes: '' },
+          incentives: { status: 'not_started', notes: '' },
+          litigation: { status: 'not_started', notes: '' },
+          consultant: { status: 'not_started', notes: '' }
+        },
+        compliance: {
+          annual_cert: { status: 'not_started', notes: '' },
+          ftb_response: { status: 'not_started', notes: '' },
+          maintenance: { status: 'not_started', notes: '' }
+        }
+      };
+    }
+
+    // ===== CALCOMPETES FUNCTIONS =====
+
+    // Phase II 14 Factors
+    const PHASE2_FACTORS = [
+      { id: 1, name: 'Jobs Created/Retained', desc: 'Number of full-time jobs created or retained' },
+      { id: 2, name: 'Compensation', desc: 'Wages and benefits provided to employees' },
+      { id: 3, name: 'Investment', desc: 'Investment in real and personal property' },
+      { id: 4, name: 'Duration of Commitment', desc: 'Length of time business commits to California' },
+      { id: 5, name: 'Economic Impact', desc: 'Overall economic impact on the state' },
+      { id: 6, name: 'Strategic Importance', desc: 'Strategic importance to the state economy' },
+      { id: 7, name: 'Opportunity for Growth', desc: 'Potential for future business growth' },
+      { id: 8, name: 'Extent of Poverty/Unemployment', desc: 'Location in high poverty/unemployment area' },
+      { id: 9, name: 'In-State Incentives', desc: 'Other California incentives available' },
+      { id: 10, name: 'Out-of-State Incentives', desc: 'Competing incentives from other states (flight risk)' },
+      { id: 11, name: 'Training Opportunities', desc: 'Training and development programs for employees' },
+      { id: 12, name: 'Benefit to State vs Business', desc: 'Relative benefit comparison' },
+      { id: 13, name: 'Influence of Credit', desc: 'How much the credit influenced the decision' },
+      { id: 14, name: 'Workforce Treatment & Fair Labor', desc: 'Includes relocation from discriminatory states' }
+    ];
+
+    // CalCompetes data store
+    let calCompetesData = {
+      eligibility: {
+        butForTest: null,
+        butForEvidence: '',
+        highNeedTest: null,
+        grantEligible: false,
+        disqualifiers: []
+      },
+      ratio: {
+        creditRequested: 0,
+        aggEmployeeComp: 0,
+        aggInvestment: 0,
+        calculatedRatio: null
+      },
+      employees: [],
+      milestones: [],
+      phase2Factors: {},
+      evidence: {
+        jobs: {},
+        investment: {},
+        site: {}
+      }
+    };
+
+    function loadCalCompetesData(workflow) {
+      // Load saved data or initialize
+      const saved = localStorage.getItem('cc_data_' + workflow.id);
+      if (saved) {
+        calCompetesData = JSON.parse(saved);
+      } else {
+        calCompetesData = {
+          eligibility: {
+            butForTest: null,
+            butForEvidence: '',
+            highNeedTest: null,
+            grantEligible: false,
+            disqualifiers: []
+          },
+          ratio: {
+            creditRequested: 0,
+            aggEmployeeComp: 0,
+            aggInvestment: 0,
+            calculatedRatio: null
+          },
+          employees: [],
+          milestones: [],
+          phase2Factors: {},
+          evidence: {
+            jobs: {},
+            investment: {},
+            site: {}
+          }
+        };
+      }
+
+      // Update UI with loaded data
+      updateCalCompetesUI();
+    }
+
+    function saveCalCompetesData() {
+      if (!currentWorkflowId) return;
+      localStorage.setItem('cc_data_' + currentWorkflowId, JSON.stringify(calCompetesData));
+    }
+
+    function updateCalCompetesUI() {
+      // Update stats
+      document.getElementById('ccStatCredit').textContent = '$' + (calCompetesData.ratio.creditRequested || 0).toLocaleString();
+      document.getElementById('ccStatRatio').textContent = calCompetesData.ratio.calculatedRatio ? calCompetesData.ratio.calculatedRatio.toFixed(4) : '-';
+
+      const totalAfte = calCompetesData.employees.reduce((sum, e) => sum + (e.afte || 0), 0);
+      document.getElementById('ccStatFtes').textContent = totalAfte.toFixed(2);
+      document.getElementById('ccStatInvestment').textContent = '$' + (calCompetesData.ratio.aggInvestment || 0).toLocaleString();
+
+      // Update ratio inputs if present
+      const creditInput = document.getElementById('ccCreditRequested');
+      if (creditInput && calCompetesData.ratio.creditRequested) {
+        creditInput.value = calCompetesData.ratio.creditRequested;
+      }
+      const compInput = document.getElementById('ccAggEmployeeComp');
+      if (compInput && calCompetesData.ratio.aggEmployeeComp) {
+        compInput.value = calCompetesData.ratio.aggEmployeeComp;
+      }
+      const invInput = document.getElementById('ccAggInvestment');
+      if (invInput && calCompetesData.ratio.aggInvestment) {
+        invInput.value = calCompetesData.ratio.aggInvestment;
+      }
+
+      // Update eligibility
+      if (calCompetesData.eligibility.butForTest) {
+        document.querySelector(`input[name="butForTest"][value="${calCompetesData.eligibility.butForTest}"]`).checked = true;
+        if (calCompetesData.eligibility.butForTest === 'yes') {
+          document.getElementById('butForEvidence').style.display = 'block';
+        }
+      }
+      if (calCompetesData.eligibility.highNeedTest) {
+        document.querySelector(`input[name="highNeedTest"][value="${calCompetesData.eligibility.highNeedTest}"]`).checked = true;
+      }
+
+      // Update bypass notice
+      updateBypassNotice();
+
+      // Render employee table
+      renderAfteTable();
+
+      // Render milestones
+      renderMilestonesTable();
+    }
+
+    function updateButForTest(value) {
+      calCompetesData.eligibility.butForTest = value;
+      document.getElementById('butForEvidence').style.display = value === 'yes' ? 'block' : 'none';
+      updateBypassNotice();
+      saveCalCompetesData();
+    }
+
+    function updateHighNeedTest(value) {
+      calCompetesData.eligibility.highNeedTest = value;
+      updateBypassNotice();
+      saveCalCompetesData();
+    }
+
+    function updateBypassNotice() {
+      const bypass = document.getElementById('ccRatioBypass');
+      if (calCompetesData.eligibility.butForTest === 'yes' || calCompetesData.eligibility.highNeedTest === 'yes') {
+        bypass.style.display = 'block';
+      } else {
+        bypass.style.display = 'none';
+      }
+    }
+
+    function updateGrantEligibility() {
+      const check500 = document.getElementById('grantCheck500Jobs').checked;
+      const check10M = document.getElementById('grantCheck10M').checked;
+      const checkHighNeed = document.getElementById('grantCheckHighNeed').checked;
+
+      calCompetesData.eligibility.grantEligible = check500 || check10M || checkHighNeed;
+
+      const result = document.getElementById('grantResult');
+      if (calCompetesData.eligibility.grantEligible) {
+        result.innerHTML = '<span class="cc-grant-type" style="color: var(--safe)">Grant</span><span class="cc-grant-note">Grant eligibility met!</span>';
+      } else {
+        result.innerHTML = '<span class="cc-grant-type">Credit</span><span class="cc-grant-note">Grant eligibility not met</span>';
+      }
+
+      saveCalCompetesData();
+    }
+
+    function checkDisqualifiers() {
+      const dqChecks = [
+        'dqRelatedParty', 'dqPreAppInvestment', 'dqPartTime',
+        'dqBaseYear', 'dqWageViolation', 'dqLitigation'
+      ];
+
+      calCompetesData.eligibility.disqualifiers = dqChecks.filter(id => document.getElementById(id).checked);
+
+      const alert = document.getElementById('disqualifierAlert');
+      if (calCompetesData.eligibility.disqualifiers.length > 0) {
+        alert.style.display = 'block';
+      } else {
+        alert.style.display = 'none';
+      }
+
+      saveCalCompetesData();
+    }
+
+    function calculateCostBenefitRatio() {
+      const credit = parseFloat(document.getElementById('ccCreditRequested').value) || 0;
+      const comp = parseFloat(document.getElementById('ccAggEmployeeComp').value) || 0;
+      const investment = parseFloat(document.getElementById('ccAggInvestment').value) || 0;
+
+      calCompetesData.ratio.creditRequested = credit;
+      calCompetesData.ratio.aggEmployeeComp = comp;
+      calCompetesData.ratio.aggInvestment = investment;
+
+      const denominator = comp + investment;
+      if (denominator === 0 || credit === 0) {
+        document.getElementById('ccRatioValue').textContent = '-';
+        document.getElementById('ccRatioAssessment').textContent = 'Enter values to calculate ratio';
+        document.getElementById('ccRatioAssessment').className = 'cc-ratio-assessment';
+        document.getElementById('ccGaugeFill').style.width = '0%';
+        calCompetesData.ratio.calculatedRatio = null;
+        saveCalCompetesData();
+        return;
+      }
+
+      const ratio = credit / denominator;
+      calCompetesData.ratio.calculatedRatio = ratio;
+
+      document.getElementById('ccRatioValue').textContent = ratio.toFixed(4);
+      document.getElementById('ccStatRatio').textContent = ratio.toFixed(4);
+      document.getElementById('ccStatCredit').textContent = '$' + credit.toLocaleString();
+      document.getElementById('ccStatInvestment').textContent = '$' + investment.toLocaleString();
+
+      // Gauge fill (scale: 0 = 0%, 2.0 = 100%)
+      const fillPercent = Math.min(ratio / 2.0 * 100, 100);
+      const gauge = document.getElementById('ccGaugeFill');
+      gauge.style.width = fillPercent + '%';
+
+      const assessment = document.getElementById('ccRatioAssessment');
+      if (ratio < 0.08) {
+        gauge.style.background = 'var(--safe)';
+        assessment.textContent = 'SAFE ZONE: Ratio below 0.08 is highly competitive';
+        assessment.className = 'cc-ratio-assessment safe';
+      } else if (ratio < 0.5) {
+        gauge.style.background = 'var(--safe)';
+        assessment.textContent = 'GOOD: Ratio is competitive but monitor closely';
+        assessment.className = 'cc-ratio-assessment safe';
+      } else if (ratio < 1.0) {
+        gauge.style.background = 'var(--watch)';
+        assessment.textContent = 'MODERATE RISK: Ratio may not pass Phase I cutoff';
+        assessment.className = 'cc-ratio-assessment watch';
+      } else {
+        gauge.style.background = 'var(--action)';
+        assessment.textContent = 'HIGH RISK: Ratio exceeds typical cutoffs. Consider bypass options.';
+        assessment.className = 'cc-ratio-assessment danger';
+      }
+
+      saveCalCompetesData();
+    }
+
+    // AFTE Functions
+    function updateAfteFields() {
+      const type = document.getElementById('afteEmployeeType').value;
+      document.getElementById('afteHoursGroup').style.display = type === 'hourly' ? 'block' : 'none';
+      document.getElementById('afteWeeksGroup').style.display = type === 'salaried' ? 'block' : 'none';
+    }
+
+    function addAfteEmployee() {
+      const name = document.getElementById('afteEmployeeName').value;
+      const type = document.getElementById('afteEmployeeType').value;
+      const hours = parseFloat(document.getElementById('afteHours').value) || 0;
+      const weeks = parseFloat(document.getElementById('afteWeeks').value) || 0;
+      const hireDate = document.getElementById('afteHireDate').value;
+      const wage = parseFloat(document.getElementById('afteWage').value) || 0;
+
+      if (!name) {
+        showToast('Please enter employee name', 'error');
+        return;
+      }
+
+      let afte;
+      let hoursOrWeeks;
+      if (type === 'hourly') {
+        afte = Math.min(hours / 1750, 1.0);
+        hoursOrWeeks = hours + ' hrs';
+      } else {
+        afte = Math.min(weeks / 50, 1.0);
+        hoursOrWeeks = weeks + ' wks';
+      }
+
+      calCompetesData.employees.push({
+        id: Date.now().toString(),
+        name,
+        type,
+        hoursOrWeeks,
+        afte,
+        wage,
+        hireDate
+      });
+
+      // Clear form
+      document.getElementById('afteEmployeeName').value = '';
+      document.getElementById('afteHours').value = '';
+      document.getElementById('afteWeeks').value = '';
+      document.getElementById('afteHireDate').value = '';
+      document.getElementById('afteWage').value = '';
+
+      renderAfteTable();
+      updateAfteSummary();
+      saveCalCompetesData();
+      showToast('Employee added');
+    }
+
+    function removeAfteEmployee(id) {
+      calCompetesData.employees = calCompetesData.employees.filter(e => e.id !== id);
+      renderAfteTable();
+      updateAfteSummary();
+      saveCalCompetesData();
+    }
+
+    function renderAfteTable() {
+      const tbody = document.getElementById('afteTableBody');
+      if (calCompetesData.employees.length === 0) {
+        tbody.innerHTML = '<tr class="cc-afte-empty"><td colspan="7">No employees added. Add employees above to calculate AFTE.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = calCompetesData.employees.map(e => `
+        <tr>
+          <td>${e.name}</td>
+          <td>${e.type}</td>
+          <td>${e.hoursOrWeeks}</td>
+          <td>${e.afte.toFixed(2)}</td>
+          <td>$${e.wage.toLocaleString()}</td>
+          <td>${e.hireDate || '-'}</td>
+          <td><button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="removeAfteEmployee('${e.id}')">Remove</button></td>
+        </tr>
+      `).join('');
+    }
+
+    function updateAfteSummary() {
+      const total = calCompetesData.employees.length;
+      const totalAfte = calCompetesData.employees.reduce((sum, e) => sum + e.afte, 0);
+      const totalComp = calCompetesData.employees.reduce((sum, e) => sum + e.wage, 0);
+
+      document.getElementById('afteTotalEmployees').textContent = total;
+      document.getElementById('afteTotalAfte').textContent = totalAfte.toFixed(2);
+      document.getElementById('afteTotalComp').textContent = '$' + totalComp.toLocaleString();
+      document.getElementById('ccStatFtes').textContent = totalAfte.toFixed(2);
+    }
+
+    // Phase II Factors
+    function renderPhase2Factors() {
+      const container = document.getElementById('phase2FactorsContainer');
+      container.innerHTML = PHASE2_FACTORS.map(f => {
+        const saved = calCompetesData.phase2Factors[f.id] || { status: 'not-started', narrative: '' };
+        return `
+          <div class="cc-phase2-factor" id="phase2Factor${f.id}">
+            <div class="cc-phase2-factor-header" onclick="togglePhase2Factor(${f.id})">
+              <div class="cc-phase2-factor-num">${f.id}</div>
+              <div class="cc-phase2-factor-name">${f.name}</div>
+              <span class="cc-phase2-factor-status ${saved.status}">${saved.status === 'documented' ? 'Documented' : saved.status === 'weak' ? 'Weak' : 'Not Started'}</span>
+            </div>
+            <div class="cc-phase2-factor-body">
+              <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">${f.desc}</p>
+              <textarea class="cc-phase2-factor-textarea" placeholder="Document your narrative for this factor..."
+                onchange="updatePhase2Factor(${f.id}, this.value)">${saved.narrative || ''}</textarea>
+              <div style="margin-top: 8px; display: flex; gap: 8px;">
+                <button class="btn btn-secondary" style="font-size: 11px;" onclick="setPhase2Status(${f.id}, 'weak')">Mark Weak</button>
+                <button class="btn btn-primary" style="font-size: 11px;" onclick="setPhase2Status(${f.id}, 'documented')">Mark Documented</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function togglePhase2Factor(id) {
+      const factor = document.getElementById('phase2Factor' + id);
+      factor.classList.toggle('expanded');
+    }
+
+    function updatePhase2Factor(id, narrative) {
+      if (!calCompetesData.phase2Factors[id]) {
+        calCompetesData.phase2Factors[id] = { status: 'not-started', narrative: '' };
+      }
+      calCompetesData.phase2Factors[id].narrative = narrative;
+      saveCalCompetesData();
+    }
+
+    function setPhase2Status(id, status) {
+      if (!calCompetesData.phase2Factors[id]) {
+        calCompetesData.phase2Factors[id] = { status: 'not-started', narrative: '' };
+      }
+      calCompetesData.phase2Factors[id].status = status;
+
+      const statusEl = document.querySelector(`#phase2Factor${id} .cc-phase2-factor-status`);
+      statusEl.className = 'cc-phase2-factor-status ' + status;
+      statusEl.textContent = status === 'documented' ? 'Documented' : status === 'weak' ? 'Weak' : 'Not Started';
+
+      saveCalCompetesData();
+      showToast('Factor status updated');
+    }
+
+    // Milestones
+    function addMilestone() {
+      const type = document.getElementById('milestoneType').value;
+      const year = document.getElementById('milestoneYear').value;
+      const target = parseFloat(document.getElementById('milestoneTarget').value) || 0;
+      const actual = parseFloat(document.getElementById('milestoneActual').value) || 0;
+
+      if (!target) {
+        showToast('Please enter a target value', 'error');
+        return;
+      }
+
+      calCompetesData.milestones.push({
+        id: Date.now().toString(),
+        type,
+        year,
+        target,
+        actual
+      });
+
+      document.getElementById('milestoneTarget').value = '';
+      document.getElementById('milestoneActual').value = '';
+
+      renderMilestonesTable();
+      saveCalCompetesData();
+      showToast('Milestone added');
+    }
+
+    function removeMilestone(id) {
+      calCompetesData.milestones = calCompetesData.milestones.filter(m => m.id !== id);
+      renderMilestonesTable();
+      saveCalCompetesData();
+    }
+
+    function updateMilestoneActual(id, value) {
+      const milestone = calCompetesData.milestones.find(m => m.id === id);
+      if (milestone) {
+        milestone.actual = parseFloat(value) || 0;
+        renderMilestonesTable();
+        saveCalCompetesData();
+      }
+    }
+
+    function renderMilestonesTable() {
+      const tbody = document.getElementById('milestoneTableBody');
+      if (calCompetesData.milestones.length === 0) {
+        tbody.innerHTML = '<tr class="cc-milestone-empty"><td colspan="6">No milestones added. Add milestones from your allocation agreement.</td></tr>';
+        document.getElementById('recaptureWarning').style.display = 'none';
+        return;
+      }
+
+      let hasRisk = false;
+      tbody.innerHTML = calCompetesData.milestones.map(m => {
+        const percent = m.target > 0 ? (m.actual / m.target * 100) : 0;
+        let status, statusClass;
+        if (percent >= 100) {
+          status = 'On Track';
+          statusClass = 'on-track';
+        } else if (percent >= 75) {
+          status = 'At Risk';
+          statusClass = 'at-risk';
+          hasRisk = true;
+        } else {
+          status = 'Breach Risk';
+          statusClass = 'breach';
+          hasRisk = true;
+        }
+
+        const typeLabel = m.type === 'jobs' ? 'FTEs' : m.type === 'investment' ? 'Investment' : 'Compensation';
+        const yearLabel = parseInt(m.year) <= 5 ? 'Year ' + m.year : 'Maint ' + (parseInt(m.year) - 5);
+        const prefix = m.type === 'jobs' ? '' : '$';
+
+        return `
+          <tr>
+            <td>${yearLabel}</td>
+            <td>${typeLabel}</td>
+            <td>${prefix}${m.target.toLocaleString()}</td>
+            <td>
+              <input type="number" value="${m.actual}" style="width: 100px; padding: 4px; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 4px; color: var(--text-primary);"
+                onchange="updateMilestoneActual('${m.id}', this.value)">
+            </td>
+            <td><span class="cc-milestone-status ${statusClass}">${status}</span></td>
+            <td><button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="removeMilestone('${m.id}')">Remove</button></td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('recaptureWarning').style.display = hasRisk ? 'block' : 'none';
+    }
+
+    // Compliance Calendar
+    function renderComplianceCalendar() {
+      const container = document.getElementById('ccCalendarGrid');
+      const years = [
+        { num: 1, type: 'performance', tasks: ['Annual Certification', 'FTB 3531 Filing', 'Employment Records'] },
+        { num: 2, type: 'performance', tasks: ['Annual Certification', 'FTB 3531 Filing', 'Employment Records'] },
+        { num: 3, type: 'performance', tasks: ['Annual Certification', 'FTB 3531 Filing', 'Employment Records'] },
+        { num: 4, type: 'performance', tasks: ['Annual Certification', 'FTB 3531 Filing', 'Employment Records'] },
+        { num: 5, type: 'performance', tasks: ['Annual Certification', 'FTB 3531 Filing', 'Final Performance Review'] },
+        { num: 6, type: 'maintenance', tasks: ['Maintenance Certification', 'Employment Verification'] },
+        { num: 7, type: 'maintenance', tasks: ['Maintenance Certification', 'Employment Verification'] },
+        { num: 8, type: 'maintenance', tasks: ['Maintenance Certification', 'Final Closeout'] }
+      ];
+
+      container.innerHTML = years.map(y => `
+        <div class="cc-calendar-year">
+          <div class="cc-calendar-year-title">
+            Year ${y.num}
+            <span class="cc-calendar-year-type ${y.type}">${y.type === 'performance' ? 'Performance' : 'Maintenance'}</span>
+          </div>
+          <div class="cc-calendar-tasks">
+            ${y.tasks.map(t => `
+              <div class="cc-calendar-task">
+                <div class="cc-calendar-task-check" onclick="this.classList.toggle('complete')"></div>
+                <span>${t}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Evidence tracking
+    function toggleEvidenceCategory(category) {
+      const cat = document.getElementById('evidenceCategory' + category.charAt(0).toUpperCase() + category.slice(1));
+      cat.parentElement.classList.toggle('expanded');
+    }
+
+    function updateEvidenceStatus(category, doc, checked) {
+      if (!calCompetesData.evidence[category]) {
+        calCompetesData.evidence[category] = {};
+      }
+      calCompetesData.evidence[category][doc] = checked;
+
+      // Update count
+      const count = Object.values(calCompetesData.evidence[category]).filter(v => v).length;
+      document.getElementById('evidenceCount' + category.charAt(0).toUpperCase() + category.slice(1)).textContent = count;
+
+      saveCalCompetesData();
     }
 
     function initializeChecklist() {
@@ -4491,7 +8212,7 @@
           <div class="empty-state">
             <div class="empty-state-icon">&#128203;</div>
             <div class="empty-state-title">No workflows yet</div>
-            <div class="empty-state-text">Create your first client workflow to start tracking residency changes.</div>
+            <div class="empty-state-text">Create your first client workflow to start tracking compliance.</div>
             <button class="btn btn-primary" onclick="showModal('newWorkflow')">+ New Client</button>
           </div>
         `;
@@ -4500,13 +8221,31 @@
 
       grid.innerHTML = workflows.map(w => {
         const progress = calculateWorkflowProgress(w);
+        const isCalCompetes = w.type === 'calcompetes';
+
+        // Different meta display for different workflow types
+        let metaHtml;
+        let typeIcon;
+        if (isCalCompetes) {
+          metaHtml = `FEIN: ${w.fein || '-'} | ${w.appWindow || 'No window'}`;
+          typeIcon = '&#128176;'; // Money bag
+        } else {
+          metaHtml = `${w.fromState} &#8594; ${w.toState} ${w.moveDate ? '| ' + w.moveDate : ''}`;
+          typeIcon = '&#127968;'; // House
+        }
+
         return `
           <div class="workflow-card" onclick="showWorkflowDetail('${w.id}')">
             <div class="workflow-card-header">
-              <div class="workflow-card-title">${w.name}</div>
+              <div class="workflow-card-title">
+                <span style="margin-right: 6px;">${typeIcon}</span>${w.name}
+              </div>
               <span class="workflow-card-status ${progress === 100 ? 'active' : 'pending'}">${progress === 100 ? 'Complete' : 'In Progress'}</span>
             </div>
-            <div class="workflow-card-meta">${w.fromState} &#8594; ${w.toState} ${w.moveDate ? '| ' + w.moveDate : ''}</div>
+            <div class="workflow-card-meta">${metaHtml}</div>
+            <div class="workflow-card-type" style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px;">
+              ${isCalCompetes ? 'California Competes Tax Credit' : 'Residency Change'}
+            </div>
             <div class="workflow-card-progress">
               <div class="workflow-card-progress-bar" style="width: ${progress}%"></div>
             </div>
@@ -4697,6 +8436,9 @@
 
       // Update UI
       renderDayCounter();
+
+      // Re-run detectors
+      calculateCriticalPeriod();
 
       // Clear form
       document.getElementById('dayEntryDate').value = '';
@@ -5001,9 +8743,9 @@
 
     // ===== ROADMAP =====
     const ROADMAP_TASKS = {
-      before: ['purchase_home', 'list_ca_home', 'schedule_movers'],
-      move: ['physical_move', 'move_family', 'surrender_keys'],
-      after: ['county_assessor', 'new_bank_accounts', 'new_drivers_license', 'vehicle_registration', 'voter_registration'],
+      before: ['purchase_home', 'list_ca_home', 'schedule_movers', 'defer_income_events'],
+      move: ['physical_move', 'move_family', 'personal_lease', 'surrender_keys'],
+      after: ['county_assessor', 'new_bank_accounts', 'new_drivers_license', 'vehicle_registration', 'ftb_address_update', 'voter_registration'],
       ongoing: ['day_counting', 'medical_ties', 'social_orgs', 'religious_orgs'],
       annual: ['file_540nr', 'monitor_ca_income', 'manage_ca_property']
     };
@@ -5055,6 +8797,411 @@
     function toggleRoadmapPhase(header) {
       const phase = header.closest('.roadmap-phase');
       phase.classList.toggle('expanded');
+    }
+
+    function toggleTrapWarnings() {
+      const panel = document.getElementById('trapWarningsPanel');
+      panel.classList.toggle('expanded');
+    }
+
+    // ===== DETECTOR FUNCTIONS =====
+
+    // 1. Transition Period Detector (Noble/Bracamonte)
+    function checkTransitionPeriod() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      const addresses = workflow.addresses || [];
+      const realEvents = workflow.realizationEvents || [];
+
+      // Find earliest non-CA address (new state lease/move date)
+      const newStateAddr = addresses.find(a => !a.city?.toUpperCase().includes('CA') && a.startDate);
+      if (!newStateAddr) return;
+
+      const moveDate = new Date(newStateAddr.startDate);
+      const thirtyDaysAfter = new Date(moveDate);
+      thirtyDaysAfter.setDate(thirtyDaysAfter.getDate() + 30);
+
+      // Check if any realization event falls within 30 days of move
+      const trapEvents = realEvents.filter(e => {
+        const eventDate = new Date(e.date);
+        return eventDate >= moveDate && eventDate <= thirtyDaysAfter;
+      });
+
+      const alertEl = document.getElementById('transitionPeriodAlert');
+      const alertTextEl = document.getElementById('transitionAlertText');
+
+      if (trapEvents.length > 0) {
+        alertEl.classList.add('active');
+        const eventTypes = trapEvents.map(e => e.type).join(', ');
+        alertTextEl.textContent = `${trapEvents.length} income event(s) (${eventTypes}) realized within 30 days of move date. You are a CA resident until physical arrival + belongings moved. Consider delaying liquidity event or accelerating physical move.`;
+      } else {
+        alertEl.classList.remove('active');
+      }
+    }
+
+    // 2. Critical Period Day Count (Bracamonte)
+    function calculateCriticalPeriod() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      const dayEntries = workflow.dayEntries || [];
+      const addresses = workflow.addresses || [];
+      const realEvents = workflow.realizationEvents || [];
+
+      // Find critical period dates
+      const newStateAddr = addresses.find(a => !a.city?.toUpperCase().includes('CA') && a.startDate);
+      const firstRealEvent = realEvents.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+
+      if (!newStateAddr || !firstRealEvent) {
+        document.getElementById('criticalCADays').textContent = '--';
+        document.getElementById('criticalNewStateDays').textContent = '--';
+        document.getElementById('criticalPeriodResult').textContent = '--';
+        return;
+      }
+
+      const startDate = new Date(newStateAddr.startDate);
+      const endDate = new Date(firstRealEvent.date);
+
+      // Count days in each location during critical period
+      let caDays = 0;
+      let newStateDays = 0;
+
+      dayEntries.forEach(entry => {
+        const entryDate = new Date(entry.date);
+        if (entryDate >= startDate && entryDate <= endDate) {
+          if (entry.location === 'CA') {
+            caDays++;
+          } else {
+            newStateDays++;
+          }
+        }
+      });
+
+      document.getElementById('criticalCADays').textContent = caDays;
+      document.getElementById('criticalNewStateDays').textContent = newStateDays;
+
+      const resultEl = document.getElementById('criticalPeriodResult');
+      const alertEl = document.getElementById('criticalPeriodAlert');
+
+      if (caDays > newStateDays && caDays > 0) {
+        resultEl.textContent = 'FAIL';
+        resultEl.className = 'critical-period-value fail';
+        alertEl.classList.add('active');
+      } else if (newStateDays > 0) {
+        resultEl.textContent = 'PASS';
+        resultEl.className = 'critical-period-value pass';
+        alertEl.classList.remove('active');
+      } else {
+        resultEl.textContent = '--';
+        resultEl.className = 'critical-period-value';
+        alertEl.classList.remove('active');
+      }
+    }
+
+    // 3. Near and Dear Inventory Check (Bracamonte)
+    function checkNearAndDear() {
+      const items = ['invFurniture', 'invArtwork', 'invHeirlooms', 'invSentimental', 'invDocuments', 'invVehicles'];
+      const inCA = items.filter(id => document.getElementById(id)?.value === 'CA');
+
+      const alertEl = document.getElementById('nearAndDearAlert');
+      const alertTextEl = document.getElementById('nearAndDearAlertText');
+
+      if (inCA.length > 0) {
+        alertEl.classList.add('active');
+        alertTextEl.textContent = `${inCA.length} item category(s) still in CA. Items remaining in CA after move date suggest you haven't truly moved.`;
+      } else {
+        alertEl.classList.remove('active');
+      }
+
+      // Save to workflow
+      saveInventoryData();
+    }
+
+    function saveInventoryData() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.inventory = {
+        furniture: document.getElementById('invFurniture')?.value || '',
+        artwork: document.getElementById('invArtwork')?.value || '',
+        heirlooms: document.getElementById('invHeirlooms')?.value || '',
+        sentimental: document.getElementById('invSentimental')?.value || '',
+        documents: document.getElementById('invDocuments')?.value || '',
+        vehicles: document.getElementById('invVehicles')?.value || ''
+      };
+      saveWorkflows();
+    }
+
+    // 4. Housing Comparison Detector (Bracamonte)
+    function checkHousingComparison() {
+      const caType = document.getElementById('caHousingType')?.value;
+      const newType = document.getElementById('newHousingType')?.value;
+      const caValue = parseFloat(document.getElementById('caHousingValue')?.value) || 0;
+      const newValue = parseFloat(document.getElementById('newHousingValue')?.value) || 0;
+
+      const alertEl = document.getElementById('housingComparisonAlert');
+
+      // Trigger if owned CA home vs rented new state AND CA value > 2x new value
+      if (caType === 'owned' && newType === 'rented' && caValue > (newValue * 2)) {
+        alertEl.classList.add('active');
+      } else {
+        alertEl.classList.remove('active');
+      }
+
+      // Save to workflow
+      saveHousingData();
+    }
+
+    function saveHousingData() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.housingComparison = {
+        ca: {
+          type: document.getElementById('caHousingType')?.value || '',
+          value: document.getElementById('caHousingValue')?.value || '',
+          sqft: document.getElementById('caHousingSqft')?.value || ''
+        },
+        newState: {
+          type: document.getElementById('newHousingType')?.value || '',
+          value: document.getElementById('newHousingValue')?.value || '',
+          sqft: document.getElementById('newHousingSqft')?.value || ''
+        }
+      };
+      saveWorkflows();
+    }
+
+    // 5. Employer Housing Flag (Mazer)
+    function checkEmployerHousing() {
+      const paidBy = document.getElementById('housingPaidBy')?.value;
+      const leaseName = document.getElementById('leaseNamedParty')?.value;
+
+      const alertEl = document.getElementById('employerHousingAlert');
+
+      if (paidBy === 'employer' || leaseName === 'employer') {
+        alertEl.classList.add('active');
+      } else {
+        alertEl.classList.remove('active');
+      }
+
+      // Save to workflow
+      saveEmployerHousingData();
+    }
+
+    function saveEmployerHousingData() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.employerHousing = {
+        paidBy: document.getElementById('housingPaidBy')?.value || '',
+        leaseName: document.getElementById('leaseNamedParty')?.value || '',
+        vehicleOwnership: document.getElementById('vehicleOwnership')?.value || ''
+      };
+      saveWorkflows();
+    }
+
+    // 6. Family Location Tracker (Mazer/Beckwith)
+    function checkFamilyLocation() {
+      const spouse = document.getElementById('spouseLocation')?.value;
+      const children = document.getElementById('childrenLocation')?.value;
+
+      const alertEl = document.getElementById('spousalLocationAlert');
+
+      // Trigger if spouse is in CA (and not N/A)
+      if (spouse === 'CA') {
+        alertEl.classList.add('active');
+      } else {
+        alertEl.classList.remove('active');
+      }
+
+      // Save to workflow
+      saveFamilyLocationData();
+    }
+
+    function saveFamilyLocationData() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.familyLocation = {
+        spouse: document.getElementById('spouseLocation')?.value || '',
+        children: document.getElementById('childrenLocation')?.value || '',
+        dependents: document.getElementById('dependentsLocation')?.value || ''
+      };
+      saveWorkflows();
+    }
+
+    // 7. RSU Allocation Calculator
+    function calculateRSUAllocation() {
+      const grantDate = document.getElementById('rsuGrantDate')?.value;
+      const vestDate = document.getElementById('rsuVestDate')?.value;
+      const vestValue = parseFloat(document.getElementById('rsuVestValue')?.value) || 0;
+      let totalDays = parseInt(document.getElementById('rsuTotalDays')?.value) || 0;
+      const caDays = parseInt(document.getElementById('rsuCADays')?.value) || 0;
+
+      // Auto-calculate total working days if dates provided and totalDays empty
+      if (grantDate && vestDate && !totalDays) {
+        const start = new Date(grantDate);
+        const end = new Date(vestDate);
+        const diffTime = Math.abs(end - start);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        // Rough estimate: ~5/7 are working days
+        totalDays = Math.round(diffDays * 5 / 7);
+        document.getElementById('rsuTotalDays').value = totalDays;
+      }
+
+      const nonCADays = totalDays - caDays;
+      document.getElementById('rsuNonCADays').value = nonCADays > 0 ? nonCADays : 0;
+
+      if (totalDays > 0 && caDays >= 0) {
+        const allocPct = (caDays / totalDays) * 100;
+        const caTaxable = vestValue * (caDays / totalDays);
+        const nonCATaxable = vestValue - caTaxable;
+
+        document.getElementById('rsuAllocPct').textContent = allocPct.toFixed(1) + '%';
+        document.getElementById('rsuCATaxable').textContent = '$' + caTaxable.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        document.getElementById('rsuNonCATaxable').textContent = '$' + nonCATaxable.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        document.getElementById('rsuVestTotal').textContent = '$' + vestValue.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+      } else {
+        document.getElementById('rsuAllocPct').textContent = '--%';
+        document.getElementById('rsuCATaxable').textContent = '$--';
+        document.getElementById('rsuNonCATaxable').textContent = '$--';
+        document.getElementById('rsuVestTotal').textContent = '$--';
+      }
+
+      // Save to workflow
+      saveRSUData();
+    }
+
+    function saveRSUData() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.rsuCalculator = {
+        grantDate: document.getElementById('rsuGrantDate')?.value || '',
+        vestDate: document.getElementById('rsuVestDate')?.value || '',
+        vestValue: document.getElementById('rsuVestValue')?.value || '',
+        totalDays: document.getElementById('rsuTotalDays')?.value || '',
+        caDays: document.getElementById('rsuCADays')?.value || ''
+      };
+      saveWorkflows();
+    }
+
+    // 8. Contract Type Warning (Mazer)
+    function selectContractType(type) {
+      // Update UI
+      document.querySelectorAll('.contract-type-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      event.currentTarget.classList.add('selected');
+
+      // Check if warning should show
+      const alertEl = document.getElementById('contractTypeAlert');
+      if (type === 'fixed' || type === 'renewable') {
+        alertEl.classList.add('active');
+      } else {
+        alertEl.classList.remove('active');
+      }
+
+      // Save to workflow
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      workflow.contractType = type;
+      saveWorkflows();
+    }
+
+    // Run all detectors when switching to a workflow
+    function runAllDetectors() {
+      checkTransitionPeriod();
+      calculateCriticalPeriod();
+      checkNearAndDear();
+      checkHousingComparison();
+      checkEmployerHousing();
+      checkFamilyLocation();
+      calculateRSUAllocation();
+
+      // Restore contract type selection
+      if (currentWorkflowId) {
+        const workflow = workflows.find(w => w.id === currentWorkflowId);
+        if (workflow?.contractType) {
+          document.querySelectorAll('.contract-type-option').forEach(opt => {
+            opt.classList.remove('selected');
+          });
+          // Find and select the matching option
+          const options = document.querySelectorAll('.contract-type-option');
+          const typeMap = ['fixed', 'renewable', 'atwill', 'permanent'];
+          typeMap.forEach((t, i) => {
+            if (t === workflow.contractType && options[i]) {
+              options[i].classList.add('selected');
+              if (t === 'fixed' || t === 'renewable') {
+                document.getElementById('contractTypeAlert')?.classList.add('active');
+              }
+            }
+          });
+        }
+      }
+    }
+
+    // Load saved detector data into forms
+    function loadDetectorData() {
+      if (!currentWorkflowId) return;
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow) return;
+
+      // Inventory
+      if (workflow.inventory) {
+        document.getElementById('invFurniture').value = workflow.inventory.furniture || '';
+        document.getElementById('invArtwork').value = workflow.inventory.artwork || '';
+        document.getElementById('invHeirlooms').value = workflow.inventory.heirlooms || '';
+        document.getElementById('invSentimental').value = workflow.inventory.sentimental || '';
+        document.getElementById('invDocuments').value = workflow.inventory.documents || '';
+        document.getElementById('invVehicles').value = workflow.inventory.vehicles || '';
+      }
+
+      // Housing comparison
+      if (workflow.housingComparison) {
+        document.getElementById('caHousingType').value = workflow.housingComparison.ca?.type || '';
+        document.getElementById('caHousingValue').value = workflow.housingComparison.ca?.value || '';
+        document.getElementById('caHousingSqft').value = workflow.housingComparison.ca?.sqft || '';
+        document.getElementById('newHousingType').value = workflow.housingComparison.newState?.type || '';
+        document.getElementById('newHousingValue').value = workflow.housingComparison.newState?.value || '';
+        document.getElementById('newHousingSqft').value = workflow.housingComparison.newState?.sqft || '';
+      }
+
+      // Employer housing
+      if (workflow.employerHousing) {
+        document.getElementById('housingPaidBy').value = workflow.employerHousing.paidBy || '';
+        document.getElementById('leaseNamedParty').value = workflow.employerHousing.leaseName || '';
+        document.getElementById('vehicleOwnership').value = workflow.employerHousing.vehicleOwnership || '';
+      }
+
+      // Family location
+      if (workflow.familyLocation) {
+        document.getElementById('spouseLocation').value = workflow.familyLocation.spouse || '';
+        document.getElementById('childrenLocation').value = workflow.familyLocation.children || '';
+        document.getElementById('dependentsLocation').value = workflow.familyLocation.dependents || '';
+      }
+
+      // RSU calculator
+      if (workflow.rsuCalculator) {
+        document.getElementById('rsuGrantDate').value = workflow.rsuCalculator.grantDate || '';
+        document.getElementById('rsuVestDate').value = workflow.rsuCalculator.vestDate || '';
+        document.getElementById('rsuVestValue').value = workflow.rsuCalculator.vestValue || '';
+        document.getElementById('rsuTotalDays').value = workflow.rsuCalculator.totalDays || '';
+        document.getElementById('rsuCADays').value = workflow.rsuCalculator.caDays || '';
+      }
+
+      // Run all checks
+      runAllDetectors();
     }
 
     function toggleRoadmapTask(checkEl, taskId) {
@@ -5392,6 +9539,11 @@
       document.getElementById('addrCity').value = '';
 
       renderAddresses();
+
+      // Re-run detectors
+      checkTransitionPeriod();
+      calculateCriticalPeriod();
+
       showToast('Address added', 'success');
     }
 
@@ -5596,6 +9748,11 @@
       document.getElementById('realEventDesc').value = '';
 
       renderRealizationEvents();
+
+      // Re-run detectors
+      checkTransitionPeriod();
+      calculateCriticalPeriod();
+
       showToast('Realization event added', 'success');
     }
 

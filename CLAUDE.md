@@ -1,11 +1,23 @@
-# CLAUDE.md - Audit Ledger (CA Residency Defense)
+# CLAUDE.md - Audit Ledger (BayComply Platform)
 
 ## Project Context
 - **Repo**: audit-ledger (GitHub Pages subdirectory)
 - **Live URL**: gugosf114.github.io/audit-ledger
 - **API Backend**: Cloud Run at baycomply.com
 - **Owner**: George Abrahamyants (Legal Technologist)
-- **Focus**: California FTB residency audit defense
+- **Focus**: California tax compliance workflows
+
+## WORKFLOW TYPES
+
+### 1. Residency Change (FTB Audit Defense)
+- Track domicile change for high-net-worth individuals leaving CA
+- 19 Bragg factors, Safe Harbor (R&TC 17014(d)), 183-day rule
+- Defense-oriented: survive FTB residency audit
+
+### 2. California Competes Tax Credit (CCTC)
+- Track credit application and 8-year compliance lifecycle
+- GO-Biz application + FTB books/records review
+- Offense-oriented: win the credit, avoid recapture
 
 ## THE LEGAL FRAMEWORK (Know This Cold)
 
@@ -77,3 +89,99 @@ Conclusive presumption of nonresidency requires ALL THREE:
 2. **Evidence > UI Polish**: Functional evidence collection beats pretty dashboards
 3. **Hash Chain > Everything**: Tamper-evidence is the core value proposition
 4. **Practitioner Credibility**: UI should signal "we know Bragg, we know Safe Harbor"
+
+---
+
+## CALIFORNIA COMPETES TAX CREDIT (CCTC) FRAMEWORK
+
+### Program Structure
+- **Administered by**: GO-Biz (Governor's Office of Business and Economic Development)
+- **Compliance Review**: FTB Books & Records (not a tax audit - contract compliance)
+- **Term**: 5-year performance + 3-year maintenance = 8 years total
+- **Risk**: Recapture (clawback) if milestones not maintained
+
+### Phase I: Quantitative Screen
+**Cost-Benefit Ratio** (lower is better):
+```
+Ratio = Credit Requested ÷ (Aggregate Employee Compensation + Aggregate Investment)
+```
+- Historical cutoffs vary: 0.03 to 1.9, but <0.08 is safer
+- Top 200% (lowest ratios) advance to Phase II
+
+### Automatic Phase II Advancement
+Bypass ratio competition if:
+1. **Flight Risk**: Project would occur in another state without credit
+2. **High Need Location**: ≥75% of new FTEs work ≥75% time in High Poverty/Unemployment area
+
+### Phase II: 14 Qualitative Factors
+1. Jobs Created/Retained
+2. Compensation (wages, benefits)
+3. Investment (real/personal property)
+4. Duration of commitment
+5. Economic Impact
+6. Strategic Importance
+7. Opportunity for Growth
+8. Extent of Poverty/Unemployment in location
+9. In-State Incentives available
+10. Out-of-State Incentives (flight risk verification)
+11. Training opportunities
+12. Benefit to State vs Benefit to Business
+13. Influence of Credit on decision
+14. Workforce Treatment & Fair Labor (includes relocation from discriminatory states)
+
+### Key Calculations
+
+**Annual Full-Time Equivalent (AFTE)**:
+- Hourly: Total Hours ÷ 1,750 (max 1.0 per employee)
+- Salaried: Total Weeks ÷ 50 (max 1.0 per employee)
+- Must average ≥35 hours/week to count
+
+**Aggregate Employee Compensation (AEC)**:
+- 5-year cumulative W-2 wages for NET NEW employees only
+- Excludes: bonuses, overtime, commissions, benefits, stock options
+
+**Aggregate Investment**:
+- Real Property: land, buildings, tenant improvements
+- Personal Property: equipment, software, furniture
+- Must be purchased AFTER application deadline
+
+### Grant vs Credit Thresholds
+Grant requires ONE of:
+- ≥500 new full-time jobs
+- ≥$10M infrastructure investment
+- Located in High Unemployment/Poverty area
+
+### Disqualifiers & Red Flags
+- Related party transfers (parent→subsidiary doesn't count as "new")
+- Pre-application investments (timing matters)
+- Part-time aggregation (cannot combine 2 PT to equal 1 FT)
+- Base Year manipulation (understating to inflate "net increase")
+- Wage definition violations (including bonuses/benefits in "wages")
+- Material litigation or labor/environmental violations (10 years)
+
+### Compliance Calendar
+| When | Action |
+|------|--------|
+| Application Window | Submit online (July, Jan, March windows) |
+| Within 30 days of approval | Designate contact person |
+| 1st day of 4th month after Tax Year End | Annual Compliance Certification to GO-Biz |
+| Tax Return Filing | Claim credit via Form FTB 3531 |
+| Within 30 days of FTB IDR | Respond to Information Document Request |
+| Years 6-8 | Maintenance certification (avoid recapture) |
+
+### FTB Documentation Requirements
+**Jobs**: Payroll registers, I-9, W-2, W-4, offer letters, pay stubs
+**Investment**: Invoices, cancelled checks, lease agreements, general ledger
+**Site**: Deed, utility bills (proof of operations)
+**AFTE Schedule**: Employee list with hire date, term date, hours/weeks per tax year
+
+### Application Windows (FY 2025-26)
+- July 21, 2025 – August 11, 2025
+- January 5, 2026 – January 26, 2026
+- March 2, 2026 – March 16, 2026
+
+### Key Sources
+- CalCompetes Application Guide
+- FTB Form 3531 Instructions
+- GO-Biz Allocation Agreements (Snapchat, Atomic Machines precedents)
+- FTB Books & Records Review Protocol
