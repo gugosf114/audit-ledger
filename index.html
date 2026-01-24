@@ -1103,6 +1103,349 @@
       font-size: 14px;
       margin-bottom: 24px;
     }
+
+    /* ===== DAY COUNTER ===== */
+    .day-counter-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .day-counter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .day-counter-title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .day-counter-title-icon {
+      font-size: 24px;
+    }
+
+    .day-counter-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .day-stat-card {
+      background: var(--bg-hover);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .day-stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .day-stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .day-stat-value.safe { color: var(--safe); }
+    .day-stat-value.caution { color: var(--watch); }
+    .day-stat-value.warning { color: #f97316; }
+    .day-stat-value.danger { color: var(--action); }
+
+    .day-progress-container {
+      margin-bottom: 24px;
+    }
+
+    .day-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .day-progress-label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .day-progress-value {
+      font-size: 14px;
+      font-family: 'SF Mono', 'Consolas', monospace;
+    }
+
+    .day-progress-bar {
+      height: 24px;
+      background: var(--bg-dark);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .day-progress-fill {
+      height: 100%;
+      border-radius: 12px;
+      transition: width 0.5s ease, background 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: white;
+    }
+
+    .day-progress-fill.safe { background: linear-gradient(90deg, #059669, var(--safe)); }
+    .day-progress-fill.caution { background: linear-gradient(90deg, #d97706, var(--watch)); }
+    .day-progress-fill.warning { background: linear-gradient(90deg, #ea580c, #f97316); }
+    .day-progress-fill.danger { background: linear-gradient(90deg, #dc2626, var(--action)); }
+
+    .day-progress-markers {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .day-progress-marker {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .day-progress-marker-line {
+      width: 1px;
+      height: 6px;
+      background: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .day-alert-banner {
+      padding: 12px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+
+    .day-alert-banner.safe {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--safe);
+    }
+
+    .day-alert-banner.caution {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--watch);
+    }
+
+    .day-alert-banner.warning {
+      background: rgba(249, 115, 22, 0.1);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+      color: #f97316;
+    }
+
+    .day-alert-banner.danger {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--action);
+    }
+
+    .day-alert-icon {
+      font-size: 20px;
+    }
+
+    .day-entry-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+    }
+
+    .day-entry-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .day-entry-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .day-entry-input {
+      padding: 10px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .day-entry-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .day-entry-btn {
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .day-entry-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .day-entries-list {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .day-entries-header {
+      display: grid;
+      grid-template-columns: 120px 80px 120px 1fr 60px;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-hover);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .day-entry-row {
+      display: grid;
+      grid-template-columns: 120px 80px 120px 1fr 60px;
+      gap: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      align-items: center;
+    }
+
+    .day-entry-row:last-child {
+      border-bottom: none;
+    }
+
+    .day-entry-row:hover {
+      background: var(--bg-hover);
+    }
+
+    .day-entry-location {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .day-entry-location.ca {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--action);
+    }
+
+    .day-entry-location.other {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .day-entry-delete {
+      padding: 6px 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day-entry-delete:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--action);
+      color: var(--action);
+    }
+
+    .day-bulk-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .day-bulk-toggle input {
+      accent-color: var(--accent);
+    }
+
+    .day-bulk-form {
+      display: none;
+      padding: 16px;
+      background: var(--bg-hover);
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .day-bulk-form.active {
+      display: block;
+    }
+
+    .day-bulk-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      resize: vertical;
+      margin-bottom: 12px;
+    }
+
+    .day-bulk-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
   </style>
 </head>
 <body>
@@ -1331,6 +1674,135 @@
           <div class="workflow-meta-item">
             <span class="workflow-meta-label">Progress</span>
             <span class="workflow-meta-value" id="workflowProgress">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY COUNTER SECTION -->
+      <div class="day-counter-section" id="dayCounterSection">
+        <div class="day-counter-header">
+          <div class="day-counter-title">
+            <span class="day-counter-title-icon">&#128197;</span>
+            CA Day Counter - 183 Day Rule
+          </div>
+          <button class="btn btn-secondary" onclick="exportDayEntries()">Export CSV</button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="day-counter-stats">
+          <div class="day-stat-card">
+            <div class="day-stat-value" id="dayStatCA">0</div>
+            <div class="day-stat-label">Days in CA</div>
+          </div>
+          <div class="day-stat-card">
+            <div class="day-stat-value safe" id="dayStatOther">0</div>
+            <div class="day-stat-label">Days Outside CA</div>
+          </div>
+          <div class="day-stat-card">
+            <div class="day-stat-value" id="dayStatRemaining">183</div>
+            <div class="day-stat-label">Days Until Limit</div>
+          </div>
+          <div class="day-stat-card">
+            <div class="day-stat-value" id="dayStatYear">2025</div>
+            <div class="day-stat-label">Tax Year</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="day-progress-container">
+          <div class="day-progress-header">
+            <span class="day-progress-label">Progress to 183-Day Threshold</span>
+            <span class="day-progress-value" id="dayProgressText">0 / 183 (0%)</span>
+          </div>
+          <div class="day-progress-bar">
+            <div class="day-progress-fill safe" id="dayProgressFill" style="width: 0%"></div>
+          </div>
+          <div class="day-progress-markers">
+            <div class="day-progress-marker">
+              <div class="day-progress-marker-line"></div>
+              <span>0</span>
+            </div>
+            <div class="day-progress-marker">
+              <div class="day-progress-marker-line"></div>
+              <span>120 Safe</span>
+            </div>
+            <div class="day-progress-marker">
+              <div class="day-progress-marker-line"></div>
+              <span>150 Caution</span>
+            </div>
+            <div class="day-progress-marker">
+              <div class="day-progress-marker-line"></div>
+              <span>183 Limit</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="day-alert-banner safe" id="dayAlertBanner">
+          <span class="day-alert-icon">&#10003;</span>
+          <span id="dayAlertText">Safe Zone: You have plenty of room before approaching the 183-day threshold.</span>
+        </div>
+
+        <!-- Entry Form -->
+        <div class="day-entry-form" id="dayEntryForm">
+          <div class="day-entry-group">
+            <label class="day-entry-label">Date</label>
+            <input type="date" class="day-entry-input" id="dayEntryDate">
+          </div>
+          <div class="day-entry-group">
+            <label class="day-entry-label">Location</label>
+            <select class="day-entry-input" id="dayEntryLocation">
+              <option value="CA">California</option>
+              <option value="NV">Nevada</option>
+              <option value="OTHER">Other State</option>
+              <option value="INTL">International</option>
+            </select>
+          </div>
+          <div class="day-entry-group">
+            <label class="day-entry-label">Purpose</label>
+            <select class="day-entry-input" id="dayEntryPurpose">
+              <option value="PERSONAL">Personal</option>
+              <option value="BUSINESS">Business</option>
+              <option value="MEDICAL">Medical</option>
+              <option value="TRANSIT">Transit</option>
+              <option value="VACATION">Vacation</option>
+            </select>
+          </div>
+          <div class="day-entry-group">
+            <label class="day-entry-label">Notes (optional)</label>
+            <input type="text" class="day-entry-input" id="dayEntryNotes" placeholder="Brief description...">
+          </div>
+          <button class="day-entry-btn" onclick="addDayEntry()">+ Add Day</button>
+        </div>
+
+        <!-- Bulk Entry Toggle -->
+        <label class="day-bulk-toggle">
+          <input type="checkbox" id="bulkEntryToggle" onchange="toggleBulkEntry()">
+          Enable bulk entry mode (for date ranges)
+        </label>
+
+        <!-- Bulk Entry Form -->
+        <div class="day-bulk-form" id="bulkEntryForm">
+          <div class="day-bulk-hint">
+            Enter date ranges, one per line. Format: YYYY-MM-DD to YYYY-MM-DD: LOCATION, PURPOSE<br>
+            Example: 2025-01-01 to 2025-01-15: NV, Personal
+          </div>
+          <textarea class="day-bulk-textarea" id="bulkEntryText" placeholder="2025-01-01 to 2025-01-15: NV, Personal
+2025-01-16 to 2025-01-18: CA, Business"></textarea>
+          <button class="day-entry-btn" onclick="processBulkEntry()">Process Bulk Entry</button>
+        </div>
+
+        <!-- Entry List -->
+        <div class="day-entries-list" id="dayEntriesList">
+          <div class="day-entries-header">
+            <span>Date</span>
+            <span>Location</span>
+            <span>Purpose</span>
+            <span>Notes</span>
+            <span>Action</span>
+          </div>
+          <div id="dayEntriesBody">
+            <!-- Day entries will be rendered here -->
           </div>
         </div>
       </div>
@@ -1606,6 +2078,10 @@
       document.getElementById('workflowProgress').textContent = progress + '%';
 
       renderChecklist(workflow);
+      renderDayCounter();
+
+      // Set default date to today
+      document.getElementById('dayEntryDate').value = new Date().toISOString().split('T')[0];
 
       document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
       document.getElementById('page-workflow-detail').classList.add('active');
@@ -1950,6 +2426,337 @@
     function uploadEvidence(workflowId, categoryId, itemId) {
       // For now, just show a toast - file upload requires backend storage
       showToast('Evidence upload coming soon - for now, note the file in comments', 'warning');
+    }
+
+    // ===== DAY COUNTER =====
+    function getDayEntries(workflowId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      return workflow?.dayEntries || [];
+    }
+
+    function saveDayEntries(workflowId, entries) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (workflow) {
+        workflow.dayEntries = entries;
+        saveWorkflows();
+      }
+    }
+
+    function addDayEntry() {
+      if (!currentWorkflowId) return;
+
+      const date = document.getElementById('dayEntryDate').value;
+      const location = document.getElementById('dayEntryLocation').value;
+      const purpose = document.getElementById('dayEntryPurpose').value;
+      const notes = document.getElementById('dayEntryNotes').value;
+
+      if (!date) {
+        showToast('Please select a date', 'error');
+        return;
+      }
+
+      const entries = getDayEntries(currentWorkflowId);
+
+      // Check for duplicate date
+      if (entries.find(e => e.date === date)) {
+        showToast('Entry for this date already exists', 'error');
+        return;
+      }
+
+      const entry = {
+        id: 'day_' + Date.now(),
+        date,
+        location,
+        purpose,
+        notes,
+        createdAt: new Date().toISOString()
+      };
+
+      entries.push(entry);
+      entries.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort newest first
+      saveDayEntries(currentWorkflowId, entries);
+
+      // Log to audit ledger
+      logDayEntry(entry);
+
+      // Update UI
+      renderDayCounter();
+
+      // Clear form
+      document.getElementById('dayEntryDate').value = '';
+      document.getElementById('dayEntryNotes').value = '';
+
+      showToast('Day logged: ' + date + ' in ' + location, 'success');
+    }
+
+    async function logDayEntry(entry) {
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      await api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'DAY_ENTRY',
+          content: {
+            message: workflow.name + ' | Day logged: ' + entry.date + ' in ' + entry.location + ' (' + entry.purpose + ')',
+            confidence: 'KNOWN_KNOWN',
+            workflowId: currentWorkflowId,
+            dayEntry: entry
+          }
+        })
+      });
+    }
+
+    function deleteDayEntry(entryId) {
+      if (!currentWorkflowId) return;
+
+      let entries = getDayEntries(currentWorkflowId);
+      const entry = entries.find(e => e.id === entryId);
+      entries = entries.filter(e => e.id !== entryId);
+      saveDayEntries(currentWorkflowId, entries);
+
+      // Log deletion to audit ledger
+      if (entry) {
+        api('/api/audit', {
+          method: 'POST',
+          body: JSON.stringify({
+            tenantId: DEFAULT_TENANT,
+            userId: DEFAULT_USER,
+            entryType: 'DAY_ENTRY_DELETE',
+            content: {
+              message: 'Day entry deleted: ' + entry.date + ' in ' + entry.location,
+              confidence: 'KNOWN_KNOWN',
+              workflowId: currentWorkflowId,
+              deletedEntry: entry
+            }
+          })
+        });
+      }
+
+      renderDayCounter();
+      showToast('Day entry deleted', 'success');
+    }
+
+    function toggleBulkEntry() {
+      const checkbox = document.getElementById('bulkEntryToggle');
+      const form = document.getElementById('bulkEntryForm');
+      const singleForm = document.getElementById('dayEntryForm');
+
+      if (checkbox.checked) {
+        form.classList.add('active');
+        singleForm.style.display = 'none';
+      } else {
+        form.classList.remove('active');
+        singleForm.style.display = 'grid';
+      }
+    }
+
+    function processBulkEntry() {
+      if (!currentWorkflowId) return;
+
+      const text = document.getElementById('bulkEntryText').value.trim();
+      if (!text) {
+        showToast('Please enter some date ranges', 'error');
+        return;
+      }
+
+      const lines = text.split('\n');
+      let addedCount = 0;
+      let entries = getDayEntries(currentWorkflowId);
+
+      for (const line of lines) {
+        // Parse: YYYY-MM-DD to YYYY-MM-DD: LOCATION, PURPOSE
+        const match = line.match(/(\d{4}-\d{2}-\d{2})\s*to\s*(\d{4}-\d{2}-\d{2}):\s*(\w+),?\s*(\w+)?/i);
+        if (!match) continue;
+
+        const startDate = new Date(match[1]);
+        const endDate = new Date(match[2]);
+        const location = match[3].toUpperCase();
+        const purpose = (match[4] || 'PERSONAL').toUpperCase();
+
+        // Generate entries for each day in range
+        let current = new Date(startDate);
+        while (current <= endDate) {
+          const dateStr = current.toISOString().split('T')[0];
+
+          // Skip if already exists
+          if (!entries.find(e => e.date === dateStr)) {
+            entries.push({
+              id: 'day_' + Date.now() + '_' + addedCount,
+              date: dateStr,
+              location: location === 'NV' ? 'NV' : location === 'CA' ? 'CA' : location === 'INTL' ? 'INTL' : 'OTHER',
+              purpose: ['PERSONAL', 'BUSINESS', 'MEDICAL', 'TRANSIT', 'VACATION'].includes(purpose) ? purpose : 'PERSONAL',
+              notes: 'Bulk entry',
+              createdAt: new Date().toISOString()
+            });
+            addedCount++;
+          }
+          current.setDate(current.getDate() + 1);
+        }
+      }
+
+      if (addedCount > 0) {
+        entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+        saveDayEntries(currentWorkflowId, entries);
+
+        // Log bulk entry to audit ledger
+        api('/api/audit', {
+          method: 'POST',
+          body: JSON.stringify({
+            tenantId: DEFAULT_TENANT,
+            userId: DEFAULT_USER,
+            entryType: 'DAY_ENTRY_BULK',
+            content: {
+              message: 'Bulk day entry: ' + addedCount + ' days added',
+              confidence: 'KNOWN_KNOWN',
+              workflowId: currentWorkflowId,
+              count: addedCount
+            }
+          })
+        });
+
+        renderDayCounter();
+        document.getElementById('bulkEntryText').value = '';
+        showToast(addedCount + ' days added via bulk entry', 'success');
+      } else {
+        showToast('No new days added (may be duplicates)', 'warning');
+      }
+    }
+
+    function calculateDayStats(entries) {
+      const currentYear = new Date().getFullYear();
+      const yearEntries = entries.filter(e => new Date(e.date).getFullYear() === currentYear);
+
+      const caDays = yearEntries.filter(e => e.location === 'CA').length;
+      const otherDays = yearEntries.filter(e => e.location !== 'CA').length;
+      const remaining = Math.max(0, 183 - caDays);
+
+      let status = 'safe';
+      if (caDays >= 183) {
+        status = 'danger';
+      } else if (caDays >= 151) {
+        status = 'warning';
+      } else if (caDays >= 121) {
+        status = 'caution';
+      }
+
+      return { caDays, otherDays, remaining, status, year: currentYear };
+    }
+
+    function getAlertMessage(status, caDays, remaining) {
+      switch (status) {
+        case 'safe':
+          return { icon: '&#10003;', text: 'Safe Zone: You have ' + remaining + ' days remaining before approaching the 183-day threshold.' };
+        case 'caution':
+          return { icon: '&#9888;', text: 'Caution: You have ' + remaining + ' days remaining. Start limiting CA visits.' };
+        case 'warning':
+          return { icon: '&#9888;', text: 'Warning: Only ' + remaining + ' days remaining! Strongly limit CA presence.' };
+        case 'danger':
+          return { icon: '&#10060;', text: 'PRESUMED CA RESIDENT: You have exceeded 183 days in California this year. Consult tax advisor immediately.' };
+        default:
+          return { icon: '&#10003;', text: 'No data yet. Start logging your days.' };
+      }
+    }
+
+    function renderDayCounter() {
+      if (!currentWorkflowId) return;
+
+      const entries = getDayEntries(currentWorkflowId);
+      const stats = calculateDayStats(entries);
+      const alert = getAlertMessage(stats.status, stats.caDays, stats.remaining);
+
+      // Update stats
+      const caStatEl = document.getElementById('dayStatCA');
+      caStatEl.textContent = stats.caDays;
+      caStatEl.className = 'day-stat-value ' + stats.status;
+
+      document.getElementById('dayStatOther').textContent = stats.otherDays;
+      document.getElementById('dayStatRemaining').textContent = stats.remaining;
+      document.getElementById('dayStatYear').textContent = stats.year;
+
+      // Update progress bar
+      const percentage = Math.min(100, Math.round((stats.caDays / 183) * 100));
+      const progressFill = document.getElementById('dayProgressFill');
+      progressFill.style.width = percentage + '%';
+      progressFill.className = 'day-progress-fill ' + stats.status;
+      progressFill.textContent = percentage > 10 ? percentage + '%' : '';
+      document.getElementById('dayProgressText').textContent = stats.caDays + ' / 183 (' + percentage + '%)';
+
+      // Update alert banner
+      const banner = document.getElementById('dayAlertBanner');
+      banner.className = 'day-alert-banner ' + stats.status;
+      document.getElementById('dayAlertText').textContent = alert.text;
+      banner.querySelector('.day-alert-icon').innerHTML = alert.icon;
+
+      // Render entries list
+      const tbody = document.getElementById('dayEntriesBody');
+      if (entries.length === 0) {
+        tbody.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--text-muted);">No days logged yet. Add your first entry above.</div>';
+      } else {
+        tbody.innerHTML = entries.map(e => {
+          const isCA = e.location === 'CA';
+          return '<div class="day-entry-row">' +
+            '<span>' + e.date + '</span>' +
+            '<span class="day-entry-location ' + (isCA ? 'ca' : 'other') + '">' + e.location + '</span>' +
+            '<span>' + e.purpose + '</span>' +
+            '<span style="color: var(--text-muted);">' + (e.notes || '-') + '</span>' +
+            '<button class="day-entry-delete" onclick="deleteDayEntry(\'' + e.id + '\')">&times;</button>' +
+          '</div>';
+        }).join('');
+      }
+
+      // Update the physical presence checklist item if exists
+      updatePhysicalPresenceFactor(stats);
+    }
+
+    function updatePhysicalPresenceFactor(stats) {
+      // Auto-update the day_count checklist item based on day counter stats
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      if (!workflow || !workflow.checklist.physical_presence) return;
+
+      const dayCountItem = workflow.checklist.physical_presence.day_count;
+      if (dayCountItem) {
+        if (stats.caDays <= 183) {
+          dayCountItem.status = 'complete';
+          dayCountItem.confidence = 'KNOWN_KNOWN';
+        } else {
+          dayCountItem.status = 'in_progress';
+          dayCountItem.confidence = 'KNOWN_UNKNOWN';
+        }
+        dayCountItem.notes = 'Auto-tracked: ' + stats.caDays + ' CA days in ' + stats.year;
+        dayCountItem.updatedAt = new Date().toISOString();
+        saveWorkflows();
+      }
+    }
+
+    function exportDayEntries() {
+      if (!currentWorkflowId) return;
+
+      const workflow = workflows.find(w => w.id === currentWorkflowId);
+      const entries = getDayEntries(currentWorkflowId);
+
+      if (entries.length === 0) {
+        showToast('No entries to export', 'warning');
+        return;
+      }
+
+      // Create CSV content
+      const headers = ['Date', 'Location', 'Purpose', 'Notes', 'Created At'];
+      const rows = entries.map(e => [e.date, e.location, e.purpose, e.notes || '', e.createdAt]);
+      const csv = [headers.join(','), ...rows.map(r => r.map(v => '"' + v + '"').join(','))].join('\n');
+
+      // Download
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = workflow.name.replace(/\s+/g, '_') + '_day_entries_' + new Date().toISOString().split('T')[0] + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast('Exported ' + entries.length + ' entries to CSV', 'success');
     }
 
     // ===== INIT =====
