@@ -1,263 +1,195 @@
 # Audit Ledger
 
-Tamper-evident AI governance platform using SHA-256 hash chains, adversarial verification, and regulatory compliance mapping.
+Tamper-evident California residency audit defense platform using SHA-256 hash chains, the 19 Bragg factors framework, and FTB-compliant documentation workflows.
+
+**Live Dashboard**: [gugosf114.github.io/audit-ledger](https://gugosf114.github.io/audit-ledger)
+**API Backend**: Cloud Run (baycomply.com)
 
 ## The Problem
 
-AI systems produce outputs that organizations act on. When those outputs are wrong - hallucinated, overconfident, or drifting from baseline behavior - there's often no record of what was checked, what confidence level was declared, or what safeguards were bypassed.
+When the California Franchise Tax Board (FTB) audits a residency change, they apply the 19 factors from *Appeal of Bragg* (2003). Most taxpayers discover this framework only after receiving an audit notice - by then, critical evidence windows have closed.
 
-Regulated industries need more than "the AI said so." They need cryptographic proof of what was verified, when, and by whom.
+The FTB has years to reconstruct your life. You have weeks to respond. Without contemporaneous, hash-chained documentation, it becomes your word against their reconstruction.
 
 ## What This Solves
 
-1. **Tamper-evident audit trail** - Every entry is hash-chained; modifications break the chain and are detected
-2. **Pre-commit confidence declaration** - Forces confidence level BEFORE content is logged (Rumsfeld Protocol)
-3. **Adversarial verification** - Three-role sealed packet system prevents AI drift and hallucination
-4. **AI output gatekeeper** - Blocks low-confidence, hallucinated, or policy-violating outputs before they reach users
-5. **Regulatory mapping** - Auto-tags entries to ISO 42001, EU AI Act, and NIST AI RMF clauses
-6. **Compliance workflows** - Multi-step checklists with dependencies, document collection, and gap analysis
+| Problem | Solution |
+|---------|----------|
+| No proof of when evidence was collected | SHA-256 hash chain - every entry timestamped and tamper-evident |
+| Unclear what the FTB actually looks for | 19 Bragg factors mapped with weights (Highest/Moderate/Least/Corroborative) |
+| Missing the 546-day Safe Harbor window | Day counter with automatic CA day tracking and threshold alerts |
+| Scattered evidence across systems | Centralized evidence repository linked to specific Bragg factors |
+| Reactive instead of proactive | Residency Change Roadmap with 18 tasks across 5 phases |
+| No confidence tracking | Rumsfeld Protocol - declare confidence BEFORE logging content |
 
-## Architecture
+## Feature Map
 
-### Core Components
+| Feature | What It Does |
+|---------|--------------|
+| **183-Day Counter** | Tracks days in/out of California against statutory presumption threshold |
+| **Safe Harbor Tracker** | Monitors 546-day period, 45-day CA limit, and $200K income threshold per R&TC 17014(d) |
+| **Residency Roadmap** | 5-phase timeline (Before Move → Move Week → After → Ongoing → Annual) with 18 tasks |
+| **19 Bragg Factors Grid** | Visual display of all factors with weight classifications and evidence status |
+| **Address Timeline** | Chronological record of all addresses with date ranges and evidence links |
+| **Evidence Repository** | Document storage linked to specific Bragg factors with hash verification |
+| **Realization Events** | Tracks California-source income events that could trigger tax liability |
+| **Third-Party Requests** | Logs subpoenas, document requests, and information demands |
+| **Hash-Chained Ledger** | Tamper-evident audit trail - modifications break the chain |
+| **Confidence Declaration** | Rumsfeld Protocol forces confidence level BEFORE content is logged |
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| Audit Ledger | `Code.gs` | Hash-chained entry system, tamper detection |
-| Confidence Declaration | `Newton_Confidence.gs` | Pre-commit confidence levels (KNOWN_KNOWN, etc.) |
-| Sealed Packets | `Newton_SealedPacket.gs` | Generator/Auditor/Regenerator verification |
-| Gatekeeper | `Newton_Gatekeeper.gs` | Blocks unsafe AI outputs |
-| Gatekeeper Brain | `Newton_GatekeeperBrain.gs` | Auto-tuning, learning mode |
-| Sentinel | `Newton_Sentinel.gs` | Signal detection (VOID_DETECTED, etc.) |
-| Regulatory Mapping | `Newton_Regulatory.gs` | ISO 42001, EU AI Act, NIST AI RMF tagging |
-| Gap Analysis | `Newton_GapAnalysis.gs` | Compliance gap identification |
+## The 19 Bragg Factors
 
-### Workflow System
+Based on *Appeal of Bragg* (2003) and FTB RSTM 1030/1040:
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| Workflow Engine | `Newton_Workflow.gs` | Multi-step workflows with dependencies |
-| Workflow UI | `Newton_WorkflowUI.gs` | Web dashboard for workflow management |
-| Workflow View | `Newton_WorkflowView.gs` | Single workflow execution page |
+### Highest Weight
+1. Location of all residential real property
+2. State of spouse/RDP and children's residence
+3. State where children attend school
+4. Location of principal residence (owned or rented)
+5. State of voter registration and voting history
+6. State of professional licenses
+7. State of vehicle registration
 
-### Governance & Dashboard
+### Moderate Weight
+8. State of driver's license
+9. State of bank accounts (especially checking)
+10. Origination point of financial transactions
+11. Location of physicians, dentists, accountants, attorneys
+12. State of social, religious, and professional organization memberships
+13. Location of real property investments
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| Dashboard v3 | `Newton_Dashboard_v3.gs` | Role-based command center (EXEC/COMPLIANCE/ENGINEER/BRIEFING) |
-| Dashboard HTML | `DashboardHTML_v3.html` | Frontend for Dashboard v3 |
-| Governance Co-Pilot | `Newton_Governance_CoPilot.gs` | AI-assisted governance with mutation tracking |
+### Least Weight
+14. State address used for tax returns and other documents
+15. State of telephone number
+16. Location where mail is received
 
-### Integration & API
+### Corroborative
+17. Location of pet licenses
+18. Location of newspaper subscriptions
+19. Time spent in California vs. other states
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| API Endpoint | `Newton_API_Endpoint.gs` | External write access via POST |
-| Web UI | `Newton_WebUI.gs` | Web-based ledger interface |
-| AI Proxy | `Newton_AIProxy.gs` | Gemini API integration |
-| Multi-Tenant | `Newton_MultiTenant.gs` | Tenant isolation |
+## Safe Harbor Rules (R&TC 17014(d))
 
-### Supporting Modules
+To qualify for Safe Harbor (conclusive presumption of nonresidency):
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| IRAC Folders | `Newton_IRAC.gs` | Legal research folder creation |
-| Document Verifier | `Newton_Verifier.gs` | Document verification via Gemini |
-| Model Card | `Newton_ModelCard.gs` | AI model documentation |
-| Detection Engine | `Newton_DetectionEngine.gs` | Pattern detection |
-| Agent System | `Newton_Agent.gs`, `Newton_AgentLogger.gs`, `Newton_AgentPacket.gs` | Agent orchestration |
-| Tenant Control | `Newton_TenantControlTower.gs` | Tenant policy management |
-| Audit Package | `Newton_AuditPackage.gs` | Audit export |
-| Confidence Planner | `Newton_ConfidencePlanner.gs` | Confidence planning |
-| Demo | `Newton_Demo.gs` | Demo scenarios |
+| Requirement | Threshold |
+|-------------|-----------|
+| Days outside California | 546+ consecutive days |
+| Days in California | ≤45 during the 546-day period |
+| California-source income | <$200,000 during the period |
 
-## How It Works
+The dashboard tracks all three requirements and calculates eligibility automatically.
 
-### Hash-Chained Audit Ledger
+## Residency Change Roadmap
+
+### Phase 1: Before Move (60-90 Days Prior)
+- Purchase/lease home in new state
+- List California home for sale
+- Schedule movers, set move date
+
+### Phase 2: Move Week
+- Physical relocation of belongings
+- Move family members (spouse, children, pets)
+- Surrender California residence keys
+
+### Phase 3: Immediately After (First 30 Days)
+- File homeowner's exemption with county assessor
+- Open new state bank accounts
+- Obtain new state driver's license
+- Register vehicles in new state
+- Register to vote in new state
+
+### Phase 4: Ongoing (First 12 Months)
+- Maintain day counting discipline
+- Establish new state medical providers
+- Join local social organizations
+- Establish religious community ties
+
+### Phase 5: Annual Maintenance
+- File Form 540NR (nonresident return)
+- Monitor California-source income
+- Manage any remaining California property
+
+## Technical Architecture
+
+### Frontend (GitHub Pages)
+- Single-page application (`index.html`)
+- localStorage for workflow state
+- Real-time hash chain verification
+- Responsive design for mobile/desktop
+
+### Backend (Cloud Run)
+- RESTful API at baycomply.com
+- SHA-256 hash chain storage
+- Multi-tenant isolation
+- Regulatory framework mapping
+
+### Hash Chain Mechanics
 
 Each entry contains:
-- UUID, timestamp, actor, event type, text content
-- Previous row's record hash
-- Current row's record hash (SHA-256 of all fields + secret)
+- UUID, timestamp, actor, event type, content
+- Previous entry's record hash
+- Current entry's record hash (SHA-256 of all fields)
 
-Tampering breaks the chain. Run `verifyLedgerIntegrity()` to detect modifications.
+Tampering breaks the chain. Verification detects any modification.
 
 ### Confidence Declaration (Rumsfeld Protocol)
 
 Before logging content, declare confidence:
 
-```javascript
-// Step 1: Declare confidence
-const uuid = declareConfidence('KNOWN_KNOWN', 'REGULATORY', 85);
-
-// Step 2: Log content with confidence UUID
-newEntryWithConfidence(uuid, 'Analyst', 'FINDING', 'Policy violates Art.9', null, 'FINAL');
-```
-
-Confidence levels:
-- **KNOWN_KNOWN** - High confidence, direct evidence
-- **KNOWN_UNKNOWN** - Identified gap, specific uncertainty
-- **UNKNOWN_UNKNOWN** - Speculation
-- **NUMERIC (0-100)** - Optional percentage
+| Level | Meaning |
+|-------|---------|
+| KNOWN_KNOWN | High confidence, direct evidence |
+| KNOWN_UNKNOWN | Identified gap, specific uncertainty |
+| UNKNOWN_UNKNOWN | Speculation, no direct evidence |
 
 Both entries are hashed. Confidence cannot be retroactively softened.
 
-### Sealed Packet Architecture
+## Legal Framework References
 
-Three-role adversarial verification:
-
-1. **Generator** - Produces atomic claims with evidence from inputs
-2. **Auditor** - Verifies output against original inputs (PASS/FAIL)
-3. **Regenerator** - Rebuilds from scratch on failure (never patches)
-
-Key rules:
-- T0 Rule: Catches context bleed
-- Fingerprinting: Detects input tampering
-- Atomicity: No compound claims
-- Evidence coupling: SUPPORTED needs quotes, NULL needs nothing
-
-### AI Gatekeeper
-
-Filters AI outputs before they reach users:
-
-```javascript
-const result = gatekeeperCheck(aiOutput, context);
-// { allowed: true/false, reason: "...", confidence: 0.85 }
-```
-
-Blocks:
-- Low-confidence outputs (below threshold)
-- Hallucinated content (claims without evidence)
-- Policy violations (PII, prohibited content)
-
-Learning mode auto-tunes thresholds based on feedback.
-
-### Regulatory Mapping
-
-Auto-tags entries to compliance frameworks:
-
-```javascript
-const tags = autoTagContent(text, eventType);
-// [{ framework: 'ISO_42001', clause: '6.1', title: 'Risk Assessment', confidence: 0.8 }]
-
-const summary = getComplianceSummary('ISO_42001');
-// { coveragePercent: 75, coveredClauses: [...], uncoveredClauses: [...] }
-```
-
-Supported frameworks:
-- **ISO/IEC 42001:2023** - AI Management System (24 clauses)
-- **EU AI Act** - European AI Regulation (20+ articles)
-- **NIST AI RMF 1.0** - Risk Management Framework (GOVERN/MAP/MEASURE/MANAGE)
-
-### Dashboard v3
-
-Role-based command center with four views:
-
-| View | Audience | Shows |
-|------|----------|-------|
-| BRIEFING | Everyone | "X changes since your last visit", prioritized actions |
-| EXEC | Leadership | Status labels (Safe/Watch/Action), no raw numbers |
-| COMPLIANCE | Compliance officers | Gap counts, blocked outputs, regulatory alerts |
-| ENGINEER | Technical | Drift score, latency, error rate with thresholds |
-
-### Workflow System
-
-Built-in compliance templates:
-- ISO 42001 AI Management System (12 steps)
-- CalCompete Grant Application (10 steps)
-- CA Residency Change (10 steps)
-- EU AI Act Compliance (8 steps)
-
-Features:
-- Step dependencies (Step 5 blocked until Steps 1,2,3 complete)
-- Document/evidence collection per step
-- Gap analysis (what's missing and what it blocks)
-- Deadline tracking with warnings
-
-## Schema (14-17 columns)
-
-| Column | Field |
-|--------|-------|
-| 1 | UUID |
-| 2 | Timestamp |
-| 3 | Actor |
-| 4 | Event Type |
-| 5 | Text |
-| 6 | Gift |
-| 7 | Prev Hash |
-| 8 | Record Hash |
-| 9 | Status |
-| 10-13 | Citation fields |
-| 14 | Citation Hash |
-| 15 | Confidence_Level (optional) |
-| 16 | Confidence_UUID (optional) |
-| 17 | Confidence_Justification (optional) |
-
-## Setup
-
-1. Create a new Google Sheet
-2. Open Extensions → Apps Script
-3. Copy all `.gs` files into the project
-4. Copy `DashboardHTML_v3.html` as an HTML file
-5. Run `setupSheet()` to create the ledger structure
-6. Run `setupLedgerSecret()` to set your hash secret (minimum 32 characters)
-7. Optional: Set `GEMINI_API_KEY` in Script Properties for AI features
-8. Optional: Deploy as web app for dashboard/API access
-
-## File Structure
-
-```
-/
-├── Code.gs                      # Main ledger logic
-├── Newton_Confidence.gs         # Rumsfeld Protocol
-├── Newton_SealedPacket.gs       # Adversarial verification
-├── Newton_Gatekeeper.gs         # AI output filtering
-├── Newton_GatekeeperBrain.gs    # Auto-tuning
-├── Newton_Sentinel.gs           # Signal detection
-├── Newton_Regulatory.gs         # Regulatory mapping
-├── Newton_GapAnalysis.gs        # Gap identification
-├── Newton_Workflow.gs           # Workflow engine
-├── Newton_WorkflowUI.gs         # Workflow dashboard
-├── Newton_WorkflowView.gs       # Workflow execution
-├── Newton_Dashboard_v3.gs       # Command center
-├── DashboardHTML_v3.html        # Dashboard frontend
-├── Newton_Governance_CoPilot.gs # AI governance with mutations
-├── Newton_API_Endpoint.gs       # External API
-├── Newton_WebUI.gs              # Web interface
-├── Newton_AIProxy.gs            # Gemini integration
-├── Newton_MultiTenant.gs        # Tenant isolation
-├── Newton_IRAC.gs               # Legal research folders
-├── Newton_Verifier.gs           # Document verification
-├── Newton_ModelCard.gs          # Model documentation
-├── Newton_DetectionEngine.gs    # Pattern detection
-├── Newton_Agent.gs              # Agent orchestration
-├── Newton_AgentLogger.gs        # Agent logging
-├── Newton_AgentPacket.gs        # Agent packets
-├── Newton_TenantControlTower.gs # Tenant policies
-├── Newton_AuditPackage.gs       # Audit export
-├── Newton_ConfidencePlanner.gs  # Confidence planning
-├── Newton_Demo.gs               # Demo scenarios
-├── SEALED_PACKETS.md            # Prompt documentation
-├── appsscript.json              # Apps Script manifest
-└── README.md
-```
+| Source | What It Covers |
+|--------|----------------|
+| *Appeal of Bragg* (2003) | Origin of the 19-factor test |
+| FTB RSTM 1030 | Domicile determination rules |
+| FTB RSTM 1040 | Statutory residency (183-day rule) |
+| R&TC 17014 | Residency definitions |
+| R&TC 17014(d) | Safe Harbor provisions |
 
 ## Use Cases
 
-| Industry | What Gets Verified |
-|----------|-------------------|
-| AI Governance | Model outputs, confidence levels, drift detection |
-| SEC/Finance | 10-K exhibits, certifications, MD&A |
-| FDA/Pharma | IND/NDA sections, clinical protocols |
-| Banking | AML/KYC, loan docs, disclosures |
-| Legal | Discovery, privilege logs, IRAC research |
-| Gov Contracting | FAR/DFARS, cost accounting |
+| Scenario | How Audit Ledger Helps |
+|----------|------------------------|
+| Pre-move planning | Roadmap shows exactly what to do and when |
+| Active relocation | Day counter tracks Safe Harbor eligibility |
+| Post-move documentation | Evidence repository links docs to Bragg factors |
+| FTB audit response | Hash-chained timeline proves when evidence was collected |
+| Professional advisors | Dashboard demonstrates client's systematic approach |
 
-## License
+## Setup
 
-MIT
+1. Visit [gugosf114.github.io/audit-ledger](https://gugosf114.github.io/audit-ledger)
+2. Create a new workflow for your residency change
+3. Set move date and origin/destination states
+4. Follow the Roadmap phases
+5. Log evidence as you collect it
+6. Export audit package when needed
+
+## Files
+
+```
+/
+├── index.html          # Main dashboard (all features)
+├── README.md           # This file
+└── .github/
+    └── scripts/
+        └── validate-site.js  # Site validation
+```
 
 ## Author
 
 George Abrahamyants
 [LinkedIn](https://www.linkedin.com/in/gabrahamyants/)
+
+## License
+
+MIT
