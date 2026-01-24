@@ -331,8 +331,13 @@
 
     /* ===== MAIN CONTENT ===== */
     .main {
-      padding-top: 260px;
+      padding-top: 100px;
       min-height: 100vh;
+    }
+
+    /* Hide the pulse-bar and role-bar - causing overlap issues */
+    .pulse-bar, .role-bar {
+      display: none;
     }
 
     .page {
