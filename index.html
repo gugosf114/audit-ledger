@@ -58,6 +58,7 @@
       font-weight: 700;
       color: var(--text-primary);
       text-decoration: none;
+      cursor: pointer;
     }
 
     .nav-brand-icon {
@@ -175,25 +176,10 @@
       transition: all 0.3s;
     }
 
-    .chain-block.broken {
-      background: var(--action);
-      animation: shake 0.5s;
-    }
-
     .chain-connector {
       width: 8px;
       height: 2px;
       background: var(--safe);
-    }
-
-    .chain-connector.broken {
-      background: var(--action);
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-2px); }
-      75% { transform: translateX(2px); }
     }
 
     .pulse-label {
@@ -243,14 +229,7 @@
       background: rgba(16, 185, 129, 0.1);
       border: 1px solid rgba(16, 185, 129, 0.3);
       border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
       max-width: 350px;
-    }
-
-    .pulse-alert.danger {
-      background: rgba(239, 68, 68, 0.1);
-      border-color: rgba(239, 68, 68, 0.3);
     }
 
     .pulse-alert-icon {
@@ -419,7 +398,7 @@
       margin-top: 4px;
     }
 
-    /* ===== CAPABILITY CARDS ===== */
+    /* ===== SECTION TITLE ===== */
     .section-title {
       font-size: 24px;
       font-weight: 600;
@@ -429,6 +408,14 @@
       gap: 12px;
     }
 
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    /* ===== CAPABILITY CARDS ===== */
     .capabilities-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -451,22 +438,6 @@
       border-color: var(--border-hover);
       transform: translateY(-4px);
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-
-    .capability-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .capability-card:hover::before {
-      opacity: 1;
     }
 
     .capability-header {
@@ -501,11 +472,6 @@
       color: var(--safe);
     }
 
-    .capability-status.ready {
-      background: rgba(99, 102, 241, 0.15);
-      color: var(--accent);
-    }
-
     .capability-title {
       font-size: 18px;
       font-weight: 600;
@@ -537,9 +503,6 @@
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .capability-action-btn {
@@ -558,7 +521,7 @@
       background: var(--accent-hover);
     }
 
-    /* ===== LEDGER PAGE ===== */
+    /* ===== TABLES ===== */
     .ledger-controls {
       display: flex;
       justify-content: space-between;
@@ -666,6 +629,260 @@
     .confidence-dot.known-unknown { background: var(--watch); }
     .confidence-dot.unknown-unknown { background: var(--action); }
 
+    /* ===== WORKFLOWS PAGE ===== */
+    .workflows-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .workflow-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .workflow-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .workflow-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .workflow-card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .workflow-card-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .workflow-card-status.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--safe);
+    }
+
+    .workflow-card-status.pending {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--watch);
+    }
+
+    .workflow-card-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .workflow-card-progress {
+      height: 6px;
+      background: var(--bg-hover);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .workflow-card-progress-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .workflow-card-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    /* ===== WORKFLOW DETAIL ===== */
+    .workflow-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .workflow-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .workflow-client-name {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .workflow-header-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .workflow-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .workflow-meta-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .workflow-meta-value {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .checklist-category {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .checklist-category-header {
+      padding: 16px 20px;
+      background: var(--bg-hover);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .checklist-category-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checklist-category-count {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .checklist-category-body {
+      padding: 0;
+    }
+
+    .checklist-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .checklist-item:last-child {
+      border-bottom: none;
+    }
+
+    .checklist-item-name {
+      font-size: 14px;
+    }
+
+    .checklist-item-status {
+      width: 140px;
+    }
+
+    .checklist-item-confidence {
+      width: 180px;
+    }
+
+    .checklist-item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .checklist-select {
+      padding: 8px 12px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      border-radius: 6px;
+      font-size: 12px;
+      width: 100%;
+      cursor: pointer;
+    }
+
+    .checklist-select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .checklist-btn {
+      padding: 8px 12px;
+      background: var(--bg-hover);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .checklist-btn:hover {
+      background: var(--bg-active);
+      color: var(--text-primary);
+    }
+
+    .checklist-btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* ===== TOOLTIP ===== */
+    .tooltip-container {
+      position: relative;
+    }
+
+    .tooltip-container:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+      z-index: 50;
+      margin-bottom: 8px;
+    }
+
     /* ===== MODAL ===== */
     .modal-overlay {
       position: fixed;
@@ -736,6 +953,12 @@
 
     .form-group {
       margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
 
     .form-label {
@@ -851,18 +1074,43 @@
     .toast.success { border-color: var(--safe); }
     .toast.error { border-color: var(--action); }
     .toast.warning { border-color: var(--watch); }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .empty-state-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .empty-state-text {
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
   </style>
 </head>
 <body>
   <!-- Navigation -->
   <nav class="nav">
-    <a href="#" class="nav-brand" onclick="showPage('home')">
+    <a class="nav-brand" onclick="showPage('home')">
       <div class="nav-brand-icon">N</div>
       Newton
     </a>
 
     <div class="nav-links">
       <a class="nav-link active" onclick="showPage('home')" data-page="home">Home</a>
+      <a class="nav-link" onclick="showPage('workflows')" data-page="workflows">Workflows</a>
       <a class="nav-link" onclick="showPage('ledger')" data-page="ledger">Audit Ledger</a>
     </div>
 
@@ -910,7 +1158,7 @@
     <div class="pulse-section right">
       <div class="pulse-alert" id="priorityAlert">
         <span class="pulse-alert-icon">&#10003;</span>
-        <span class="pulse-alert-text" id="alertText">Loading...</span>
+        <span class="pulse-alert-text" id="alertText">All systems operational</span>
       </div>
     </div>
   </div>
@@ -929,7 +1177,7 @@
         <option value="7d" selected>Last 7 Days</option>
         <option value="30d">Last 30 Days</option>
       </select>
-      <span class="role-identity" id="userIdentity">Actor: Loading...</span>
+      <span class="role-identity" id="userIdentity">Actor: System</span>
     </div>
   </div>
 
@@ -962,6 +1210,23 @@
 
       <div class="capabilities-grid">
 
+        <div class="capability-card" onclick="showPage('workflows')">
+          <div class="capability-header">
+            <div class="capability-icon">&#128203;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Residency Workflows</h3>
+          <p class="capability-description">Pre-audit defense for CA residency changes. Track every action with confidence declarations and tamper-evident timestamps.</p>
+          <div class="capability-features">
+            <span class="capability-feature">FTB Audit Ready</span>
+            <span class="capability-feature">Evidence Upload</span>
+            <span class="capability-feature">Hash Chain</span>
+          </div>
+          <div class="capability-action">
+            <button class="capability-action-btn">View Workflows</button>
+          </div>
+        </div>
+
         <div class="capability-card" onclick="showPage('ledger')">
           <div class="capability-header">
             <div class="capability-icon">&#128274;</div>
@@ -979,7 +1244,7 @@
           </div>
         </div>
 
-        <div class="capability-card">
+        <div class="capability-card" onclick="showModal('newEntry')">
           <div class="capability-header">
             <div class="capability-icon">&#127919;</div>
             <span class="capability-status active">Active</span>
@@ -992,24 +1257,7 @@
             <span class="capability-feature">Pre-commit</span>
           </div>
           <div class="capability-action">
-            <button class="capability-action-btn" onclick="showModal('newEntry')">Declare</button>
-          </div>
-        </div>
-
-        <div class="capability-card">
-          <div class="capability-header">
-            <div class="capability-icon">&#128737;</div>
-            <span class="capability-status active">Active</span>
-          </div>
-          <h3 class="capability-title">AI Gatekeeper</h3>
-          <p class="capability-description">Filters AI outputs before they reach users. Blocks low-confidence, hallucinated, or policy-violating content.</p>
-          <div class="capability-features">
-            <span class="capability-feature">Confidence Filter</span>
-            <span class="capability-feature">Hallucination Block</span>
-            <span class="capability-feature">Policy Enforcement</span>
-          </div>
-          <div class="capability-action">
-            <button class="capability-action-btn">View Stats</button>
+            <button class="capability-action-btn">Declare</button>
           </div>
         </div>
 
@@ -1033,6 +1281,60 @@
       </div>
     </div>
 
+    <!-- WORKFLOWS PAGE -->
+    <div class="page" id="page-workflows">
+      <div class="section-header">
+        <h1 class="section-title">Residency Workflows</h1>
+        <button class="btn btn-primary" onclick="showModal('newWorkflow')">+ New Client</button>
+      </div>
+
+      <div class="workflows-grid" id="workflowsGrid">
+        <div class="empty-state">
+          <div class="empty-state-icon">&#128203;</div>
+          <div class="empty-state-title">No workflows yet</div>
+          <div class="empty-state-text">Create your first client workflow to start tracking residency changes.</div>
+          <button class="btn btn-primary" onclick="showModal('newWorkflow')">+ New Client</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKFLOW DETAIL PAGE -->
+    <div class="page" id="page-workflow-detail">
+      <div class="workflow-header">
+        <div class="workflow-header-top">
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">
+              <a href="#" onclick="showPage('workflows')" style="color: var(--accent); text-decoration: none;">&#8592; Back to Workflows</a>
+            </div>
+            <h1 class="workflow-client-name" id="workflowClientName">Client Name</h1>
+          </div>
+          <span class="workflow-card-status active" id="workflowStatus">Active</span>
+        </div>
+        <div class="workflow-header-meta">
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">From</span>
+            <span class="workflow-meta-value" id="workflowFrom">California</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">To</span>
+            <span class="workflow-meta-value" id="workflowTo">Nevada</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Move Date</span>
+            <span class="workflow-meta-value" id="workflowMoveDate">-</span>
+          </div>
+          <div class="workflow-meta-item">
+            <span class="workflow-meta-label">Progress</span>
+            <span class="workflow-meta-value" id="workflowProgress">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="checklistContainer">
+        <!-- Checklist categories will be rendered here -->
+      </div>
+    </div>
+
     <!-- LEDGER PAGE -->
     <div class="page" id="page-ledger">
       <h1 class="section-title">Audit Ledger</h1>
@@ -1042,8 +1344,8 @@
           <select class="filter-select" id="filterEventType">
             <option value="">All Event Types</option>
             <option value="FINDING">Finding</option>
-            <option value="ALERT">Alert</option>
-            <option value="test">Test</option>
+            <option value="CHECKLIST_UPDATE">Checklist Update</option>
+            <option value="WORKFLOW_CREATE">Workflow Create</option>
           </select>
           <select class="filter-select" id="filterPeriod">
             <option value="7">Last 7 days</option>
@@ -1063,7 +1365,7 @@
         <table>
           <thead>
             <tr>
-              <th>UUID</th>
+              <th>ID</th>
               <th>Timestamp</th>
               <th>Actor</th>
               <th>Event Type</th>
@@ -1093,9 +1395,9 @@
           <label class="form-label">Confidence Level *</label>
           <select class="form-input" id="entryConfidence">
             <option value="">Select confidence level...</option>
-            <option value="KNOWN_KNOWN">KNOWN_KNOWN - High confidence, direct evidence</option>
-            <option value="KNOWN_UNKNOWN">KNOWN_UNKNOWN - Identified gap</option>
-            <option value="UNKNOWN_UNKNOWN">UNKNOWN_UNKNOWN - Speculation</option>
+            <option value="KNOWN_KNOWN">KNOWN_KNOWN - I know the fact and have evidence</option>
+            <option value="KNOWN_UNKNOWN">KNOWN_UNKNOWN - I know there's a gap here</option>
+            <option value="UNKNOWN_UNKNOWN">UNKNOWN_UNKNOWN - I don't know what I don't know</option>
           </select>
           <p class="form-hint">Declare confidence before the entry is logged (Rumsfeld Protocol)</p>
         </div>
@@ -1121,6 +1423,63 @@
     </div>
   </div>
 
+  <!-- Modal: New Workflow -->
+  <div class="modal-overlay" id="modal-newWorkflow">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">New Client Workflow</h2>
+        <button class="modal-close" onclick="closeModal('newWorkflow')">&#10005;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Client Name *</label>
+          <input type="text" class="form-input" id="workflowName" placeholder="Full legal name">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="workflowEmail" placeholder="client@email.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-input" id="workflowPhone" placeholder="(555) 555-5555">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">From State *</label>
+            <select class="form-input" id="workflowFromState">
+              <option value="CA" selected>California</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">To State *</label>
+            <select class="form-input" id="workflowToState">
+              <option value="">Select state...</option>
+              <option value="NV">Nevada</option>
+              <option value="TX">Texas</option>
+              <option value="FL">Florida</option>
+              <option value="WA">Washington</option>
+              <option value="TN">Tennessee</option>
+              <option value="WY">Wyoming</option>
+              <option value="SD">South Dakota</option>
+              <option value="AK">Alaska</option>
+              <option value="NH">New Hampshire</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Target Move Date</label>
+          <input type="date" class="form-input" id="workflowMoveDate">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('newWorkflow')">Cancel</button>
+        <button class="btn btn-primary" onclick="createWorkflow()">Create Workflow</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -1129,6 +1488,75 @@
     const API_BASE = 'https://baycomply-api-827642717513.us-central1.run.app';
     const DEFAULT_TENANT = '00000000-0000-0000-0000-000000000001';
     const DEFAULT_USER = '00000000-0000-0000-0000-000000000001';
+
+    // ===== LOCAL STATE =====
+    let workflows = JSON.parse(localStorage.getItem('newton_workflows') || '[]');
+    let currentWorkflowId = null;
+
+    // ===== CHECKLIST TEMPLATE =====
+    const CHECKLIST_TEMPLATE = {
+      'formalities': {
+        title: 'Formalities (Least Weight - But Required)',
+        items: [
+          { id: 'drivers_license', name: "Driver's License - Surrender CA, obtain new state" },
+          { id: 'vehicle_registration', name: 'Vehicle Registration - All vehicles registered in new state' },
+          { id: 'voter_registration', name: 'Voter Registration - Register in new state' },
+          { id: 'usps_address', name: 'USPS Address Change - File Form 3575' },
+          { id: 'professional_services', name: 'Professional Services - New doctors, dentists, accountants, attorneys' },
+        ]
+      },
+      'property': {
+        title: 'Residential Property (Highest Weight)',
+        items: [
+          { id: 'ca_property_status', name: 'CA Property - Listed for sale, rented, or disposed' },
+          { id: 'homeowners_exemption', name: "Homeowner's Exemption - Removed from CA property" },
+          { id: 'new_residence', name: 'New Residence - Purchased or leased in new state' },
+          { id: 'residence_comparison', name: 'Residence Comparison - New home comparable or better' },
+        ]
+      },
+      'physical_presence': {
+        title: 'Physical Presence (Highest Weight)',
+        items: [
+          { id: 'move_date', name: 'Move Date - Documented date of physical move' },
+          { id: 'day_count', name: 'Day Count - Less than 9 months in CA' },
+          { id: 'visit_purpose', name: 'CA Visits - Purpose documented (vacation, business, medical)' },
+          { id: 'visit_accommodations', name: 'CA Accommodations - Where you stay when visiting' },
+        ]
+      },
+      'family_social': {
+        title: 'Family & Social Connections (Highest Weight)',
+        items: [
+          { id: 'spouse_location', name: 'Spouse/Partner - Lives in new state' },
+          { id: 'children_location', name: 'Minor Children - Reside and attend school in new state' },
+          { id: 'clubs_resigned', name: 'CA Clubs - Resigned from country clubs, gyms, etc.' },
+          { id: 'clubs_joined', name: 'New State Clubs - Joined clubs, organizations in new state' },
+        ]
+      },
+      'business_employment': {
+        title: 'Business & Employment (Highest/Moderate Weight)',
+        items: [
+          { id: 'employment_location', name: 'Employment - Primary work location in new state' },
+          { id: 'business_interests', name: 'CA Business Interests - Level of participation documented' },
+          { id: 'professional_licenses', name: 'Professional Licenses - Where licenses are held' },
+          { id: 'remote_work', name: 'Remote Work - Physical location when working documented' },
+        ]
+      },
+      'financial': {
+        title: 'Financial & Income',
+        items: [
+          { id: 'bank_accounts', name: 'Bank Accounts - Opened in new state' },
+          { id: 'stock_options', name: 'Stock Options/RSUs - CA portion documented' },
+          { id: 'deferred_comp', name: 'Deferred Compensation - Timing and sourcing documented' },
+        ]
+      },
+      'safe_harbor': {
+        title: 'Safe Harbor Screening',
+        items: [
+          { id: 'employment_contract', name: 'Employment Contract - 546+ consecutive days outside CA' },
+          { id: 'intangible_income', name: 'Intangible Income - Under $200K threshold verified' },
+        ]
+      }
+    };
 
     // ===== API HELPER =====
     async function api(endpoint, options = {}) {
@@ -1156,6 +1584,26 @@
 
       if (pageId === 'ledger') loadLedgerData();
       if (pageId === 'home') loadHomeStats();
+      if (pageId === 'workflows') renderWorkflowsList();
+    }
+
+    function showWorkflowDetail(workflowId) {
+      currentWorkflowId = workflowId;
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (!workflow) return;
+
+      document.getElementById('workflowClientName').textContent = workflow.name;
+      document.getElementById('workflowFrom').textContent = workflow.fromState;
+      document.getElementById('workflowTo').textContent = workflow.toState;
+      document.getElementById('workflowMoveDate').textContent = workflow.moveDate || '-';
+
+      const progress = calculateWorkflowProgress(workflow);
+      document.getElementById('workflowProgress').textContent = progress + '%';
+
+      renderChecklist(workflow);
+
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.getElementById('page-workflow-detail').classList.add('active');
     }
 
     // ===== MODALS =====
@@ -1182,48 +1630,22 @@
       const stats = await api('/api/stats');
       if (stats) {
         document.getElementById('statEntries').textContent = stats.entries.toLocaleString();
-        document.getElementById('statWorkflows').textContent = stats.workflows;
+        document.getElementById('statWorkflows').textContent = workflows.length;
         document.getElementById('statCompliance').textContent = stats.compliance + '%';
       }
+      document.getElementById('pulseWorkflows').textContent = workflows.length;
     }
 
     // ===== LOAD PULSE BAR =====
     async function loadPulseBar() {
-      // Chain integrity
       const chain = await api('/api/chain/integrity');
       if (chain) {
         document.getElementById('chainStatus').innerHTML =
-          '<span class="pulse-value ' + (chain.verified ? 'verified' : 'broken') + '">' + (chain.verified ? 'VERIFIED' : 'BROKEN') + '</span> - ' + chain.rows.toLocaleString() + ' rows';
+          '<span class="pulse-value ' + (chain.verified ? 'verified' : 'broken') + '">' +
+          (chain.verified ? 'VERIFIED' : 'BROKEN') + '</span> - ' + chain.rows.toLocaleString() + ' rows';
         document.getElementById('systemStatus').textContent = chain.verified ? 'Chain Verified' : 'CHAIN BROKEN';
       }
-
-      // Economic impact
-      const economic = await api('/api/economic-impact');
-      if (economic) {
-        const total = economic.total;
-        document.getElementById('economicValue').textContent =
-          total >= 1000000 ? '$' + (total / 1000000).toFixed(1) + 'M' : '$' + (total / 1000).toFixed(0) + 'K';
-      }
-
-      // Priority alert
-      const alert = await api('/api/alerts/priority');
-      if (alert) {
-        document.getElementById('alertText').textContent = alert.message;
-        const alertEl = document.getElementById('priorityAlert');
-        if (!alert.safe) alertEl.classList.add('danger');
-      }
-
-      // Workflow count
-      const workflows = await api('/api/workflows/count');
-      if (workflows) {
-        document.getElementById('pulseWorkflows').textContent = workflows.count;
-      }
-
-      // User
-      const user = await api('/api/user');
-      if (user) {
-        document.getElementById('userIdentity').textContent = 'Actor: ' + user.email;
-      }
+      document.getElementById('pulseWorkflows').textContent = workflows.length;
     }
 
     // ===== LOAD LEDGER =====
@@ -1238,17 +1660,18 @@
         return;
       }
 
-      tbody.innerHTML = entries.map(entry =>
-        '<tr>' +
+      tbody.innerHTML = entries.map(entry => {
+        const confidenceClass = (entry.confidence || 'KNOWN_KNOWN').toLowerCase().replace(/_/g, '-');
+        return '<tr>' +
           '<td><span class="ledger-uuid">' + String(entry.uuid).substring(0, 8) + '</span></td>' +
           '<td>' + entry.timestamp + '</td>' +
           '<td>' + entry.actor + '</td>' +
           '<td><span class="ledger-event-type">' + entry.eventType + '</span></td>' +
           '<td>' + String(entry.text).substring(0, 50) + (String(entry.text).length > 50 ? '...' : '') + '</td>' +
-          '<td><span class="ledger-confidence"><span class="confidence-dot known-known"></span>' + entry.confidence + '</span></td>' +
+          '<td><span class="ledger-confidence"><span class="confidence-dot ' + confidenceClass + '"></span>' + entry.confidence + '</span></td>' +
           '<td>' + entry.status + '</td>' +
-        '</tr>'
-      ).join('');
+        '</tr>';
+      }).join('');
     }
 
     // ===== SUBMIT NEW ENTRY =====
@@ -1277,13 +1700,251 @@
         showToast('Entry created with hash-chain verification', 'success');
         loadLedgerData();
         loadPulseBar();
-        // Reset form
         document.getElementById('entryConfidence').value = '';
         document.getElementById('entryEventType').value = '';
         document.getElementById('entryText').value = '';
       } else {
         showToast('Error: ' + (result?.error || 'Unknown error'), 'error');
       }
+    }
+
+    // ===== WORKFLOWS =====
+    function createWorkflow() {
+      const name = document.getElementById('workflowName').value;
+      const email = document.getElementById('workflowEmail').value;
+      const phone = document.getElementById('workflowPhone').value;
+      const fromState = document.getElementById('workflowFromState').value;
+      const toState = document.getElementById('workflowToState').value;
+      const moveDate = document.getElementById('workflowMoveDate').value;
+
+      if (!name || !toState) {
+        showToast('Please fill in required fields', 'error');
+        return;
+      }
+
+      const workflow = {
+        id: 'wf_' + Date.now(),
+        name,
+        email,
+        phone,
+        fromState,
+        toState,
+        moveDate,
+        createdAt: new Date().toISOString(),
+        checklist: initializeChecklist()
+      };
+
+      workflows.push(workflow);
+      saveWorkflows();
+
+      // Log to audit ledger
+      api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'WORKFLOW_CREATE',
+          content: {
+            message: 'Created workflow for ' + name + ' (' + fromState + ' to ' + toState + ')',
+            confidence: 'KNOWN_KNOWN',
+            workflowId: workflow.id
+          }
+        })
+      });
+
+      closeModal('newWorkflow');
+      showToast('Workflow created for ' + name, 'success');
+
+      // Clear form
+      document.getElementById('workflowName').value = '';
+      document.getElementById('workflowEmail').value = '';
+      document.getElementById('workflowPhone').value = '';
+      document.getElementById('workflowMoveDate').value = '';
+      document.getElementById('workflowToState').value = '';
+
+      showWorkflowDetail(workflow.id);
+    }
+
+    function initializeChecklist() {
+      const checklist = {};
+      for (const [categoryId, category] of Object.entries(CHECKLIST_TEMPLATE)) {
+        checklist[categoryId] = {};
+        for (const item of category.items) {
+          checklist[categoryId][item.id] = {
+            status: 'not_started',
+            confidence: '',
+            notes: '',
+            evidence: null,
+            updatedAt: null
+          };
+        }
+      }
+      return checklist;
+    }
+
+    function saveWorkflows() {
+      localStorage.setItem('newton_workflows', JSON.stringify(workflows));
+    }
+
+    function renderWorkflowsList() {
+      const grid = document.getElementById('workflowsGrid');
+
+      if (workflows.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">&#128203;</div>
+            <div class="empty-state-title">No workflows yet</div>
+            <div class="empty-state-text">Create your first client workflow to start tracking residency changes.</div>
+            <button class="btn btn-primary" onclick="showModal('newWorkflow')">+ New Client</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = workflows.map(w => {
+        const progress = calculateWorkflowProgress(w);
+        return `
+          <div class="workflow-card" onclick="showWorkflowDetail('${w.id}')">
+            <div class="workflow-card-header">
+              <div class="workflow-card-title">${w.name}</div>
+              <span class="workflow-card-status ${progress === 100 ? 'active' : 'pending'}">${progress === 100 ? 'Complete' : 'In Progress'}</span>
+            </div>
+            <div class="workflow-card-meta">${w.fromState} &#8594; ${w.toState} ${w.moveDate ? '| ' + w.moveDate : ''}</div>
+            <div class="workflow-card-progress">
+              <div class="workflow-card-progress-bar" style="width: ${progress}%"></div>
+            </div>
+            <div class="workflow-card-stats">
+              <span>${progress}% complete</span>
+              <span>Created ${new Date(w.createdAt).toLocaleDateString()}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function calculateWorkflowProgress(workflow) {
+      let total = 0;
+      let completed = 0;
+      for (const category of Object.values(workflow.checklist)) {
+        for (const item of Object.values(category)) {
+          total++;
+          if (item.status === 'complete' || item.status === 'na') completed++;
+        }
+      }
+      return total > 0 ? Math.round((completed / total) * 100) : 0;
+    }
+
+    function renderChecklist(workflow) {
+      const container = document.getElementById('checklistContainer');
+      container.innerHTML = '';
+
+      for (const [categoryId, category] of Object.entries(CHECKLIST_TEMPLATE)) {
+        const categoryData = workflow.checklist[categoryId] || {};
+        const completedCount = Object.values(categoryData).filter(i => i.status === 'complete' || i.status === 'na').length;
+
+        const categoryHtml = `
+          <div class="checklist-category">
+            <div class="checklist-category-header">
+              <div class="checklist-category-title">${category.title}</div>
+              <div class="checklist-category-count">${completedCount}/${category.items.length}</div>
+            </div>
+            <div class="checklist-category-body">
+              ${category.items.map(item => {
+                const itemData = categoryData[item.id] || { status: 'not_started', confidence: '' };
+                return `
+                  <div class="checklist-item">
+                    <div class="checklist-item-name">${item.name}</div>
+                    <div class="checklist-item-status">
+                      <select class="checklist-select" onchange="updateChecklistItem('${workflow.id}', '${categoryId}', '${item.id}', 'status', this.value)">
+                        <option value="not_started" ${itemData.status === 'not_started' ? 'selected' : ''}>Not Started</option>
+                        <option value="in_progress" ${itemData.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                        <option value="complete" ${itemData.status === 'complete' ? 'selected' : ''}>Complete</option>
+                        <option value="na" ${itemData.status === 'na' ? 'selected' : ''}>N/A</option>
+                      </select>
+                    </div>
+                    <div class="checklist-item-confidence tooltip-container">
+                      <select class="checklist-select" onchange="updateChecklistItem('${workflow.id}', '${categoryId}', '${item.id}', 'confidence', this.value)">
+                        <option value="" ${!itemData.confidence ? 'selected' : ''}>Select confidence...</option>
+                        <option value="KNOWN_KNOWN" ${itemData.confidence === 'KNOWN_KNOWN' ? 'selected' : ''}>KNOWN_KNOWN</option>
+                        <option value="KNOWN_UNKNOWN" ${itemData.confidence === 'KNOWN_UNKNOWN' ? 'selected' : ''}>KNOWN_UNKNOWN</option>
+                        <option value="UNKNOWN_UNKNOWN" ${itemData.confidence === 'UNKNOWN_UNKNOWN' ? 'selected' : ''}>UNKNOWN_UNKNOWN</option>
+                      </select>
+                      <div class="tooltip">
+                        KNOWN_KNOWN: I have evidence<br>
+                        KNOWN_UNKNOWN: I know there's a gap<br>
+                        UNKNOWN_UNKNOWN: I don't know what I don't know
+                      </div>
+                    </div>
+                    <div class="checklist-item-actions">
+                      <button class="checklist-btn" onclick="uploadEvidence('${workflow.id}', '${categoryId}', '${item.id}')">&#128206; Upload</button>
+                      <button class="checklist-btn primary" onclick="logChecklistItem('${workflow.id}', '${categoryId}', '${item.id}')">&#10003; Log</button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+        container.innerHTML += categoryHtml;
+      }
+    }
+
+    function updateChecklistItem(workflowId, categoryId, itemId, field, value) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (!workflow) return;
+
+      if (!workflow.checklist[categoryId]) workflow.checklist[categoryId] = {};
+      if (!workflow.checklist[categoryId][itemId]) {
+        workflow.checklist[categoryId][itemId] = { status: 'not_started', confidence: '', notes: '' };
+      }
+
+      workflow.checklist[categoryId][itemId][field] = value;
+      workflow.checklist[categoryId][itemId].updatedAt = new Date().toISOString();
+      saveWorkflows();
+
+      // Update progress display
+      const progress = calculateWorkflowProgress(workflow);
+      document.getElementById('workflowProgress').textContent = progress + '%';
+    }
+
+    async function logChecklistItem(workflowId, categoryId, itemId) {
+      const workflow = workflows.find(w => w.id === workflowId);
+      if (!workflow) return;
+
+      const itemData = workflow.checklist[categoryId]?.[itemId];
+      const itemTemplate = CHECKLIST_TEMPLATE[categoryId]?.items.find(i => i.id === itemId);
+
+      if (!itemData?.confidence) {
+        showToast('Please select a confidence level first', 'error');
+        return;
+      }
+
+      const result = await api('/api/audit', {
+        method: 'POST',
+        body: JSON.stringify({
+          tenantId: DEFAULT_TENANT,
+          userId: DEFAULT_USER,
+          entryType: 'CHECKLIST_UPDATE',
+          content: {
+            message: workflow.name + ' | ' + itemTemplate.name + ' | Status: ' + itemData.status,
+            confidence: itemData.confidence,
+            workflowId: workflowId,
+            categoryId: categoryId,
+            itemId: itemId
+          }
+        })
+      });
+
+      if (result && !result.error) {
+        showToast('Logged to audit ledger with hash verification', 'success');
+      } else {
+        showToast('Error logging to ledger', 'error');
+      }
+    }
+
+    function uploadEvidence(workflowId, categoryId, itemId) {
+      // For now, just show a toast - file upload requires backend storage
+      showToast('Evidence upload coming soon - for now, note the file in comments', 'warning');
     }
 
     // ===== INIT =====
