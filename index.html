@@ -4923,6 +4923,18 @@
             <button class="capability-action-btn">View Ledger</button>
           </div>
         </div>
+        <div class="capability-card">
+          <div class="capability-header">
+            <div class="capability-icon">&#128279;</div>
+            <span class="capability-status active">Active</span>
+          </div>
+          <h3 class="capability-title">Chain Integrity</h3>
+          <p class="capability-description">Verify the hash chain is intact. Any tampering with historical records will break the chain.</p>
+          <div class="capability-action">
+            <button class="capability-action-btn" onclick="event.stopPropagation(); testChainTamper();">Verify Chain</button>
+          </div>
+          <div id="webhookResult" style="margin-top: 12px; font-size: 13px; min-height: 20px;"></div>
+        </div>
       </div>
     </div>
 
@@ -9926,6 +9938,25 @@
           <button class="day-entry-delete" onclick="deleteRequest('${r.id}')">&times;</button>
         </div>
       `).join('');
+    }
+
+    // ===== CHAIN INTEGRITY TEST =====
+    async function testChainTamper() {
+      const resultDiv = document.getElementById('webhookResult');
+      resultDiv.innerHTML = `<span style="color: var(--watch);">&#128269; Verifying chain integrity...</span>`;
+
+      try {
+        const res = await fetch('https://newton-cmmc-827642717513.us-central1.run.app/api/chain/integrity?tenant_id=baycomply');
+        const data = await res.json();
+
+        if (data.verification_status === 'PASS') {
+          resultDiv.innerHTML = `<span style="color: var(--safe);">&#10003; Chain intact. ${data.total_records} records verified.</span>`;
+        } else {
+          resultDiv.innerHTML = `<span style="color: var(--action);">&#10007; TAMPER DETECTED at position ${data.first_error_position}</span>`;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `<span style="color: var(--action);">&#9888; Error: ${err.message}</span>`;
+      }
     }
 
     // ===== INIT =====
