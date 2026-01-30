@@ -8,7 +8,16 @@
       "WebFetch(domain:developers.google.com)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nMerge doc-centric architecture into bakers automation pipeline\n\nBrain agent: SHA-256 doc_id from bucket:name:generation for deterministic\nidempotency, transactional Firestore claim, Pub/Sub pointer pattern\n\\(doc_id only, poster reads full state from Firestore\\), status state\nmachine \\(RECEIVED → GENERATING → QUEUED → POSTING → POSTED/FAILED\\).\n\nPoster agent: transactional posting lock with UUID token + TTL to prevent\ndouble-posting on Pub/Sub retry, DRY_RUN mode for validation without\ntouching GBP, stale lock reclamation after 120s timeout.\n\nInfra: Firestore composite index for memory query, DRY_RUN=true default\non first poster deploy, step counter alignment \\(8 steps\\).\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(ls:*)",
+      "Bash(git clone:*)",
+      "Bash(xcopy:*)",
+      "Bash(git -C \"C:/Users/georg/Documents/GitHub/bakers-agent\" add -A)",
+      "Bash(git -C \"C:/Users/georg/Documents/GitHub/bakers-agent\" status)",
+      "Bash(git -C \"C:/Users/georg/Documents/GitHub/bakers-agent\" commit -m \"$\\(cat <<''EOF''\nInitial commit — moved from audit-ledger repo\n\nSplit bakery marketing automation out of gugosf114/audit-ledger.\nThese products share zero code.\nEOF\n\\)\")",
+      "Bash(git -C \"C:/Users/georg/Documents/GitHub/bakers-agent\" push -u origin main)",
+      "Bash(git rm:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
