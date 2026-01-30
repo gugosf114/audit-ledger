@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(git config:*)",
+      "WebFetch(domain:docs.cloud.google.com)",
+      "WebFetch(domain:developers.google.com)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nMerge doc-centric architecture into bakers automation pipeline\n\nBrain agent: SHA-256 doc_id from bucket:name:generation for deterministic\nidempotency, transactional Firestore claim, Pub/Sub pointer pattern\n\\(doc_id only, poster reads full state from Firestore\\), status state\nmachine \\(RECEIVED → GENERATING → QUEUED → POSTING → POSTED/FAILED\\).\n\nPoster agent: transactional posting lock with UUID token + TTL to prevent\ndouble-posting on Pub/Sub retry, DRY_RUN mode for validation without\ntouching GBP, stale lock reclamation after 120s timeout.\n\nInfra: Firestore composite index for memory query, DRY_RUN=true default\non first poster deploy, step counter alignment \\(8 steps\\).\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)"
+    ]
+  }
+}
