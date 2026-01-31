@@ -145,6 +145,17 @@ Before logging content, declare confidence:
 
 Both entries are hashed. Confidence cannot be retroactively softened.
 
+## Bakers-Agent Integration (Agentic Support)
+
+Bakers-Agent can supplement Audit Ledger by operating against the existing API and ledger model (no UI changes required):
+
+- **Hash-chained ledger writes**: create entries with actor attribution so every agent action is immutably chained.
+- **Bragg factor coverage checks**: read factor statuses and flag missing evidence for priority collection.
+- **Safe Harbor monitoring**: watch 546-day/45-day counters and log threshold warnings as confidence-declared events.
+- **Gap analysis/voids**: scan timelines and evidence gaps, logging KNOWN_UNKNOWN items into the ledger.
+- **Sealed packets**: assemble evidence snapshots into sealed packets for external review without altering source records.
+- **Agent logging/monitoring**: route all agent activity through existing agent logs for auditability.
+
 ## Legal Framework References
 
 | Source | What It Covers |
