@@ -3,30 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Newton - AI Governance Platform</title>
+  <title>BayComply &middot; Audit Ledger &mdash; CA Residency Audit Defense</title>
+  <meta name="description" content="Hash-chained evidence platform for California residency audit defense. Built on the 19 Bragg factors, R&TC 17014(d) Safe Harbor tracking, and FTB audit-readiness workflows.">
+  <meta property="og:title" content="BayComply &middot; Audit Ledger">
+  <meta property="og:description" content="Tamper-evident documentation for California residency audits. 19 Bragg factors, Safe Harbor day counting, hash-chained evidence trails.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg-dark: #0a0a0f;
-      --bg-card: #12121a;
-      --bg-hover: #1a1a25;
-      --bg-active: #252535;
-      --border: rgba(255,255,255,0.08);
-      --border-hover: rgba(255,255,255,0.15);
-      --text-primary: #ffffff;
-      --text-secondary: #a0a0b0;
-      --text-muted: #606070;
-      --accent: #6366f1;
-      --accent-hover: #818cf8;
-      --safe: #10b981;
-      --watch: #f59e0b;
-      --action: #ef4444;
-      --info: #3b82f6;
+      /* The Working Case File — paper, ink, and rule */
+      --bg-dark: #E8E6DF;              /* desk blotter */
+      --bg-card: #FCFBF7;              /* bond paper */
+      --bg-hover: #F3F1E9;
+      --bg-active: #ECE9DE;
+      --border: rgba(28, 33, 39, 0.16);
+      --border-hover: rgba(28, 33, 39, 0.34);
+      --text-primary: #1C2127;         /* iron-gall ink */
+      --text-secondary: #46505A;
+      --text-muted: #79828C;
+      --accent: #24518A;               /* record blue */
+      --accent-hover: #183A66;
+      --safe: #2E6B4E;                 /* banker's green */
+      --watch: #A8721D;                /* ochre ink */
+      --action: #A32C28;               /* auditor's red */
+      --info: #24518A;
+      --ink: #1C2127;
+      --sheet: #FCFBF7;
+      --sheet-aged: #F3F1E9;
+      --feint: #C7D2E0;                /* ledger feint rule */
+      --feint-ink: #7E97B5;
+      --margin-red: rgba(163, 44, 40, 0.38);
+      --font-display: 'Besley', 'Georgia', serif;
+      --font-body: 'Source Serif 4', 'Georgia', serif;
+      --font-data: 'Courier Prime', 'Courier New', monospace;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      font-family: var(--font-body);
       background: var(--bg-dark);
       color: var(--text-primary);
       min-height: 100vh;
@@ -64,7 +80,7 @@
     .nav-brand-icon {
       width: 36px;
       height: 36px;
-      background: linear-gradient(135deg, var(--accent), #a855f7);
+      background: linear-gradient(135deg, var(--accent), #5B3A56);
       border-radius: 10px;
       display: flex;
       align-items: center;
@@ -226,8 +242,8 @@
       align-items: center;
       gap: 12px;
       padding: 10px 16px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(46, 107, 78, 0.1);
+      border: 1px solid rgba(46, 107, 78, 0.3);
       border-radius: 8px;
       max-width: 350px;
     }
@@ -246,8 +262,8 @@
       align-items: center;
       gap: 12px;
       padding: 8px 16px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.1);
+      border: 1px solid rgba(46, 107, 78, 0.2);
       border-radius: 8px;
     }
 
@@ -473,7 +489,7 @@
     }
 
     .capability-status.active {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
@@ -676,12 +692,12 @@
     }
 
     .workflow-card-status.active {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
     .workflow-card-status.pending {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(168, 114, 29, 0.15);
       color: var(--watch);
     }
 
@@ -1243,14 +1259,14 @@
     }
 
     .day-alert-banner.safe {
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(46, 107, 78, 0.1);
+      border: 1px solid rgba(46, 107, 78, 0.3);
       color: var(--safe);
     }
 
     .day-alert-banner.caution {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: rgba(168, 114, 29, 0.1);
+      border: 1px solid rgba(168, 114, 29, 0.3);
       color: var(--watch);
     }
 
@@ -1261,8 +1277,8 @@
     }
 
     .day-alert-banner.danger {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(163, 44, 40, 0.1);
+      border: 1px solid rgba(163, 44, 40, 0.3);
       color: var(--action);
     }
 
@@ -1375,12 +1391,12 @@
     }
 
     .day-entry-location.ca {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       color: var(--action);
     }
 
     .day-entry-location.other {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
@@ -1396,7 +1412,7 @@
     }
 
     .day-entry-delete:hover {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(163, 44, 40, 0.1);
       border-color: var(--action);
       color: var(--action);
     }
@@ -1523,17 +1539,17 @@
     }
 
     .safe-harbor-badge.eligible {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
     .safe-harbor-badge.ineligible {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       color: var(--action);
     }
 
     .safe-harbor-badge.pending {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(168, 114, 29, 0.15);
       color: var(--watch);
     }
 
@@ -1571,12 +1587,12 @@
     }
 
     .safe-harbor-metric-status.pass {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       color: var(--safe);
     }
 
     .safe-harbor-metric-status.fail {
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(163, 44, 40, 0.2);
       color: var(--action);
     }
 
@@ -1758,7 +1774,7 @@
 
     .evidence-category.active {
       border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(36, 81, 138, 0.1);
     }
 
     .evidence-category-icon {
@@ -1789,7 +1805,7 @@
 
     .evidence-upload-zone:hover {
       border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.05);
+      background: rgba(36, 81, 138, 0.05);
     }
 
     .evidence-upload-icon {
@@ -1871,12 +1887,12 @@
     }
 
     .evidence-item-status.verified {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
     .evidence-item-status.pending {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(168, 114, 29, 0.15);
       color: var(--watch);
     }
 
@@ -1905,8 +1921,8 @@
     }
 
     .timeline-info-box {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(36, 81, 138, 0.1);
+      border: 1px solid rgba(36, 81, 138, 0.3);
       border-radius: 8px;
       padding: 12px 16px;
       margin-bottom: 20px;
@@ -1988,17 +2004,17 @@
     }
 
     .timeline-event-type.stock {
-      background: rgba(99, 102, 241, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--accent);
     }
 
     .timeline-event-type.rsu {
-      background: rgba(168, 85, 247, 0.15);
-      color: #a855f7;
+      background: rgba(91, 58, 86, 0.15);
+      color: #5B3A56;
     }
 
     .timeline-event-type.sale {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       color: var(--action);
     }
 
@@ -2088,18 +2104,18 @@
     }
 
     .address-entry-type.primary {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
     .address-entry-type.secondary {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--info);
     }
 
     .address-entry-type.business {
-      background: rgba(168, 85, 247, 0.15);
-      color: #a855f7;
+      background: rgba(91, 58, 86, 0.15);
+      color: #5B3A56;
     }
 
     /* ===== THIRD PARTY REQUESTS ===== */
@@ -2127,8 +2143,8 @@
     }
 
     .requests-info {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: rgba(168, 114, 29, 0.1);
+      border: 1px solid rgba(168, 114, 29, 0.3);
       border-radius: 8px;
       padding: 12px 16px;
       margin-bottom: 20px;
@@ -2190,22 +2206,22 @@
     }
 
     .request-item-status.sent {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--info);
     }
 
     .request-item-status.received {
-      background: rgba(16, 185, 129, 0.15);
+      background: rgba(46, 107, 78, 0.15);
       color: var(--safe);
     }
 
     .request-item-status.pending {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(168, 114, 29, 0.15);
       color: var(--watch);
     }
 
     .request-item-status.overdue {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       color: var(--action);
     }
 
@@ -2284,22 +2300,22 @@
     }
 
     .bragg-factor-number.highest {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       color: var(--action);
     }
 
     .bragg-factor-number.moderate {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(168, 114, 29, 0.15);
       color: var(--watch);
     }
 
     .bragg-factor-number.least {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--info);
     }
 
     .bragg-factor-number.corroborative {
-      background: rgba(99, 102, 241, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--accent);
     }
 
@@ -2319,22 +2335,22 @@
     }
 
     .bragg-factor-weight.highest {
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       color: var(--action);
     }
 
     .bragg-factor-weight.moderate {
-      background: rgba(245, 158, 11, 0.15);
+      background: rgba(168, 114, 29, 0.15);
       color: var(--watch);
     }
 
     .bragg-factor-weight.least {
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--info);
     }
 
     .bragg-factor-weight.corroborative {
-      background: rgba(99, 102, 241, 0.15);
+      background: rgba(36, 81, 138, 0.15);
       color: var(--accent);
     }
 
@@ -2523,11 +2539,11 @@
       font-size: 18px;
     }
 
-    .roadmap-phase-icon.before { background: rgba(99, 102, 241, 0.15); }
-    .roadmap-phase-icon.move { background: rgba(245, 158, 11, 0.15); }
-    .roadmap-phase-icon.after { background: rgba(16, 185, 129, 0.15); }
-    .roadmap-phase-icon.ongoing { background: rgba(59, 130, 246, 0.15); }
-    .roadmap-phase-icon.annual { background: rgba(168, 85, 247, 0.15); }
+    .roadmap-phase-icon.before { background: rgba(36, 81, 138, 0.15); }
+    .roadmap-phase-icon.move { background: rgba(168, 114, 29, 0.15); }
+    .roadmap-phase-icon.after { background: rgba(46, 107, 78, 0.15); }
+    .roadmap-phase-icon.ongoing { background: rgba(36, 81, 138, 0.15); }
+    .roadmap-phase-icon.annual { background: rgba(91, 58, 86, 0.15); }
 
     .roadmap-phase-name {
       font-size: 15px;
@@ -2668,8 +2684,8 @@
     }
 
     .roadmap-legal-note {
-      background: rgba(59, 130, 246, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
+      background: rgba(36, 81, 138, 0.1);
+      border: 1px solid rgba(36, 81, 138, 0.3);
       border-radius: 8px;
       padding: 12px 16px;
       margin-bottom: 20px;
@@ -2714,7 +2730,7 @@
 
     .roadmap-decision-option.selected {
       border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(36, 81, 138, 0.1);
     }
 
     .roadmap-decision-option-title {
@@ -2730,8 +2746,8 @@
 
     /* ===== TRAP WARNINGS ===== */
     .trap-warnings-panel {
-      background: rgba(239, 68, 68, 0.08);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(163, 44, 40, 0.08);
+      border: 1px solid rgba(163, 44, 40, 0.3);
       border-radius: 8px;
       margin-bottom: 20px;
       overflow: hidden;
@@ -2747,7 +2763,7 @@
     }
 
     .trap-warnings-header:hover {
-      background: rgba(239, 68, 68, 0.05);
+      background: rgba(163, 44, 40, 0.05);
     }
 
     .trap-warnings-title {
@@ -2817,8 +2833,8 @@
     }
 
     .rsu-allocation-box {
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      background: rgba(168, 114, 29, 0.1);
+      border: 1px solid rgba(168, 114, 29, 0.3);
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 16px;
@@ -2858,8 +2874,8 @@
 
     /* ===== DETECTOR ALERTS ===== */
     .detector-alert {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(163, 44, 40, 0.1);
+      border: 1px solid rgba(163, 44, 40, 0.4);
       border-radius: 8px;
       padding: 12px 16px;
       margin-bottom: 16px;
@@ -2871,13 +2887,13 @@
     }
 
     .detector-alert.warning {
-      background: rgba(245, 158, 11, 0.1);
-      border-color: rgba(245, 158, 11, 0.4);
+      background: rgba(168, 114, 29, 0.1);
+      border-color: rgba(168, 114, 29, 0.4);
     }
 
     .detector-alert.critical {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(239, 68, 68, 0.5);
+      background: rgba(163, 44, 40, 0.15);
+      border-color: rgba(163, 44, 40, 0.5);
     }
 
     .detector-alert-header {
@@ -3209,7 +3225,7 @@
 
     .contract-type-option.selected {
       border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(36, 81, 138, 0.1);
     }
 
     .contract-type-radio {
@@ -3264,7 +3280,7 @@
 
     .workflow-type-option.selected {
       border-color: var(--accent);
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(36, 81, 138, 0.1);
     }
 
     .workflow-type-icon {
@@ -3345,13 +3361,13 @@
     }
 
     .cc-eligibility-btn.yes.selected {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       border-color: var(--safe);
       color: var(--safe);
     }
 
     .cc-eligibility-btn.no.selected {
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(163, 44, 40, 0.2);
       border-color: var(--action);
       color: var(--action);
     }
@@ -3365,20 +3381,20 @@
     }
 
     .cc-result-banner.pass {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.4);
+      background: rgba(46, 107, 78, 0.15);
+      border: 1px solid rgba(46, 107, 78, 0.4);
       color: var(--safe);
     }
 
     .cc-result-banner.fail {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(163, 44, 40, 0.15);
+      border: 1px solid rgba(163, 44, 40, 0.4);
       color: var(--action);
     }
 
     .cc-result-banner.warning {
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.4);
+      background: rgba(168, 114, 29, 0.15);
+      border: 1px solid rgba(168, 114, 29, 0.4);
       color: var(--watch);
     }
 
@@ -3543,12 +3559,12 @@
     }
 
     .cc-phase2-status.strong {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       color: var(--safe);
     }
 
     .cc-phase2-status.weak {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(168, 114, 29, 0.2);
       color: var(--watch);
     }
 
@@ -3583,17 +3599,17 @@
     }
 
     .cc-milestone-status.on-track {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       color: var(--safe);
     }
 
     .cc-milestone-status.at-risk {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(168, 114, 29, 0.2);
       color: var(--watch);
     }
 
     .cc-milestone-status.breach {
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(163, 44, 40, 0.2);
       color: var(--action);
     }
 
@@ -3627,23 +3643,23 @@
     }
 
     .cc-status-badge.pending {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(168, 114, 29, 0.2);
       color: var(--watch);
     }
 
     .cc-status-badge.approved {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       color: var(--safe);
     }
 
     .cc-status-badge.active {
-      background: rgba(99, 102, 241, 0.2);
+      background: rgba(36, 81, 138, 0.2);
       color: var(--accent);
     }
 
     .cc-legal-note {
       padding: 12px 16px;
-      background: rgba(99, 102, 241, 0.1);
+      background: rgba(36, 81, 138, 0.1);
       border-left: 3px solid var(--accent);
       border-radius: 0 6px 6px 0;
       font-size: 13px;
@@ -3820,17 +3836,17 @@
     }
 
     .cc-window-status.closed {
-      background: rgba(239, 68, 68, 0.2);
+      background: rgba(163, 44, 40, 0.2);
       color: var(--action);
     }
 
     .cc-window-status.upcoming {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       color: var(--safe);
     }
 
     .cc-window-status.future {
-      background: rgba(99, 102, 241, 0.2);
+      background: rgba(36, 81, 138, 0.2);
       color: var(--accent);
     }
 
@@ -3906,8 +3922,8 @@
     }
 
     .cc-eligibility-box.red-flag {
-      border-color: rgba(239, 68, 68, 0.4);
-      background: rgba(239, 68, 68, 0.05);
+      border-color: rgba(163, 44, 40, 0.4);
+      background: rgba(163, 44, 40, 0.05);
     }
 
     .cc-grant-checklist {
@@ -3973,8 +3989,8 @@
     .cc-disqualifier-alert {
       margin-top: 12px;
       padding: 12px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(163, 44, 40, 0.15);
+      border: 1px solid rgba(163, 44, 40, 0.4);
       border-radius: 6px;
       color: var(--action);
       font-size: 13px;
@@ -4083,24 +4099,24 @@
 
     .cc-ratio-assessment.safe {
       color: var(--safe);
-      background: rgba(16, 185, 129, 0.1);
+      background: rgba(46, 107, 78, 0.1);
     }
 
     .cc-ratio-assessment.watch {
       color: var(--watch);
-      background: rgba(245, 158, 11, 0.1);
+      background: rgba(168, 114, 29, 0.1);
     }
 
     .cc-ratio-assessment.danger {
       color: var(--action);
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(163, 44, 40, 0.1);
     }
 
     .cc-ratio-bypass {
       margin-top: 16px;
       padding: 12px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(46, 107, 78, 0.1);
+      border: 1px solid rgba(46, 107, 78, 0.3);
       border-radius: 6px;
       color: var(--safe);
       font-size: 13px;
@@ -4292,12 +4308,12 @@
     }
 
     .cc-phase2-factor-status.documented {
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(46, 107, 78, 0.2);
       color: var(--safe);
     }
 
     .cc-phase2-factor-status.weak {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(168, 114, 29, 0.2);
       color: var(--watch);
     }
 
@@ -4371,8 +4387,8 @@
 
     .cc-recapture-warning {
       padding: 12px 16px;
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(163, 44, 40, 0.15);
+      border: 1px solid rgba(163, 44, 40, 0.4);
       border-radius: 6px;
       color: var(--action);
       font-size: 13px;
@@ -4411,12 +4427,12 @@
     }
 
     .cc-calendar-year-type.performance {
-      background: rgba(99, 102, 241, 0.2);
+      background: rgba(36, 81, 138, 0.2);
       color: var(--accent);
     }
 
     .cc-calendar-year-type.maintenance {
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(168, 114, 29, 0.2);
       color: var(--watch);
     }
 
@@ -4551,15 +4567,15 @@
 
     .cc-ftb-alert {
       margin-top: 20px;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.4);
+      background: rgba(163, 44, 40, 0.1);
+      border: 1px solid rgba(163, 44, 40, 0.4);
       border-radius: 8px;
       overflow: hidden;
     }
 
     .cc-ftb-alert-header {
       padding: 12px 16px;
-      background: rgba(239, 68, 68, 0.15);
+      background: rgba(163, 44, 40, 0.15);
       font-size: 14px;
       font-weight: 600;
       color: var(--action);
@@ -4573,14 +4589,645 @@
       font-size: 13px;
       color: var(--text-secondary);
     }
+    /* ================================================================
+       BAYCOMPLY RECORD SYSTEM — "The Working Case File"
+       Design layer v2. Appended after the base sheet; wins ties by
+       cascade order. Class names and DOM untouched — JS-safe.
+       Ledger grammar: double rule = closed account / letterhead,
+       feint blue rule = data line, red rule = the auditor's margin.
+       ================================================================ */
+
+    /* ---------- 1. Base ---------- */
+    body {
+      padding-top: 64px; /* fixed letterhead nav */
+      font-size: 15.5px;
+    }
+
+    .main { padding-top: 32px; }
+
+    ::selection { background: #F2E3A1; color: var(--ink); } /* highlighter on paper */
+
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: #C6C2B4; border: 3px solid var(--bg-dark); }
+    ::-webkit-scrollbar-thumb:hover { background: #ADA895; }
+
+    /* ---------- 2. Typography sweeps ---------- */
+    [class*="-title"], [class*="-name"] { font-family: var(--font-display); }
+    [class*="-label"] { font-family: var(--font-data); letter-spacing: 0.06em; }
+    [class*="-value"], [class*="-count"] { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+
+    .timeline-event-date, .address-entry-dates, .request-item-date,
+    .cc-window-dates, .cc-deadline-when, .ledger-uuid, .trap-warning-case,
+    .roadmap-phase-timing, .role-identity {
+      font-family: var(--font-data);
+    }
+
+    /* ---------- 3. Letterhead nav ---------- */
+    .nav {
+      background: var(--sheet);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom: 3px double var(--ink);
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 19px;
+    }
+
+    .nav-brand-icon {
+      background: var(--ink);
+      color: var(--sheet);
+      border-radius: 0;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 19px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav-link {
+      font-family: var(--font-data);
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border-radius: 0;
+      border-bottom: 2px solid transparent;
+      padding: 8px 14px;
+    }
+
+    .nav-link:hover {
+      background: transparent;
+      color: var(--ink);
+      border-bottom-color: var(--border-hover);
+    }
+
+    .nav-link.active {
+      background: transparent;
+      color: var(--ink);
+      border-bottom-color: var(--action); /* the auditor's mark on the open tab */
+    }
+
+    .status-indicator {
+      background: transparent;
+      border: 1px solid var(--border-hover);
+      border-radius: 0;
+      font-family: var(--font-data);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 6px 12px;
+    }
+
+    .status-dot { border-radius: 0; width: 7px; height: 7px; animation: none; }
+
+    /* ---------- 4. Record strip (pulse bar, revived in-flow) ---------- */
+    .pulse-bar {
+      display: grid;              /* un-hides it; role-bar stays retired */
+      position: static;
+      background: var(--sheet-aged);
+      border-bottom: 1px solid var(--border-hover);
+      padding: 14px 32px;
+    }
+
+    .pulse-label {
+      font-family: var(--font-data);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+    }
+
+    .pulse-subtext { font-family: var(--font-data); font-size: 10.5px; }
+
+    .chain-block {
+      border-radius: 0;
+      width: 22px;
+      height: 22px;
+      background: var(--sheet);
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      font-family: var(--font-data);
+      font-weight: 700;
+    }
+
+    .chain-block.verified { background: var(--safe); border-color: var(--safe); color: var(--sheet); }
+    .chain-block.broken { background: var(--action); border-color: var(--action); color: var(--sheet); }
+
+    .chain-connector { background: transparent; border-top: 2px dotted var(--feint-ink); height: 0; }
+
+    .economic-value, .pulse-counter-value { color: var(--ink); font-weight: 700; }
+    .pulse-value.verified { color: var(--safe); }
+    .pulse-value.broken { color: var(--action); }
+
+    .pulse-alert {
+      background: var(--sheet);
+      border: 1px solid var(--border-hover);
+      border-radius: 0;
+      font-family: var(--font-data);
+      font-size: 11px;
+      padding: 6px 12px;
+    }
+
+    /* ---------- 5. Filing-caption hero (the signature) ---------- */
+    .hero {
+      text-align: left;
+      background: var(--sheet);
+      border: 3px double var(--ink);
+      box-shadow: 4px 4px 0 rgba(28, 33, 39, 0.06);
+      padding: 44px 56px 0;
+      position: relative;
+      margin-bottom: 40px;
+    }
+
+    .hero::before {
+      content: "IN RE: CALIFORNIA RESIDENCY \2014  FRANCHISE TAX BOARD AUDIT DEFENSE";
+      display: block;
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--text-secondary);
+      padding-bottom: 14px;
+      padding-right: 130px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 30px;
+    }
+
+    .hero::after {
+      content: "No. ________";
+      position: absolute;
+      top: 44px;
+      right: 56px;
+      font-family: var(--font-data);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-weight: 850;
+      font-size: clamp(30px, 4.2vw, 46px);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      background: none;
+      background-clip: unset;
+      -webkit-background-clip: unset;
+      -webkit-text-fill-color: currentColor;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      max-width: 60ch;
+      margin: 0 0 36px;
+    }
+
+    .hero-stats {
+      justify-content: flex-start;
+      gap: 0;
+      margin: 0 -56px;
+      padding: 18px 0;
+      border-top: 1px solid var(--ink);
+      border-bottom: 3px double var(--ink); /* totals rule closes the caption */
+    }
+
+    .hero-stat { text-align: left; padding: 0 40px; }
+    .hero-stat:first-child { padding-left: 56px; }
+    .hero-stat + .hero-stat { border-left: 1px solid var(--border); }
+
+    .hero-stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+
+    .hero-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-top: 6px;
+    }
+
+    /* ---------- 6. Buttons: rubber stamps ---------- */
+    .btn {
+      font-family: var(--font-data);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border-radius: 0;
+      border: 1px solid var(--ink);
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .btn:active { transform: translate(1px, 1px); }
+
+    .btn-primary { background: var(--accent); border-color: var(--accent-hover); color: var(--sheet); }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: transparent; color: var(--ink); }
+    .btn-secondary:hover { background: var(--bg-hover); }
+
+    .capability-action-btn, .day-entry-btn, .checklist-btn, .day-bulk-toggle {
+      font-family: var(--font-data);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 0;
+      border: 1px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .capability-action-btn:hover, .day-entry-btn:hover, .checklist-btn:hover, .day-bulk-toggle:hover {
+      background: var(--ink);
+      color: var(--sheet);
+    }
+
+    /* ---------- 7. Paper surfaces ---------- */
+    .feature-map, .framework-section, .capability-card, .workflow-card,
+    .roadmap-section, .day-counter-section, .safe-harbor-section,
+    .address-section, .evidence-section, .timeline-section, .requests-section,
+    .inventory-section, .cc-overview-section, .cc-eligibility-section,
+    .cc-ratio-section, .cc-afte-section, .cc-phase2-section,
+    .cc-milestones-section, .cc-calendar-section, .cc-evidence-section {
+      border-radius: 0;
+      border: 1px solid var(--border);
+      box-shadow: 3px 3px 0 rgba(28, 33, 39, 0.05);
+    }
+
+    .critical-period-box, .housing-comparison-box, .family-tracker-box,
+    .rsu-calculator-box, .rsu-allocation-box, .rsu-result-box, .timeline-info-box,
+    .cc-timeline-box, .cc-windows-box, .cc-deadlines-box, .cc-ratio-formula-box,
+    .cc-afte-formula-box, .cc-ratio-result-box, .contract-type-box,
+    .day-stat-card, .cc-stat-card, .cc-window-card, .housing-card,
+    .safe-harbor-metric, .safe-harbor-requirement, .safe-harbor-contract,
+    .evidence-stat, .address-entry, .timeline-event, .evidence-item,
+    .request-item, .cc-afte-entry, .cc-milestone-entry, .checklist-item,
+    .cc-phase2-factor, .cc-evidence-category, .evidence-category,
+    .checklist-category, .bragg-factor, .workflow-type-option,
+    .contract-type-option, .cc-option, .cc-eligibility-box, .cc-grant-result,
+    .detector-alert, .day-alert-banner, .cc-ftb-alert, .cc-disqualifier-alert,
+    .cc-recapture-warning, .evidence-upload-zone, .roadmap-phase, .roadmap-task,
+    .roadmap-decision-box, .roadmap-decision-option, .roadmap-legal-note,
+    .trap-warnings-panel, .trap-warning-item, .day-entry-form, .day-bulk-form,
+    .address-form, .timeline-form, .requests-form, .safe-harbor-form,
+    .cc-gauge-bar, .cc-gauge-fill, .cc-timeline-marker, .cc-legend-dot,
+    .day-progress-bar, .day-progress-fill, .roadmap-progress-bar,
+    .roadmap-progress-fill, .safe-harbor-progress, .safe-harbor-progress-fill,
+    .workflow-card-progress-bar, .modal, .modal-close, .tooltip,
+    .empty-state, .framework-source, .weight-legend-dot, .roadmap-phase-icon,
+    .capability-icon, .roadmap-task-check, .cc-calendar-task-check {
+      border-radius: 0;
+    }
+
+    .capability-card { transition: box-shadow 0.15s, border-color 0.15s; }
+    .capability-card:hover {
+      border-color: var(--ink);
+      box-shadow: 5px 5px 0 rgba(28, 33, 39, 0.09);
+      transform: none;
+    }
+
+    .capability-icon { background: transparent; border: 1px solid var(--border); }
+    .capability-title { font-weight: 800; font-size: 19px; }
+
+    /* ---------- 8. Section headers: ruled and closed ---------- */
+    .section-header {
+      border-bottom: 3px double var(--ink);
+      padding-bottom: 14px;
+    }
+
+    .section-title { font-weight: 800; font-size: 26px; }
+
+    /* ---------- 9. Docket table (feature map) ---------- */
+    .feature-map-title { font-weight: 800; font-size: 21px; }
+    .feature-map-subtitle { font-style: italic; }
+    .feature-map-header { border-bottom: 3px double var(--ink); }
+
+    .feature-map-table { counter-reset: folio; }
+    .feature-map-row { counter-increment: folio; border-bottom: 1px solid var(--feint); }
+    .feature-map-row:last-child { border-bottom: none; }
+    .feature-map-row:hover { background: var(--bg-hover); }
+
+    .feature-map-feature { font-family: var(--font-display); font-weight: 700; }
+    .feature-map-feature::before {
+      content: counter(folio, decimal-leading-zero);
+      font-family: var(--font-data);
+      font-weight: 400;
+      font-size: 11px;
+      color: var(--feint-ink);
+      margin-right: 12px;
+    }
+
+    /* ---------- 10. Bragg index cards & weight inks ---------- */
+    .framework-title { font-weight: 800; }
+    .framework-source {
+      font-family: var(--font-data);
+      font-size: 11px;
+      line-height: 1.7;
+      background: var(--sheet-aged);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+    }
+
+    .bragg-factor { transition: border-color 0.15s; }
+    .bragg-factor:hover { border-color: var(--border-hover); transform: none; }
+    .bragg-factor-name { font-weight: 700; }
+
+    .bragg-factor-number {
+      background: transparent;
+      border: 1px solid currentColor;
+      font-family: var(--font-data);
+      font-weight: 700;
+    }
+
+    .bragg-factor-number.highest, .bragg-factor-number.moderate,
+    .bragg-factor-number.least, .bragg-factor-number.corroborative { background: transparent; }
+    .bragg-factor-number.highest { color: var(--action); }
+    .bragg-factor-number.moderate { color: var(--accent); }
+    .bragg-factor-number.least { color: var(--text-muted); }
+    .bragg-factor-number.corroborative { color: var(--watch); }
+
+    .bragg-factor-weight {
+      border-radius: 0;
+      font-family: var(--font-data);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid currentColor;
+    }
+
+    .bragg-factor-weight.highest, .bragg-factor-weight.moderate,
+    .bragg-factor-weight.least, .bragg-factor-weight.corroborative { background: transparent; }
+    .bragg-factor-weight.highest { color: var(--action); }
+    .bragg-factor-weight.moderate { color: var(--accent); }
+    .bragg-factor-weight.least { color: var(--text-muted); }
+    .bragg-factor-weight.corroborative { color: var(--watch); }
+
+    .weight-legend-dot { width: 9px; height: 9px; }
+    .weight-legend-dot.highest { background: var(--action); }
+    .weight-legend-dot.moderate { background: var(--accent); }
+    .weight-legend-dot.least { background: var(--text-muted); }
+    .weight-legend-dot.corroborative { background: var(--watch); }
+
+    /* ---------- 11. Typewriter tags (chips sweep) ---------- */
+    .capability-status, .workflow-card-status, .workflow-card-type,
+    .timeline-event-type, .address-entry-type, .ledger-event-type,
+    .ledger-confidence, .evidence-item-status, .evidence-item-category,
+    .request-item-status, .request-item-type, .cc-status-badge,
+    .cc-window-status, .cc-overview-status, .cc-milestone-status,
+    .safe-harbor-badge, .safe-harbor-metric-status, .cc-calendar-year-type,
+    .checklist-item-confidence, .roadmap-task-weight-badge, .cc-phase2-factor-status {
+      border-radius: 0;
+      font-family: var(--font-data);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ---------- 12. Tabs: manila folders ---------- */
+    .workflow-tabs { border-bottom: 1px solid var(--ink); gap: 4px; }
+
+    .workflow-tab {
+      font-family: var(--font-data);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-radius: 0;
+      border: 1px solid transparent;
+      margin-bottom: -1px;
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .workflow-tab:hover { color: var(--ink); background: var(--bg-hover); }
+
+    .workflow-tab.active {
+      background: var(--bg-dark);
+      border-color: var(--ink);
+      border-bottom-color: var(--bg-dark);
+      color: var(--ink);
+    }
+
+    .workflow-client-name { font-weight: 800; }
+
+    /* ---------- 13. Ledger tables: feint-ruled ---------- */
+    .ledger-table { border: 1px solid var(--border-hover); background: var(--sheet); }
+
+    .ledger-table th, .cc-afte-table th, .cc-milestone-table th {
+      background: var(--sheet-aged);
+      font-family: var(--font-data);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .ledger-table td, .cc-afte-table td, .cc-milestone-table td {
+      border-bottom: 1px solid var(--feint);
+      font-size: 13.5px;
+    }
+
+    .ledger-table tr:hover td { background: #F6F4EC; }
+    .ledger-uuid { font-size: 11px; }
+
+    /* ---------- 14. Typed forms ---------- */
+    .form-label {
+      font-family: var(--font-data);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-secondary);
+    }
+
+    .form-input, .form-textarea, .role-filter-select, .ledger-search,
+    .filter-select, .day-entry-input, .rsu-calc-input, .housing-card-input,
+    .inventory-item-select, .checklist-select, .day-bulk-textarea,
+    .cc-phase2-factor-textarea, .roadmap-task-status select,
+    select, input[type="text"], input[type="date"], input[type="number"], textarea {
+      font-family: var(--font-data);
+      font-size: 13px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-hover);
+      border-radius: 0;
+      color: var(--ink);
+    }
+
+    .form-input:focus, .form-textarea:focus, .ledger-search:focus,
+    .day-entry-input:focus, .day-bulk-textarea:focus, .cc-phase2-factor-textarea:focus,
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px var(--accent);
+      outline: none;
+    }
+
+    .form-hint { font-style: italic; font-size: 12px; }
+
+    .evidence-upload-zone { border: 1px dashed var(--border-hover); background: var(--sheet-aged); }
+    .evidence-upload-zone:hover { border-color: var(--ink); background: var(--bg-hover); }
+
+    /* ---------- 15. Progress: ruled gauges, flat ink ---------- */
+    .day-progress-bar, .roadmap-progress-bar, .safe-harbor-progress,
+    .workflow-card-progress-bar, .cc-gauge-bar {
+      background: #E3E0D6;
+      border: 1px solid var(--border);
+    }
+
+    .day-progress-fill.safe { background: var(--safe); }
+    .day-progress-fill.caution { background: var(--watch); }
+    .day-progress-fill.warning { background: #B4511E; }
+    .day-progress-fill.danger { background: var(--action); }
+    .roadmap-progress-fill, .workflow-card-progress-bar > div { background: var(--accent); }
+    .safe-harbor-progress-fill { background: var(--safe); }
+    .day-progress-marker-line { background: var(--ink); }
+
+    /* ---------- 16. Roadmap, traps, decisions ---------- */
+    .roadmap-title, .day-counter-title, .safe-harbor-title, .evidence-title,
+    .requests-title, .timeline-title, .inventory-title { font-weight: 800; }
+
+    .roadmap-legal-note {
+      background: var(--sheet-aged);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+    }
+
+    .trap-warnings-panel { border: 1px solid var(--action); }
+    .trap-warnings-header { background: rgba(163, 44, 40, 0.06); }
+    .trap-warnings-title { font-weight: 700; color: var(--action); }
+    .trap-warning-name { font-weight: 700; color: var(--action); }
+    .trap-warning-case { font-size: 11px; color: var(--text-muted); }
+
+    .roadmap-decision-box { border: 3px double var(--ink); background: var(--sheet); }
+    .roadmap-decision-option { border: 1px solid var(--border); transition: border-color 0.15s; }
+    .roadmap-decision-option:hover { border-color: var(--accent); }
+    .roadmap-decision-option.selected {
+      border-color: var(--accent);
+      background: rgba(36, 81, 138, 0.05);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .roadmap-phase { border: 1px solid var(--border); }
+    .roadmap-phase-name { font-weight: 700; }
+    .roadmap-phase-icon { border: 1px solid var(--border); }
+
+    .roadmap-task-check, .cc-calendar-task-check {
+      border: 1px solid var(--ink);
+      background: var(--sheet);
+    }
+
+    /* ---------- 17. Modals: filed forms ---------- */
+    .modal-overlay { background: rgba(28, 33, 39, 0.45); backdrop-filter: none; }
+
+    .modal {
+      border: 1px solid var(--ink);
+      border-top: 4px solid var(--ink);
+      box-shadow: 8px 8px 0 rgba(28, 33, 39, 0.12);
+      background: var(--sheet);
+    }
+
+    .modal-title { font-weight: 800; }
+    .modal-header { border-bottom: 1px solid var(--border); }
+    .modal-footer { border-top: 1px solid var(--border); }
+
+    /* ---------- 18. Empty states & tooltips ---------- */
+    .empty-state { border: 1px dashed var(--border-hover); background: transparent; }
+    .empty-state-title { font-weight: 700; }
+
+    .tooltip { font-family: var(--font-data); font-size: 11px; }
+
+    /* ---------- 19. Printer's ornaments (emoji re-inked) ---------- */
+    .feature-map-icon, .capability-icon, .roadmap-phase-icon, .empty-state-icon,
+    .evidence-category-icon, .evidence-item-icon, .evidence-upload-icon,
+    .day-counter-title-icon, .safe-harbor-requirement-icon, .workflow-type-icon,
+    .pulse-alert-icon, .day-alert-icon, .roadmap-title > span,
+    .trap-warnings-title > span, .roadmap-decision-title > span {
+      filter: grayscale(1) contrast(1.05);
+      opacity: 0.8;
+    }
+
+    /* ---------- 20. The auditor's margin (signature rule) ---------- */
+    .page { position: relative; }
+    .page::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 22px;
+      border-left: 1px solid var(--margin-red);
+      pointer-events: none;
+    }
+
+    /* ---------- 21. Responsive (base sheet shipped none) ---------- */
+    @media (max-width: 960px) {
+      .nav { padding: 0 16px; }
+      .nav-link { padding: 8px 10px; font-size: 11px; letter-spacing: 0.08em; }
+      .pulse-bar { padding: 12px 16px; }
+      .hero { padding: 28px 22px 0; }
+      .hero::before { padding-right: 110px; font-size: 10px; }
+      .hero::after { top: 28px; right: 22px; }
+      .hero-stats { margin: 0 -22px; flex-wrap: wrap; }
+      .hero-stat { padding: 0 20px; }
+      .hero-stat:first-child { padding-left: 22px; }
+      .hero-stat-value { font-size: 24px; }
+      .page { padding: 28px 16px; }
+      .page::before { display: none; }
+      .workflow-tabs { display: flex; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: thin; }
+      .day-counter-stats, .cc-stats-grid, .evidence-stats, .safe-harbor-grid,
+      .critical-period-grid, .housing-comparison-grid, .family-tracker-grid,
+      .rsu-calculator-grid, .cc-afte-entry-grid, .cc-milestone-entry-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-status { display: none; }
+      .nav-brand { font-size: 17px; }
+      .pulse-bar { grid-template-columns: 1fr; }
+      .pulse-section.center, .pulse-section.right { display: none; }
+      .hero-title { font-size: clamp(26px, 8.4vw, 34px); }
+      .hero-subtitle { font-size: 15px; }
+      .form-row { grid-template-columns: 1fr; }
+      .modal { width: calc(100vw - 24px); }
+    }
+
+    /* ---------- 22. Motion discipline ---------- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ---------- 23. Print: it is a legal document, after all ---------- */
+    @media print {
+      .nav, .pulse-bar, .role-bar, .btn, .capability-action, .modal-overlay { display: none !important; }
+      body { background: #fff; padding-top: 0; }
+      .page { padding: 0; }
+      .page::before { display: none; }
+      .hero, .capability-card, .feature-map, .framework-section { box-shadow: none; }
+    }
   </style>
 </head>
 <body>
   <!-- Navigation -->
   <nav class="nav">
     <a class="nav-brand" onclick="showPage('home')">
-      <div class="nav-brand-icon">N</div>
-      Newton
+      <div class="nav-brand-icon">B</div>
+      BayComply
     </a>
 
     <div class="nav-links">
