@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,28 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Besley:ital,wght@0,400..900;1,400..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..700;1,8..60,300..700&display=swap" rel="stylesheet">
+  <meta name="color-scheme" content="dark light">
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('bc-theme') === 'light') {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      } catch (e) {}
+      window.toggleTheme = function () {
+        var el = document.documentElement;
+        var next = el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        el.setAttribute('data-theme', next);
+        try { localStorage.setItem('bc-theme', next); } catch (e) {}
+        var b = document.getElementById('themeToggle');
+        if (b) b.textContent = next === 'dark' ? 'Day' : 'Night';
+      };
+      document.addEventListener('DOMContentLoaded', function () {
+        var b = document.getElementById('themeToggle');
+        if (b) b.textContent = document.documentElement.getAttribute('data-theme') === 'dark' ? 'Day' : 'Night';
+      });
+    })();
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -5219,6 +5241,161 @@
       .page { padding: 0; }
       .page::before { display: none; }
       .hero, .capability-card, .feature-map, .framework-section { box-shadow: none; }
+      :root, html[data-theme="dark"] {
+        --bg-dark: #ffffff; --bg-card: #ffffff; --sheet: #ffffff;
+        --sheet-aged: #f2f2f2; --ink: #111111;
+        --text-primary: #111111; --text-secondary: #333333; --text-muted: #555555;
+        --border: rgba(0, 0, 0, 0.25); --border-hover: rgba(0, 0, 0, 0.45);
+      }
+      html { zoom: 1; }
+    }
+
+    /* ---------- 24. Type scale +15% ---------- */
+    html { zoom: 1.15; }
+
+    @media (max-width: 680px) {
+      html { zoom: 1.05; }
+    }
+
+    /* ---------- 25. Theme toggle stamp ---------- */
+    .theme-toggle {
+      font-family: var(--font-data);
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      background: transparent;
+      border: 1px solid var(--border-hover);
+      border-radius: 0;
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .theme-toggle:hover { color: var(--text-primary); border-color: var(--text-primary); }
+
+    /* ---------- 26. Night reading (default) ----------
+       Same document, lamplight instead of daylight: dark ledger-cloth
+       desk, lamplit-ivory ink, faded record blue. Structure unchanged. */
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --bg-dark: #191B16;              /* ledger-cloth desk */
+      --bg-card: #21231D;              /* the sheet at night */
+      --bg-hover: #282A23;
+      --bg-active: #2E3128;
+      --border: rgba(233, 228, 214, 0.14);
+      --border-hover: rgba(233, 228, 214, 0.32);
+      --text-primary: #E9E4D6;         /* lamplit ivory */
+      --text-secondary: #B8B2A2;
+      --text-muted: #8A8578;
+      --accent: #8CABD8;               /* faded record blue */
+      --accent-hover: #A3BFE4;
+      --safe: #7FAE94;
+      --watch: #C99A4E;
+      --action: #CE6A57;
+      --info: #8CABD8;
+      --ink: #E9E4D6;
+      --sheet: #21231D;
+      --sheet-aged: #262820;
+      --feint: rgba(140, 171, 216, 0.22);
+      --feint-ink: #7E97B5;
+      --margin-red: rgba(206, 106, 87, 0.35);
+    }
+
+    html[data-theme="dark"] ::selection { background: #F2E3A1; color: #191B16; }
+
+    html[data-theme="dark"] ::-webkit-scrollbar-track { background: #191B16; }
+    html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #3A3D33; border-color: #191B16; }
+    html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #4A4E41; }
+
+    html[data-theme="dark"] .hero,
+    html[data-theme="dark"] .feature-map,
+    html[data-theme="dark"] .framework-section,
+    html[data-theme="dark"] .capability-card,
+    html[data-theme="dark"] .workflow-card,
+    html[data-theme="dark"] .roadmap-section,
+    html[data-theme="dark"] .day-counter-section,
+    html[data-theme="dark"] .safe-harbor-section,
+    html[data-theme="dark"] .address-section,
+    html[data-theme="dark"] .evidence-section,
+    html[data-theme="dark"] .timeline-section,
+    html[data-theme="dark"] .requests-section,
+    html[data-theme="dark"] .inventory-section,
+    html[data-theme="dark"] .cc-overview-section,
+    html[data-theme="dark"] .cc-eligibility-section,
+    html[data-theme="dark"] .cc-ratio-section,
+    html[data-theme="dark"] .cc-afte-section,
+    html[data-theme="dark"] .cc-phase2-section,
+    html[data-theme="dark"] .cc-milestones-section,
+    html[data-theme="dark"] .cc-calendar-section,
+    html[data-theme="dark"] .cc-evidence-section {
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+    }
+
+    html[data-theme="dark"] .capability-card:hover { box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.5); }
+    html[data-theme="dark"] .modal { box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5); }
+    html[data-theme="dark"] .modal-overlay { background: rgba(0, 0, 0, 0.62); }
+
+    html[data-theme="dark"] .day-progress-bar,
+    html[data-theme="dark"] .roadmap-progress-bar,
+    html[data-theme="dark"] .safe-harbor-progress,
+    html[data-theme="dark"] .workflow-card-progress-bar,
+    html[data-theme="dark"] .cc-gauge-bar {
+      background: #2E3128;
+    }
+
+    html[data-theme="dark"] .day-progress-fill.warning { background: #C97444; }
+    html[data-theme="dark"] .ledger-table tr:hover td { background: #2A2C24; }
+    html[data-theme="dark"] .trap-warnings-header { background: rgba(206, 106, 87, 0.1); }
+    html[data-theme="dark"] .roadmap-decision-option.selected { background: rgba(140, 171, 216, 0.08); }
+
+    html[data-theme="dark"] .form-input,
+    html[data-theme="dark"] .form-textarea,
+    html[data-theme="dark"] .role-filter-select,
+    html[data-theme="dark"] .ledger-search,
+    html[data-theme="dark"] .filter-select,
+    html[data-theme="dark"] .day-entry-input,
+    html[data-theme="dark"] .rsu-calc-input,
+    html[data-theme="dark"] .housing-card-input,
+    html[data-theme="dark"] .inventory-item-select,
+    html[data-theme="dark"] .checklist-select,
+    html[data-theme="dark"] .day-bulk-textarea,
+    html[data-theme="dark"] .cc-phase2-factor-textarea,
+    html[data-theme="dark"] .roadmap-task-status select,
+    html[data-theme="dark"] select,
+    html[data-theme="dark"] input[type="text"],
+    html[data-theme="dark"] input[type="date"],
+    html[data-theme="dark"] input[type="number"],
+    html[data-theme="dark"] textarea {
+      background: #1D1F19;
+      color: var(--text-primary);
+    }
+
+    html[data-theme="dark"] .evidence-upload-zone { background: #24261F; }
+
+    html[data-theme="dark"] .feature-map-icon,
+    html[data-theme="dark"] .capability-icon,
+    html[data-theme="dark"] .roadmap-phase-icon,
+    html[data-theme="dark"] .empty-state-icon,
+    html[data-theme="dark"] .evidence-category-icon,
+    html[data-theme="dark"] .evidence-item-icon,
+    html[data-theme="dark"] .evidence-upload-icon,
+    html[data-theme="dark"] .day-counter-title-icon,
+    html[data-theme="dark"] .safe-harbor-requirement-icon,
+    html[data-theme="dark"] .workflow-type-icon,
+    html[data-theme="dark"] .pulse-alert-icon,
+    html[data-theme="dark"] .day-alert-icon,
+    html[data-theme="dark"] .roadmap-title > span,
+    html[data-theme="dark"] .trap-warnings-title > span,
+    html[data-theme="dark"] .roadmap-decision-title > span {
+      filter: grayscale(1) invert(0.88) brightness(1.15);
+      opacity: 0.85;
+    }
+
+    html[data-theme="dark"] .timeline-event-type.rsu,
+    html[data-theme="dark"] .address-entry-type.business {
+      color: #B891AE;
     }
   </style>
 </head>
@@ -5237,6 +5414,7 @@
     </div>
 
     <div class="nav-status">
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Switch between day and night reading">Day</button>
       <div class="status-indicator">
         <div class="status-dot"></div>
         <span id="systemStatus">System Active</span>
